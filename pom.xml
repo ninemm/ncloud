@@ -24,6 +24,8 @@
         <jpush.version>3.3.7</jpush.version>
         <bitwalker.version>1.15</bitwalker.version>
         <logback.version>1.1.11</logback.version>
+        <easyexcel.version>1.1.2-beta4</easyexcel.version>
+        <hutool.version>4.1.12</hutool.version>
     </properties>
 
     <dependencyManagement>
@@ -63,7 +65,13 @@
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
-                <version>4.1.10</version>
+                <version>${hutool.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>easyexcel</artifactId>
+                <version>${easyexcel.version}</version>
             </dependency>
 
             <dependency>
