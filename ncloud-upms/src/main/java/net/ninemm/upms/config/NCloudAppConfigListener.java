@@ -35,7 +35,6 @@ import net.ninemm.base.handler.OptionsHandler;
 import net.ninemm.base.interceptor.BusinessExceptionInterceptor;
 import net.ninemm.base.interceptor.GlobalCacheInterceptor;
 import net.ninemm.base.interceptor.NotNullParaInterceptor;
-import net.ninemm.base.interceptor.OptionsFilterInterceptor;
 import net.ninemm.base.plugin.shiro.ShiroCacheUtils;
 import net.ninemm.upms.interceptor.LogInterceptor;
 
@@ -64,7 +63,6 @@ public class NCloudAppConfigListener extends JbootAppListenerBase {
 
     @Override
     public void onInterceptorConfig(Interceptors interceptors) {
-        // interceptors.add(new OptionsFilterInterceptor());
         interceptors.add(new NotNullParaInterceptor("/template/exception.html"));
         interceptors.add(new BusinessExceptionInterceptor("/template/exception.html"));
         interceptors.add(new GlobalCacheInterceptor());
