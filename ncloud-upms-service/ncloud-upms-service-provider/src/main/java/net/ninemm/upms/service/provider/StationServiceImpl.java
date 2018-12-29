@@ -6,10 +6,13 @@ import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.SqlPara;
+import io.jboot.Jboot;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.db.model.Columns;
 import io.jboot.utils.StrUtils;
+import net.ninemm.base.web.base.BaseService;
 import net.ninemm.upms.service.api.StationService;
+import net.ninemm.upms.service.model.Operation;
 import net.ninemm.upms.service.model.Station;
 import io.jboot.service.JbootServiceBase;
 
@@ -19,7 +22,7 @@ import java.util.Map;
 
 @Bean
 @Singleton
-public class StationServiceImpl extends JbootServiceBase<Station> implements StationService {
+public class StationServiceImpl extends BaseService<Station> implements StationService {
 
     @Override
     public Page<Station> paginate(int page, int pageSize, Map<String, Object> params) {
@@ -29,11 +32,9 @@ public class StationServiceImpl extends JbootServiceBase<Station> implements Sta
             columns.likeAppendPercent("station_name", stationName);
         }
 
-        Object orderByField = params.get("orderByField");
-        String orderByFields = orderByField != null ? orderByField.toString() : "create_date";
         Object isAsc = params.get("isAsc");
-        String orderBy = orderBy(orderByFields, isAsc);
-
+        Object orderByField = params.get("orderByField");
+        String orderBy = orderBy(orderByField, isAsc);
         return DAO.paginateByColumns(page, pageSize, columns, orderBy);
     }
 
@@ -55,24 +56,11 @@ public class StationServiceImpl extends JbootServiceBase<Station> implements Sta
         return Db.find(sqlBuilder.toString());
     }
 
-    private String orderBy(String orderByFields, Object isAsc) {
-
-        boolean isSort = false;
-        if (isAsc != null) {
-            isSort = Boolean.valueOf(isAsc.toString());
-        }
-        String sort = isSort ? "asc" : "desc";
-
-        List<String> list = Splitter.on(",").splitToList(orderByFields);
-        StringBuilder sb = new StringBuilder();
-        if (list.size() == 1) {
-            sb.append(list.get(0)).append(" ").append(sort);
-            return sb.toString();
-        }
-
-        for (String field : list) {
-            sb.append(field).append(" ").append(sort).append(",");
-        }
-        return sb.substring(0, sb.length() - 1);
+    /**
+     * 清除 model 缓存
+     */
+    @Override
+    protected void clearAllCache() {
+        Jboot.me().getCache().removeAll(Station.CACHE_NAME);
     }
 }

@@ -133,4 +133,12 @@ public interface UserService  {
     public boolean batchSave(List<User> list);
 
     public Page<User> paginate(int page, int pageSize, Map<String, Object> params);
+
+    /**
+     * find user by dept id
+     *
+     * @param deptId
+     * @return List
+     */
+    public List<User> findListByDeptId(String deptId);
 }

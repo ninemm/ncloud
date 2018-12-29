@@ -8,5 +8,6 @@ import net.ninemm.upms.service.model.base.BaseDepartment;
  */
 @Table(tableName = "upms_department", primaryKey = "id")
 public class Department extends BaseDepartment<Department> {
-	
+
+	public static final String CACHE_NAME = "upms_department";
 }

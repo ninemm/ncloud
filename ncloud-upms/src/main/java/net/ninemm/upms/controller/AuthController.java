@@ -22,6 +22,7 @@ import com.jfinal.aop.Clear;
 import com.jfinal.kit.Ret;
 import io.jboot.Jboot;
 import io.jboot.component.swagger.ParamType;
+import io.jboot.utils.StrUtils;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
 import io.swagger.annotations.Api;
@@ -34,7 +35,9 @@ import net.ninemm.base.common.RestResult;
 import net.ninemm.base.interceptor.GlobalCacheInterceptor;
 import net.ninemm.base.interceptor.NotNullPara;
 import net.ninemm.base.plugin.shiro.ShiroUtils;
+import net.ninemm.upms.service.api.DepartmentService;
 import net.ninemm.upms.service.api.UserService;
+import net.ninemm.upms.service.model.Department;
 import net.ninemm.upms.service.model.User;
 
 import java.util.List;
@@ -52,6 +55,9 @@ public class AuthController extends BaseAppController {
 
     @Inject
     UserService userService;
+
+    @Inject
+    DepartmentService departmentService;
 
     @ApiOperation(value = "用户登录", httpMethod = "POST", notes = "用户登录时，如果用户有多个账套，则会跳转到账套选择页面，选择账套完成之后，跳转到主页面")
     @ApiImplicitParams({
@@ -74,6 +80,20 @@ public class AuthController extends BaseAppController {
             renderJson(Ret.fail());
             return ;
         }
+
+        // 查询用户的角色，主管，经理，业务员
+        /*boolean isManager = ShiroUtils.hasPermission("");
+        if (isManager) {
+            Department department = departmentService.findDeptDataAreaByDeptId(user.getDepartmentId());
+            if (department == null) {
+                renderJson(Ret.fail().set("errorMessage", "用户未分配部门，请分配部门"));
+                return;
+            }
+            String dataArea = department.getDataArea();
+            if (StrUtils.notBlank(dataArea)) {
+                Jboot.me().getCache().put(CacheKey.CACHE_PARENT_DATA_AREA, user.getId(), dataArea);
+            }
+        }*/
 
         /** 登录成功移除用户退出标识 */
         Jboot.me().getCache().remove(CacheKey.CACHE_JWT_TOKEN, user.getId());
@@ -103,7 +123,7 @@ public class AuthController extends BaseAppController {
 
         Jboot.me().getCache().put(CacheKey.CACHE_JWT_TOKEN, getUserId(), getUserId(), 2 * 60 * 60);
 //        Jboot.me().getCache().remove(CacheKey.CACHE_SELLER, getUserId());
-//        Jboot.me().getCache().remove(CacheKey.CACHE_DEALER_DATA_AREA, getUserId());
+        Jboot.me().getCache().remove(CacheKey.CACHE_LOGINED_USER, getUserId());
 //        Jboot.me().getCache().remove(CacheKey.CACHE_LOGINED_USER,getUserId() + ":" + CacheKey.CACHE_KEY_ROLE);
 
         renderJson(RestResult.buildSuccess("退出成功！"));

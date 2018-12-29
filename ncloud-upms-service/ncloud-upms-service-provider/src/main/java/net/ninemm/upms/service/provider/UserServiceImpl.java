@@ -12,6 +12,7 @@ import io.jboot.core.cache.annotation.Cacheable;
 import io.jboot.db.model.Columns;
 import io.jboot.utils.StrUtils;
 import net.ninemm.base.utils.EncryptUtils;
+import net.ninemm.base.web.base.BaseService;
 import net.ninemm.upms.service.api.GroupService;
 import net.ninemm.upms.service.api.UserGroupRelService;
 import net.ninemm.upms.service.api.UserService;
@@ -27,7 +28,7 @@ import java.util.Map;
 
 @Bean
 @Singleton
-public class UserServiceImpl extends JbootServiceBase<User> implements UserService {
+public class UserServiceImpl extends BaseService<User> implements UserService {
 
     @Inject
     UserGroupRelService userGroupRelService;
@@ -43,10 +44,9 @@ public class UserServiceImpl extends JbootServiceBase<User> implements UserServi
             columns.likeAppendPercent("realname", realname);
         }
 
-        Object orderByField = params.get("orderByField");
-        String orderByFields = orderByField != null ? orderByField.toString() : "create_date";
         Object isAsc = params.get("isAsc");
-        String orderBy = orderBy(orderByFields, isAsc);
+        Object orderByField = params.get("orderByField");
+        String orderBy = orderBy(orderByField, isAsc);
 
         return DAO.paginateByColumns(page, pageSize, columns, orderBy);
     }
@@ -77,6 +77,18 @@ public class UserServiceImpl extends JbootServiceBase<User> implements UserServi
     @Override
     public User findByUsername(String username) {
         return DAO.findFirstByColumn("username", username);
+    }
+
+    /**
+     * find user by dept id
+     *
+     * @param deptId
+     * @return List
+     */
+    @Override
+    @Cacheable(name = "upms_user", key = "user:dept:#(deptId)", nullCacheEnable = false)
+    public List<User> findListByDeptId(String deptId) {
+        return DAO.findListByColumn("department_id", deptId);
     }
 
     @Override
@@ -175,7 +187,8 @@ public class UserServiceImpl extends JbootServiceBase<User> implements UserServi
         return super.deleteById(id);
     }
 
-    private void clearAllCache() {
+    @Override
+    protected void clearAllCache() {
         Jboot.me().getCache().removeAll(User.CACHE_NAME);
     }
 
@@ -185,26 +198,5 @@ public class UserServiceImpl extends JbootServiceBase<User> implements UserServi
 
     private String buildCacheKey(String id) {
         return "user:" + id;
-    }
-
-    private String orderBy(String orderByFields, Object isAsc) {
-
-        boolean isSort = false;
-        if (isAsc != null) {
-            isSort = Boolean.valueOf(isAsc.toString());
-        }
-        String sort = isSort ? "asc" : "desc";
-
-        List<String> list = Splitter.on(",").splitToList(orderByFields);
-        StringBuilder sb = new StringBuilder();
-        if (list.size() == 1) {
-            sb.append(list.get(0)).append(" ").append(sort);
-            return sb.toString();
-        }
-
-        for (String field : list) {
-            sb.append(field).append(" ").append(sort).append(",");
-        }
-        return sb.substring(0, sb.length() - 1);
     }
 }

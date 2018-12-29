@@ -2,11 +2,12 @@ package net.ninemm.upms.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.db.model.JbootModel;
 import net.ninemm.upms.service.model.Department;
 
 import java.util.List;
 
-public interface DepartmentService  {
+public interface DepartmentService<M extends JbootModel<M>>  {
 
     /**
      * find model by primary key
@@ -22,7 +23,7 @@ public interface DepartmentService  {
      *
      * @return all <Department
      */
-    public List<Department> findAll();
+    public List<? extends Model> findAll();
 
 
     /**
@@ -40,7 +41,7 @@ public interface DepartmentService  {
      * @param model
      * @return
      */
-    public boolean delete(Department model);
+    public boolean delete(M model);
 
 
     /**
@@ -49,7 +50,7 @@ public interface DepartmentService  {
      * @param model
      * @return
      */
-    public boolean save(Department model);
+    public boolean save(M model);
 
 
     /**
@@ -58,7 +59,7 @@ public interface DepartmentService  {
      * @param model
      * @return if save or update success
      */
-    public boolean saveOrUpdate(Department model);
+    public boolean saveOrUpdate(M model);
 
 
     /**
@@ -67,7 +68,7 @@ public interface DepartmentService  {
      * @param model
      * @return
      */
-    public boolean update(Department model);
+    public boolean update(M model);
 
 
     /**
@@ -108,10 +109,37 @@ public interface DepartmentService  {
 
     public void keep(List<? extends Model> models, String... attrs);
 
-    public List<Department> findAllAsSort();
+    public List<? extends Model> findAllAsSort();
 
-    public List<Department> findListExcludeRoot();
+    public List<? extends Model> findListExcludeRoot();
 
-    public List<Department> findListByParentId(String parentId);
+    /**
+     * find child list include parent node by dataArea
+     * @author Eric
+     * @date  2018-12-27 11:41
+     * @param deptDataArea
+     * @return list
+     */
+    public List<? extends Model> findChildListIncludeRoot(String deptDataArea);
+
+    public List<? extends Model> findListByParentId(String parentId);
+
+    /**
+     * find all parent dept as desc order
+     * @author Eric
+     * @date  2018-12-27 11:41
+     * @param deptId
+     * @return list
+     */
+    public List<? extends Model> findAllParentDeptByDeptId(String deptId);
+
+    /**
+     * find parent dept node
+     * @author Eric
+     * @date  2018-12-27 11:41
+     * @param deptId
+     * @return net.ninemm.upms.service.model.Department
+     */
+    public Department findDeptDataAreaByDeptId(String deptId);
 
 }

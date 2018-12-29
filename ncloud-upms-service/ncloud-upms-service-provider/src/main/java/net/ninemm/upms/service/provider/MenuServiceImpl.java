@@ -1,9 +1,11 @@
 package net.ninemm.upms.service.provider;
 
+import io.jboot.Jboot;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.db.model.Column;
 import io.jboot.db.model.Columns;
 import io.jboot.service.JbootServiceBase;
+import net.ninemm.base.web.base.BaseService;
 import net.ninemm.upms.service.api.MenuService;
 import net.ninemm.upms.service.model.Menu;
 
@@ -12,7 +14,7 @@ import java.util.List;
 
 @Bean
 @Singleton
-public class MenuServiceImpl extends JbootServiceBase<Menu> implements MenuService {
+public class MenuServiceImpl extends BaseService<Menu> implements MenuService {
 
     @Override
     public List<Menu> findListByParentId(String parentId) {
@@ -38,5 +40,13 @@ public class MenuServiceImpl extends JbootServiceBase<Menu> implements MenuServi
         columns.eq("parent_id", "0");
         columns.eq("is_parent", 1);
         return DAO.findListByColumns(columns, "order_list");
+    }
+
+    /**
+     * 清除 model 缓存
+     */
+    @Override
+    protected void clearAllCache() {
+        Jboot.me().getCache().removeAll(Menu.CACHE_NAME);
     }
 }

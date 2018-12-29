@@ -8,5 +8,6 @@ import net.ninemm.upms.service.model.base.BaseRole;
  */
 @Table(tableName = "upms_role", primaryKey = "id")
 public class Role extends BaseRole<Role> {
-	
+
+    public static final String CACHE_NAME = "upms_role";
 }

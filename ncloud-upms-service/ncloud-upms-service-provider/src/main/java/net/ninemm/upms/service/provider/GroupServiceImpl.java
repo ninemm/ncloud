@@ -4,10 +4,12 @@ import com.google.common.base.Splitter;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
+import io.jboot.Jboot;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.cache.annotation.Cacheable;
 import io.jboot.db.model.Columns;
 import io.jboot.utils.StrUtils;
+import net.ninemm.base.web.base.BaseService;
 import net.ninemm.upms.service.api.GroupService;
 import net.ninemm.upms.service.model.Group;
 import io.jboot.service.JbootServiceBase;
@@ -16,9 +18,15 @@ import javax.inject.Singleton;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 用户分组业务处理
+ * @author Eric
+ * @date  2018-12-29 17:09
+ */
+
 @Bean
 @Singleton
-public class GroupServiceImpl extends JbootServiceBase<Group> implements GroupService {
+public class GroupServiceImpl extends BaseService<Group> implements GroupService {
 
     @Override
     public Page<Group> paginate(int page, int pageSize, Map<String, Object> params) {
@@ -28,10 +36,14 @@ public class GroupServiceImpl extends JbootServiceBase<Group> implements GroupSe
             columns.likeAppendPercent("group_name", groupName);
         }
 
-        Object orderByField = params.get("orderByField");
-        String orderByFields = orderByField != null ? orderByField.toString() : "create_date";
+        Object dataArea = params.get("dataArea");
+        if (dataArea != null) {
+            columns.like("data_area", dataArea);
+        }
+
         Object isAsc = params.get("isAsc");
-        String orderBy = orderBy(orderByFields, isAsc);
+        Object orderByField = params.get("orderByField");
+        String orderBy = orderBy(orderByField, isAsc);
 
         return DAO.paginateByColumns(page, pageSize, columns, orderBy);
     }
@@ -44,7 +56,6 @@ public class GroupServiceImpl extends JbootServiceBase<Group> implements GroupSe
 
     @Override
     public boolean deleteById(Object id) {
-
         return super.deleteById(id);
     }
 
@@ -59,24 +70,11 @@ public class GroupServiceImpl extends JbootServiceBase<Group> implements GroupSe
         return Db.find(sqlBuilder.toString());
     }
 
-    private String orderBy(String orderByFields, Object isAsc) {
-
-        boolean isSort = false;
-        if (isAsc != null) {
-            isSort = Boolean.valueOf(isAsc.toString());
-        }
-        String sort = isSort ? "asc" : "desc";
-
-        List<String> list = Splitter.on(",").splitToList(orderByFields);
-        StringBuilder sb = new StringBuilder();
-        if (list.size() == 1) {
-            sb.append(list.get(0)).append(" ").append(sort);
-            return sb.toString();
-        }
-
-        for (String field : list) {
-            sb.append(field).append(" ").append(sort).append(",");
-        }
-        return sb.substring(0, sb.length() - 1);
+    /**
+     * 清除 model 缓存
+     */
+    @Override
+    protected void clearAllCache() {
+        Jboot.me().getCache().removeAll(Group.CACHE_NAME);
     }
 }

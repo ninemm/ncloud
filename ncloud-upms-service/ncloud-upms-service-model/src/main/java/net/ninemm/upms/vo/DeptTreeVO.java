@@ -33,7 +33,7 @@ public class DeptTreeVO implements TreeEntity {
     public String id;
     public String name;
     public String parentId;
-    public List<TreeEntity> children;
+    public List<DeptTreeVO> children;
 
     public boolean disabled = false;
     public boolean isLeaf = true;
@@ -69,7 +69,7 @@ public class DeptTreeVO implements TreeEntity {
         this.parentId = parentId;
     }
 
-    public List<TreeEntity> getChildren() {
+    public List<DeptTreeVO> getChildren() {
         return children;
     }
 

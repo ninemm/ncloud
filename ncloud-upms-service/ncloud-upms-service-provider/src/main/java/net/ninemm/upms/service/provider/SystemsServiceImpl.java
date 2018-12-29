@@ -4,6 +4,7 @@ import com.jfinal.plugin.activerecord.Page;
 import io.jboot.Jboot;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.db.model.Columns;
+import net.ninemm.base.web.base.BaseService;
 import net.ninemm.upms.service.api.SystemsService;
 import net.ninemm.upms.service.model.Systems;
 import io.jboot.service.JbootServiceBase;
@@ -14,7 +15,7 @@ import java.util.Map;
 
 @Bean
 @Singleton
-public class SystemsServiceImpl extends JbootServiceBase<Systems> implements SystemsService {
+public class SystemsServiceImpl extends BaseService<Systems> implements SystemsService {
 
     @Override
     public Page<Systems> paginate(int page, int pageSize, Map<String, Object> params) {
@@ -25,19 +26,9 @@ public class SystemsServiceImpl extends JbootServiceBase<Systems> implements Sys
             columns.likeAppendPercent("name", name);
         }
 
+        Object isAsc = params.get("isAsc");
         Object orderByField = params.get("orderByField");
-        String orderBy = orderByField != null ? orderByField.toString() : "create_date";
-
-        Object _isAsc = params.get("isAsc");
-        if (_isAsc != null) {
-            Boolean isAsc = Boolean.valueOf(_isAsc.toString());
-            if (isAsc) {
-                orderBy += " asc";
-            } else {
-                orderBy += " desc";
-            }
-        }
-
+        String orderBy = orderBy(orderByField, isAsc);
         return DAO.paginateByColumns(page, pageSize, columns, orderBy);
     }
 
@@ -71,7 +62,8 @@ public class SystemsServiceImpl extends JbootServiceBase<Systems> implements Sys
         return DAO.findByCache(Systems.CACHE_NAME, Systems.CACHE_SELECT_LIST_KEY, sql);
     }
 
-    private void clearAllCache() {
-        Jboot.me().getCache().remove(Systems.CACHE_NAME, Systems.CACHE_SELECT_LIST_KEY);
+    @Override
+    protected void clearAllCache() {
+        Jboot.me().getCache().removeAll(Systems.CACHE_NAME);
     }
 }

@@ -16,13 +16,13 @@
 
 package net.ninemm.upms.support;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import net.ninemm.base.plugin.jwt.AbstractJwtAuthorizingRealm;
 import net.ninemm.upms.service.api.OperationService;
 import net.ninemm.upms.service.api.RoleService;
-import net.ninemm.upms.service.api.UserService;
-import net.ninemm.upms.service.model.User;
+import net.ninemm.upms.service.model.Role;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.subject.PrincipalCollection;
@@ -42,38 +42,33 @@ public class JwtAuthorizingRealm extends AbstractJwtAuthorizingRealm {
 
     @Inject
     OperationService operationService;
-
-    @Inject
-    UserService userService;
-
     /**
      * 授权,JWT已包含访问主张只需要解析其中的主张定义就行了
      *
      * @author Eric Huang
      * @date 2018-06-29 22:09
-     * @param [principals]
+     * @param principals
      * @return org.apache.shiro.authz.AuthorizationInfo
      **/
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         String userId = (String) principals.getPrimaryPrincipal();
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-        User user = userService.findById(userId);
+        List<String> roleList = Lists.newArrayList();
+        List<String> roleIdList = Lists.newArrayList();
 
-        /**
-         * 角色
-         */
-        //List<String> roles = roleService.findRolePermissionsByUserId(userId);
-        List<String> roles = Lists.newArrayList();
-//        roles.add("s")
-        info.addRoles(roles);
+        /** 用户角色 */
+        List<Role> list = roleService.findRoleListByUserId(userId);
+        list.stream().forEach(role -> {
+            roleList.add(role.getRoleCode());
+            roleIdList.add(role.getId());
+        });
+        info.addRoles(roleList);
 
-        /**
-         * 权限
-         */
-//        List<String> perms = operationService.findOperationPermsByUserId(userId, user.getStationId());
-        List<String> perms = Lists.newArrayList();
-        info.addStringPermissions(perms);
+        /** 用户操作权限 */
+        String roleIds = Joiner.on(",").join(roleIdList);
+        List<String> permissions = operationService.findAllPermissionByUserId(userId, roleIds);
+        info.addStringPermissions(permissions);
         return info;
     }
 }

@@ -20,11 +20,14 @@ package net.ninemm.upms.controller;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.jfinal.kit.Ret;
+import com.jfinal.kit.StrKit;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
+import net.ninemm.base.interceptor.NotNullPara;
 import net.ninemm.base.utils.layer.TreeKit;
 import net.ninemm.upms.service.api.MenuService;
 import net.ninemm.upms.service.api.RoleService;
+import net.ninemm.upms.service.model.Department;
 import net.ninemm.upms.service.model.Menu;
 import net.ninemm.upms.vo.MenuTreeVO;
 
@@ -86,6 +89,35 @@ public class MenuController extends BaseAppController {
         return menuTreeVOList;
     }
 
+    public void findById() {
+        String id = getPara(0);
+        Menu menu = menuService.findById(id);
+        menuService.join(menu, "parent_id", "parent");
+        renderJson(menu);
+    }
 
+    public void saveOrUpdate() {
+        Menu menu = getRawObject(Menu.class);
+        boolean result = menuService.saveOrUpdate(menu);
+        if (result) {
+            renderJson(Ret.ok());
+        } else {
+            renderJson(Ret.fail());
+        }
+    }
+
+    public void delete() {
+        String id = getPara(0);
+        if (StrKit.isBlank(id)) {
+            renderJson(Ret.fail());
+            return;
+        }
+        boolean result = menuService.deleteById(id);
+        if (result) {
+            renderJson(Ret.ok());
+        } else {
+            renderJson(Ret.fail());
+        }
+    }
 
 }

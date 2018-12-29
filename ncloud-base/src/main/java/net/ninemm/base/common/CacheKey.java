@@ -55,18 +55,24 @@ public class CacheKey {
 	/** jwt_token */
 	public static final String CACHE_JWT_TOKEN = "jwt_token";
 
+	/** 账套 缓存名称 */
 	public static final String CACHE_SELLER = "seller";
 
-	public static final String CACHE_DEALER_DATA_AREA = "dealer-data-area";
+	/** 根节点(部门)数据域 缓存名称 */
+	public static final String CACHE_ROOT_DATA_AREA = "root-data-area";
 
-	public static final String DEALER_DATA_AREA_CACHE_NAME = "dealerDataAreaCacheName";
+	/** 父级部门数据域  缓存名称*/
+	public static final String CACHE_PARENT_DATA_AREA = "parent-dataarea";
 
 	/** 登录用户的角色为管理者 */
 	public static final String CACHE_MANAGER_ROLE = "manager";
+
 	/** 登录用户的角色为业务员 */
 	public static final String CACHE_USER_ROLE = "normal";
+
 	/** 登录用户角色的 KEY */
     public static final String CACHE_KEY_ROLE = "role";
+
 	/** 登录用户缓存 CacheName */
 	public static final String CACHE_LOGINED_USER = "user";
 

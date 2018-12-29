@@ -30,10 +30,54 @@ import java.util.List;
  * @date 2018-12-18 23:20
  **/
 
-public class BaseService extends JbootServiceBase {
+public abstract class BaseService<M extends JbootModel<M>> extends JbootServiceBase<M> {
 
-    protected String orderBy(String orderByFields, Object isAsc) {
+    @Override
+    public boolean deleteById(Object id) {
+        clearAllCache();
+        return super.deleteById(id);
+    }
 
+    @Override
+    public boolean delete(M model) {
+        clearAllCache();
+        return super.delete(model);
+    }
+
+    @Override
+    public boolean save(M model) {
+        clearAllCache();
+        return super.save(model);
+    }
+
+    @Override
+    public boolean saveOrUpdate(M model) {
+        clearAllCache();
+        return super.saveOrUpdate(model);
+    }
+
+    @Override
+    public boolean update(M model) {
+        clearAllCache();
+        return super.update(model);
+    }
+
+    /**
+     * 清除 model 缓存
+     */
+    protected abstract void clearAllCache();
+
+    /**
+     * 生成排序 SQL
+     * @author Eric
+     * @date  2018-12-29 00:32
+     * @param orderByField     排序字段 如 create_date order_list
+     * @param isAsc             是否按升序排序 false, true
+     * @return java.lang.String
+     */
+    protected String orderBy(Object orderByField, Object isAsc) {
+
+        String orderByFields = orderByField != null ? orderByField.toString() : "create_date";
         boolean isSort = false;
         if (isAsc != null) {
             isSort = Boolean.valueOf(isAsc.toString());

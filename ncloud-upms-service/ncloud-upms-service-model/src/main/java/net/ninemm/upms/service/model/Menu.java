@@ -9,4 +9,5 @@ import net.ninemm.upms.service.model.base.BaseMenu;
 @Table(tableName = "upms_menu", primaryKey = "id")
 public class Menu extends BaseMenu<Menu> {
 
+    public static final String CACHE_NAME = "upms_menu";
 }

@@ -115,4 +115,13 @@ public interface RoleService  {
 
     public List<Record> findListAsOptions(String dataArea);
 
+    /**
+     * 获取用户的所有角色
+     * @author Eric
+     * @date  2018-12-27 14:36
+     * @param userId
+     * @return java.util.List<net.ninemm.upms.service.model.Role>
+     */
+    public List<Role> findRoleListByUserId(String userId);
+
 }

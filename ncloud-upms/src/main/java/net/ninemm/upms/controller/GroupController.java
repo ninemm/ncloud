@@ -47,10 +47,10 @@ import java.util.Map;
 public class GroupController extends BaseAppController {
 
     @Inject
-    GroupService groupService;
+    RoleService roleService;
 
     @Inject
-    RoleService roleService;
+    GroupService groupService;
 
     @Inject
     GroupRoleRelService groupRoleRelService;
@@ -104,8 +104,12 @@ public class GroupController extends BaseAppController {
             renderJson(Ret.fail());
             return;
         }
-        groupService.deleteById(id);
-        renderJson(Ret.ok());
+        boolean isDeleted = groupService.deleteById(id);
+        if (isDeleted) {
+            renderJson(Ret.ok());
+            return;
+        }
+        renderJson(Ret.fail());
     }
 
     public void updateGroupPermission() {

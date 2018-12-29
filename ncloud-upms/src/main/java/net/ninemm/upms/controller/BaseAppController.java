@@ -47,13 +47,20 @@ public class BaseAppController extends BaseController {
 
     @NotAction
     public String getDataArea() {
+        return Jboot.me().getCache().get(CacheKey.CACHE_PARENT_DATA_AREA, getUserId());
+    }
 
-        String defaultDataArea = Jboot.me().getCache().get(CacheKey.CACHE_DEALER_DATA_AREA, getUserId());
-        String role = Jboot.me().getCache().get(CacheKey.CACHE_LOGINED_USER, getUserId() + ":" + CacheKey.CACHE_KEY_ROLE);
-        if (CacheKey.CACHE_MANAGER_ROLE.equals(role)) {
-            return defaultDataArea;
+    @Override
+    public Map<String, Object> getAllParaMap() {
+        Map<String, Object> params = super.getAllParaMap();
+        String dataArea = getDataArea();
+
+        if (StrUtils.notBlank(dataArea)) {
+            params.put("dataArea", dataArea + "%");
+        } else {
+            params.put("userId", getUserId());
         }
-        return null;
+        return params;
     }
 
     /**
