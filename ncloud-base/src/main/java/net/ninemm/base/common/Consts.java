@@ -58,6 +58,8 @@ public class Consts {
 	 */
 	public static final String TOKEN_TAG = "_token";
 
+	public static final String CAPTCHA_CODE = "code";
+
 	/**
 	 * 跨域访问时，过滤请求类型为 options 的方法
 	 */

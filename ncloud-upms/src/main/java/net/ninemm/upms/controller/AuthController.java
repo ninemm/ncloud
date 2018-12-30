@@ -19,6 +19,8 @@ package net.ninemm.upms.controller;
 
 import com.google.inject.Inject;
 import com.jfinal.aop.Clear;
+import com.jfinal.captcha.Captcha;
+import com.jfinal.captcha.CaptchaManager;
 import com.jfinal.kit.Ret;
 import io.jboot.Jboot;
 import io.jboot.component.swagger.ParamType;
@@ -70,9 +72,13 @@ public class AuthController extends BaseAppController {
     @Clear(GlobalCacheInterceptor.class)
     public void login(String mobile, String password) {
 
+        if (!validateCaptcha(Consts.CAPTCHA_CODE)) {
+            renderJson(Ret.fail("errorMessage", "验证码错误"));
+            return;
+        }
+
         List<User> list = userService.findByMobile(mobile);
         User user = list.get(0);
-
         boolean checkPwd = ShiroUtils.checkPwd(password, user.getPassword(), user.getSalt());
         if (!checkPwd) {
             renderJson(Ret.fail());

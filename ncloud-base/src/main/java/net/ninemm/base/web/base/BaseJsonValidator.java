@@ -6,6 +6,7 @@ import net.ninemm.base.common.RestResult;
 
 /**
  * Json 校验基类
+ * @author eric
  */
 public abstract class BaseJsonValidator extends BaseValidator {
 
