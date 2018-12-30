@@ -7,7 +7,6 @@ import io.jboot.db.model.Columns;
 import net.ninemm.base.web.base.BaseService;
 import net.ninemm.upms.service.api.SystemsService;
 import net.ninemm.upms.service.model.Systems;
-import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Singleton;
 import java.util.List;

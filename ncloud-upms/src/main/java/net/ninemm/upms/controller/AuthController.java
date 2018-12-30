@@ -22,7 +22,6 @@ import com.jfinal.aop.Clear;
 import com.jfinal.kit.Ret;
 import io.jboot.Jboot;
 import io.jboot.component.swagger.ParamType;
-import io.jboot.utils.StrUtils;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
 import io.swagger.annotations.Api;
@@ -37,7 +36,6 @@ import net.ninemm.base.interceptor.NotNullPara;
 import net.ninemm.base.plugin.shiro.ShiroUtils;
 import net.ninemm.upms.service.api.DepartmentService;
 import net.ninemm.upms.service.api.UserService;
-import net.ninemm.upms.service.model.Department;
 import net.ninemm.upms.service.model.User;
 
 import java.util.List;

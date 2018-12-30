@@ -19,14 +19,10 @@ package net.ninemm.base.plugin.jwt;
 import io.jboot.Jboot;
 import io.jboot.utils.StrUtils;
 import net.ninemm.base.common.CacheKey;
-import net.ninemm.base.plugin.jwt.JwtAuthenticationToken;
 import net.ninemm.base.plugin.shiro.ShiroCacheUtils;
 import org.apache.shiro.authc.*;
-import org.apache.shiro.authz.AuthorizationInfo;
-import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.realm.AuthorizingRealm;
-import org.apache.shiro.subject.PrincipalCollection;
 
 /**
  * 基于JWT（ JSON WEB TOKEN）的认证域

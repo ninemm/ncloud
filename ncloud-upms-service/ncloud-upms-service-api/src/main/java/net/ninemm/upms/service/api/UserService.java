@@ -2,6 +2,7 @@ package net.ninemm.upms.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.db.model.JbootModel;
 import net.ninemm.upms.service.model.User;
 
 import java.util.List;

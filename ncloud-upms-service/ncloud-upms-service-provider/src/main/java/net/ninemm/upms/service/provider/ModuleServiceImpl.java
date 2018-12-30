@@ -1,6 +1,5 @@
 package net.ninemm.upms.service.provider;
 
-import com.jfinal.kit.Kv;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
@@ -10,12 +9,9 @@ import io.jboot.Jboot;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.cache.annotation.Cacheable;
 import io.jboot.db.model.Columns;
-import net.ninemm.upms.service.api.ModuleService;
-import net.ninemm.upms.service.model.Department;
-import net.ninemm.upms.service.model.Menu;
-import net.ninemm.upms.service.model.Module;
 import io.jboot.service.JbootServiceBase;
-import net.ninemm.upms.service.model.Systems;
+import net.ninemm.upms.service.api.ModuleService;
+import net.ninemm.upms.service.model.Module;
 
 import javax.inject.Singleton;
 import java.sql.SQLException;

@@ -1,7 +1,6 @@
 package net.ninemm.upms.service.provider;
 
 import com.alibaba.fastjson.JSON;
-import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
@@ -17,7 +16,6 @@ import net.ninemm.upms.service.api.GroupService;
 import net.ninemm.upms.service.api.UserGroupRelService;
 import net.ninemm.upms.service.api.UserService;
 import net.ninemm.upms.service.model.User;
-import io.jboot.service.JbootServiceBase;
 import net.ninemm.upms.service.model.UserGroupRel;
 
 import javax.inject.Inject;
@@ -31,10 +29,10 @@ import java.util.Map;
 public class UserServiceImpl extends BaseService<User> implements UserService {
 
     @Inject
-    UserGroupRelService userGroupRelService;
+    GroupService groupService;
 
     @Inject
-    GroupService groupService;
+    UserGroupRelService userGroupRelService;
 
     @Override
     public Page<User> paginate(int page, int pageSize, Map<String, Object> params) {
@@ -98,6 +96,9 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
             @Override
             public boolean run() throws SQLException {
 
+                clearAllCache();
+                clearCacheByKey(User.CACHE_NAME, buildCacheKey(user.getId()));
+
                 // 删除已有的用户组
                 if (StrUtils.notBlank(user.getId())) {
                     userGroupRelService.deleteByUserId(user.getId());
@@ -129,7 +130,6 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
                 });
 
                 Db.batchSave(userGroupRelList, userGroupRelList.size());
-                clearCacheByKey(User.CACHE_NAME, buildCacheKey(user.getId()));
                 return true;
             }
         });

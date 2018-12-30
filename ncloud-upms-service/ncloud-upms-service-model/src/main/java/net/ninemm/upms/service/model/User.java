@@ -11,16 +11,7 @@ import java.util.List;
  */
 @Table(tableName = "upms_user", primaryKey = "id")
 public class User extends BaseUser<User> {
-	public static final String CACHE_NAME = "upms_user";
 
-	private List<String> stationIds;
-	private List<String> groupIds;
+    public static final String CACHE_NAME = "upms_user";
 
-	public List<String> getStationIds() {
-        return Splitter.on(",").splitToList(getStationId());
-    }
-
-    public List<String> getGroupIds() {
-	    return Splitter.on(",").splitToList(getGroupId());
-    }
 }

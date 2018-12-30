@@ -28,6 +28,7 @@ import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.upload.UploadFile;
+import io.jboot.utils.StrUtils;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
 import net.ninemm.base.plugin.excel.ExcelKit;
@@ -77,10 +78,21 @@ public class UserController extends BaseAppController {
         }
 
         User user = userService.findById(id);
-        List<String> stationIds = JSON.parseArray(user.getStationId(), String.class);
+        List<String> stationIds = Lists.newArrayList();
+        List<String> groupIds = Lists.newArrayList();
+        String stationId = user.getStationId();
+
+        if (StrUtils.notBlank(stationId)) {
+            stationIds = JSON.parseArray(user.getStationId(), String.class);
+        }
         user.put("stationIds", stationIds);
-        List<String> groupIds = JSON.parseArray(user.getGroupId(), String.class);
+
+        String groupId = user.getGroupId();
+        if (StrUtils.notBlank(stationId)) {
+            groupIds = JSON.parseArray(user.getGroupId(), String.class);
+        }
         user.put("groupIds", groupIds);
+
         renderJson(user);
     }
 

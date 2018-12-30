@@ -19,7 +19,6 @@ package net.ninemm.base.handler;
 
 import com.jfinal.handler.Handler;
 import com.jfinal.render.RenderManager;
-import io.jboot.web.cors.EnableCORS;
 import net.ninemm.base.common.Consts;
 
 import javax.servlet.http.HttpServletRequest;

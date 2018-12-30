@@ -20,13 +20,10 @@ import com.jfinal.aop.Interceptor;
 import com.jfinal.aop.Invocation;
 import com.jfinal.kit.LogKit;
 import com.jfinal.kit.StrKit;
-import io.jboot.Jboot;
 import io.jboot.component.jwt.JwtManager;
 import io.jboot.web.controller.JbootController;
-import net.ninemm.base.common.CacheKey;
 import net.ninemm.base.common.Consts;
 import net.ninemm.base.common.RestResult;
-import net.ninemm.base.common.ResultCode;
 
 /**
  * 缓存拦截器

@@ -5,13 +5,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
-import com.jfinal.plugin.activerecord.Record;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.db.model.Column;
+import io.jboot.service.JbootServiceBase;
 import io.jboot.utils.StrUtils;
 import net.ninemm.upms.service.api.GroupRoleRelService;
 import net.ninemm.upms.service.model.GroupRoleRel;
-import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Singleton;
 import java.sql.SQLException;

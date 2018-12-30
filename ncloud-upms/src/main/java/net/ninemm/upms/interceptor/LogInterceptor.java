@@ -13,7 +13,6 @@ import io.jboot.web.controller.JbootController;
 import net.ninemm.base.common.Consts;
 import net.ninemm.upms.service.api.SystemLogService;
 import net.ninemm.upms.service.model.SystemLog;
-import org.apache.http.HttpRequest;
 
 import javax.servlet.http.HttpServletRequest;
 

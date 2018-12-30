@@ -17,27 +17,11 @@
 
 package net.ninemm.upms.controller;
 
-import com.google.inject.Inject;
 import com.jfinal.aop.Clear;
-import com.jfinal.kit.Ret;
-import io.jboot.Jboot;
-import io.jboot.component.swagger.ParamType;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import net.ninemm.base.common.CacheKey;
-import net.ninemm.base.common.Consts;
-import net.ninemm.base.common.RestResult;
 import net.ninemm.base.interceptor.GlobalCacheInterceptor;
-import net.ninemm.base.interceptor.NotNullPara;
-import net.ninemm.base.plugin.shiro.ShiroUtils;
-import net.ninemm.upms.service.api.UserService;
-import net.ninemm.upms.service.model.User;
-
-import java.util.List;
 
 /**
  * 用户登录、注销

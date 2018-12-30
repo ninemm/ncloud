@@ -25,7 +25,6 @@ import com.jfinal.plugin.activerecord.Page;
 import io.jboot.utils.StrUtils;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
-import net.ninemm.base.interceptor.NotNullPara;
 import net.ninemm.upms.service.api.SystemsService;
 import net.ninemm.upms.service.model.Systems;
 

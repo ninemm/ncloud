@@ -1,9 +1,9 @@
 package net.ninemm.upms.service.provider;
 
 import io.jboot.aop.annotation.Bean;
+import io.jboot.service.JbootServiceBase;
 import net.ninemm.upms.service.api.StationOperationRelService;
 import net.ninemm.upms.service.model.StationOperationRel;
-import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Singleton;
 

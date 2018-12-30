@@ -4,10 +4,9 @@ import com.google.common.collect.ComparisonChain;
 import io.jboot.Jboot;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.cache.annotation.Cacheable;
-import io.jboot.core.rpc.annotation.JbootrpcService;
+import io.jboot.service.JbootServiceBase;
 import net.ninemm.upms.service.api.DictService;
 import net.ninemm.upms.service.model.Dict;
-import io.jboot.service.JbootServiceBase;
 
 import javax.inject.Singleton;
 import java.util.Collections;
