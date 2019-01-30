@@ -23,9 +23,12 @@ import com.jfinal.kit.Ret;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
+import io.jboot.utils.StrUtils;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
+import io.swagger.annotations.ApiOperation;
 import net.ninemm.upms.service.api.DepartmentService;
+import net.ninemm.upms.service.api.RoleOperationRelService;
 import net.ninemm.upms.service.api.RoleService;
 import net.ninemm.upms.service.model.Role;
 
@@ -48,6 +51,9 @@ public class RoleController extends BaseAppController {
 
     @Inject
     DepartmentService departmentService;
+
+    @Inject
+    RoleOperationRelService roleOperationRelService;
 
     public void list() {
         Map<String, Object> params = getAllParaMap();
@@ -111,6 +117,24 @@ public class RoleController extends BaseAppController {
             return;
         }
         roleService.deleteById(id);
+        renderJson(Ret.ok());
+    }
+
+    @ApiOperation(value = "角色已分配的功能权限", httpMethod = "GET,POST", notes = "用户登录时，如果用户有多个账套，则会跳转到账套选择页面，选择账套完成之后，跳转到主页面")
+    public void findAllocatedPermission() {
+        String roleId = getPara(0);
+        List<String> list = roleOperationRelService.findListByRoleId(roleId);
+        renderJson(list.toArray());
+    }
+
+    @ApiOperation(value = "更新角色的功能权限", httpMethod = "PUT", notes = "用户登录时，如果用户有多个账套，则会跳转到账套选择页面，选择账套完成之后，跳转到主页面")
+    public void updatePermission() {
+        Map<String, String> paramMap = getRawObject(Map.class);
+        String roleId = paramMap.get("roleId");
+        String moduleId = paramMap.get("moduleId");
+        String operationIds = paramMap.get("operationIds");
+
+        roleService.updatePermission(roleId, moduleId, operationIds);
         renderJson(Ret.ok());
     }
 }

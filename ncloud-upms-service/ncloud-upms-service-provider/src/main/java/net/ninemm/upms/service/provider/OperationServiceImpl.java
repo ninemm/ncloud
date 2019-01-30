@@ -65,6 +65,11 @@ public class OperationServiceImpl extends BaseService<Operation> implements Oper
         return urlList;
     }
 
+    @Override
+    public List<Operation> findListByModuleId(String moduleId) {
+        return DAO.findListByColumn("module_id", moduleId);
+    }
+
     /**
      * 清除 model 缓存
      */

@@ -108,4 +108,7 @@ public interface StationOperationRelService  {
 
     public void keep(List<? extends Model> models, String... attrs);
 
+    public List<String> findListByStationId(String stationId);
+
+    public void deleteByModuleId(String stationId, String moduleId);
 }

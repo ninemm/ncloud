@@ -22,6 +22,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
+import com.jfinal.aop.Clear;
 import com.jfinal.kit.PathKit;
 import com.jfinal.kit.Ret;
 import com.jfinal.kit.StrKit;
@@ -31,6 +32,7 @@ import com.jfinal.upload.UploadFile;
 import io.jboot.utils.StrUtils;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
+import net.ninemm.base.interceptor.GlobalCacheInterceptor;
 import net.ninemm.base.plugin.excel.ExcelKit;
 import net.ninemm.base.utils.AttachmentUtils;
 import net.ninemm.upms.excel.listener.ExcelUserListener;
@@ -154,5 +156,12 @@ public class UserController extends BaseAppController {
         ExcelUserListener<UserPropertyModel> userListener = new ExcelUserListener<UserPropertyModel>();
         ExcelKit.readExcel(newFile, userListener, userPropertyModel, 1);
         renderJson(Ret.ok());
+    }
+
+    @Clear
+    public void findAccountOptions() {
+        String mobile = getPara("mobile");
+        List<Record> list = userService.findAllAccount(mobile);
+        renderJson(list);
     }
 }

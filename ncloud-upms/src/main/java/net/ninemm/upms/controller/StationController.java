@@ -25,6 +25,8 @@ import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
+import io.swagger.annotations.ApiOperation;
+import net.ninemm.upms.service.api.StationOperationRelService;
 import net.ninemm.upms.service.api.StationService;
 import net.ninemm.upms.service.model.Station;
 
@@ -44,6 +46,9 @@ public class StationController extends BaseAppController {
 
     @Inject
     StationService stationService;
+
+    @Inject
+    StationOperationRelService stationOperationRelService;
 
     public void list() {
         Map<String, Object> params = getAllParaMap();
@@ -90,5 +95,23 @@ public class StationController extends BaseAppController {
     public void findListAsOptions() {
         List<Record> list = stationService.findListAsOptions(null);
         renderJson(list);
+    }
+
+    @ApiOperation(value = "岗位已分配权限", httpMethod = "GET,POST", notes = "查询该岗位已分配权限")
+    public void findAllocatedPermission() {
+        String stationId = getPara(0);
+        List<String> list = stationOperationRelService.findListByStationId(stationId);
+        renderJson(list.toArray());
+    }
+
+    @ApiOperation(value = "更新岗位的权限", httpMethod = "PUT", notes = "给岗位分配权限")
+    public void updatePermission() {
+        Map<String, String> paramMap = getRawObject(Map.class);
+        String moduleId = paramMap.get("moduleId");
+        String stationId = paramMap.get("stationId");
+        String operationIds = paramMap.get("operationIds");
+
+        stationService.updatePermission(stationId, moduleId, operationIds);
+        renderJson(Ret.ok());
     }
 }

@@ -26,12 +26,12 @@ import java.util.List;
  * @author Eric.Huang
  * @date 2018-12-14 22:13
  **/
-public class MenuTreeVO implements TreeEntity {
+public class MenuTreeVO<T extends MenuTreeVO> implements TreeEntity {
 
     public String id;
     public String name;
     public String parentId;
-    public List<TreeEntity> children;
+    public List<T> children;
 
     private String icon;
     private String url;
@@ -45,6 +45,7 @@ public class MenuTreeVO implements TreeEntity {
 
     private String label;
     private Integer sort;
+    private Integer level;
     private boolean spread = false;
 
     @Override
@@ -73,7 +74,7 @@ public class MenuTreeVO implements TreeEntity {
         this.parentId = parentId;
     }
 
-    public List<TreeEntity> getChildren() {
+    public List<T> getChildren() {
         return children;
     }
 
@@ -168,5 +169,13 @@ public class MenuTreeVO implements TreeEntity {
 
     public void setSpread(boolean spread) {
         this.spread = spread;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
     }
 }

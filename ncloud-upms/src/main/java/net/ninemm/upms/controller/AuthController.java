@@ -24,6 +24,7 @@ import com.jfinal.captcha.CaptchaManager;
 import com.jfinal.kit.Ret;
 import io.jboot.Jboot;
 import io.jboot.component.swagger.ParamType;
+import io.jboot.utils.StrUtils;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
 import io.swagger.annotations.Api;
@@ -38,6 +39,7 @@ import net.ninemm.base.interceptor.NotNullPara;
 import net.ninemm.base.plugin.shiro.ShiroUtils;
 import net.ninemm.upms.service.api.DepartmentService;
 import net.ninemm.upms.service.api.UserService;
+import net.ninemm.upms.service.model.Department;
 import net.ninemm.upms.service.model.User;
 
 import java.util.List;
@@ -68,17 +70,16 @@ public class AuthController extends BaseAppController {
         @ApiImplicitParam(name = "choicedUserId", value = "选中的用户", paramType = ParamType.FORM, dataType = "string", required = false),
         @ApiImplicitParam(name = "choicedSellerId", value = "选中的账套", paramType = ParamType.FORM, dataType = "string", required = false)
     })
-    @NotNullPara({"mobile", "password"})
+    @NotNullPara({"mobile", "password", "deptId"})
     @Clear(GlobalCacheInterceptor.class)
-    public void login(String mobile, String password) {
+    public void login(String mobile, String password, String deptId) {
 
         if (!validateCaptcha(Consts.CAPTCHA_CODE)) {
             renderJson(Ret.fail("errorMessage", "验证码错误"));
             return;
         }
 
-        List<User> list = userService.findByMobile(mobile);
-        User user = list.get(0);
+        User user = userService.findByMobileAndDeptId(mobile, deptId);
         boolean checkPwd = ShiroUtils.checkPwd(password, user.getPassword(), user.getSalt());
         if (!checkPwd) {
             renderJson(Ret.fail());
@@ -86,18 +87,16 @@ public class AuthController extends BaseAppController {
         }
 
         // 查询用户的角色，主管，经理，业务员
-        /*boolean isManager = ShiroUtils.hasPermission("");
-        if (isManager) {
-            Department department = departmentService.findDeptDataAreaByDeptId(user.getDepartmentId());
-            if (department == null) {
-                renderJson(Ret.fail().set("errorMessage", "用户未分配部门，请分配部门"));
-                return;
-            }
-            String dataArea = department.getDataArea();
-            if (StrUtils.notBlank(dataArea)) {
-                Jboot.me().getCache().put(CacheKey.CACHE_PARENT_DATA_AREA, user.getId(), dataArea);
-            }
-        }*/
+        Department department = departmentService.findDeptDataAreaByDeptId(user.getDepartmentId());
+        if (department == null) {
+            renderJson(Ret.fail().set("errorMessage", "用户未分配部门，请分配部门"));
+            return;
+        }
+
+        String dataArea = department.getDataArea();
+        if (StrUtils.notBlank(dataArea)) {
+            Jboot.me().getCache().put(CacheKey.CACHE_PARENT_DATA_AREA, user.getId(), dataArea);
+        }
 
         /** 登录成功移除用户退出标识 */
         Jboot.me().getCache().remove(CacheKey.CACHE_JWT_TOKEN, user.getId());
@@ -118,18 +117,11 @@ public class AuthController extends BaseAppController {
     public void logout() {
 
         String userId = getUserId();
-//        if (StrKit.notBlank(userId)) {
-//            User user = userService.findById(userId);
-//            if (user != null) {
-//                userJoinPosService.deleteByMobile(user.getMobile());
-//            }
-//        }
-
         Jboot.me().getCache().put(CacheKey.CACHE_JWT_TOKEN, getUserId(), getUserId(), 2 * 60 * 60);
-//        Jboot.me().getCache().remove(CacheKey.CACHE_SELLER, getUserId());
-        Jboot.me().getCache().remove(CacheKey.CACHE_LOGINED_USER, getUserId());
-//        Jboot.me().getCache().remove(CacheKey.CACHE_LOGINED_USER,getUserId() + ":" + CacheKey.CACHE_KEY_ROLE);
 
+        Jboot.me().getCache().remove(CacheKey.CACHE_LOGINED_USER, getUserId());
+        Jboot.me().getCache().remove(CacheKey.CACHE_PARENT_DATA_AREA, getUserId());
+//        Jboot.me().getCache().remove(CacheKey.CACHE_LOGINED_USER,getUserId() + ":" + CacheKey.CACHE_KEY_ROLE);
         renderJson(RestResult.buildSuccess("退出成功！"));
     }
 

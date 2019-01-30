@@ -24,7 +24,7 @@ package net.ninemm.base.common;
 public class ResultCode {
 
     /** 成功 */
-    public final static int SUCCESS = 200;
+    public final static int SUCCESS = 0;
 
     /** 执行异常 */
     public final static int ERROR = 1;

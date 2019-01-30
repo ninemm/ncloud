@@ -49,12 +49,28 @@ public abstract class BaseMenu<M extends BaseMenu<M>> extends JbootModel<M> impl
 		return getStr("name");
 	}
 
+	public void setRedirect(java.lang.String redirect) {
+		set("redirect", redirect);
+	}
+	
+	public java.lang.String getRedirect() {
+		return getStr("redirect");
+	}
+
 	public void setCode(java.lang.String code) {
 		set("code", code);
 	}
-	
+
 	public java.lang.String getCode() {
 		return getStr("code");
+	}
+
+	public void setPath(java.lang.String path) {
+		set("path", path);
+	}
+
+	public java.lang.String getPath() {
+		return getStr("path");
 	}
 
 	public void setIcon(java.lang.String icon) {

@@ -19,10 +19,19 @@ package net.ninemm.upms.support;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
+import com.jfinal.aop.Aop;
+import com.jfinal.aop.AopFactory;
+import io.jboot.Jboot;
+import io.jboot.aop.JbootInjectManager;
+import io.jboot.core.rpc.JbootrpcManager;
+import io.jboot.utils.StrUtils;
+import net.ninemm.base.common.CacheKey;
 import net.ninemm.base.plugin.jwt.AbstractJwtAuthorizingRealm;
+import net.ninemm.base.plugin.jwt.JwtAuthenticationToken;
 import net.ninemm.upms.service.api.OperationService;
 import net.ninemm.upms.service.api.RoleService;
 import net.ninemm.upms.service.model.Role;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.subject.PrincipalCollection;
@@ -37,11 +46,20 @@ import java.util.List;
  */
 public class JwtAuthorizingRealm extends AbstractJwtAuthorizingRealm {
 
-    @Inject
-    RoleService roleService;
+    @Override
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+        JwtAuthenticationToken jwtToken = (JwtAuthenticationToken) token;
+        String userId = (String) jwtToken.getPrincipal();
 
-    @Inject
-    OperationService operationService;
+        String uidCache = Jboot.me().getCache().get(CacheKey.CACHE_JWT_TOKEN, userId);
+        if (StrUtils.isNotBlank(uidCache)) {
+            /** token 已被加入黑名单 */
+            throw new UnknownAccountException();
+        }
+
+        return new SimpleAuthenticationInfo(userId, jwtToken.getCredentials(), this.getName());
+    }
+
     /**
      * 授权,JWT已包含访问主张只需要解析其中的主张定义就行了
      *
@@ -58,6 +76,7 @@ public class JwtAuthorizingRealm extends AbstractJwtAuthorizingRealm {
         List<String> roleIdList = Lists.newArrayList();
 
         /** 用户角色 */
+        RoleService roleService = Jboot.service(RoleService.class);
         List<Role> list = roleService.findRoleListByUserId(userId);
         list.stream().forEach(role -> {
             roleList.add(role.getRoleCode());
@@ -67,6 +86,8 @@ public class JwtAuthorizingRealm extends AbstractJwtAuthorizingRealm {
 
         /** 用户操作权限 */
         String roleIds = Joiner.on(",").join(roleIdList);
+//        OperationService operationService = Jboot.service(OperationService.class);
+        OperationService operationService = Jboot.bean(OperationService.class);
         List<String> permissions = operationService.findAllPermissionByUserId(userId, roleIds);
         info.addStringPermissions(permissions);
         return info;

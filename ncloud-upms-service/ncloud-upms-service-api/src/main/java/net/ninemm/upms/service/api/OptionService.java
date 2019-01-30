@@ -60,6 +60,14 @@ public interface OptionService  {
      */
     public boolean saveOrUpdate(Option model);
 
+    /**
+     * save or update model
+     *
+     * @param key
+     * @param value
+     * @return if save or update success
+     */
+    public boolean saveOrUpdate(String key, String value);
 
     /**
      * update data model
@@ -107,5 +115,13 @@ public interface OptionService  {
     public void keep(Model model, String... attrs);
 
     public void keep(List<? extends Model> models, String... attrs);
+
+    /**
+     * 获取系统配置信息
+     *
+     * @date  2019-01-27 22:47
+     * @return list
+     */
+    public List<Option> findAllSystemSettingList();
 
 }

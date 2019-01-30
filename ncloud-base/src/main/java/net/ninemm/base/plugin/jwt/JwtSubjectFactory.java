@@ -30,12 +30,9 @@ public class JwtSubjectFactory extends DefaultWebSubjectFactory {
 	@Override
     public Subject createSubject(SubjectContext context) {
         if (context.getAuthenticationToken() instanceof JwtAuthenticationToken) {
-            /**
-             * jwt 不创建 session
-             */
+            /** jwt 不创建 session */
             context.setSessionCreationEnabled(false);
         }
-
         return super.createSubject(context);
     }
 	

@@ -16,6 +16,7 @@
 
 package net.ninemm.base.plugin.shiro;
 
+import com.google.common.base.Splitter;
 import net.ninemm.base.utils.EncryptUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -23,12 +24,14 @@ import org.apache.shiro.subject.Subject;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Shiro 工具类
  * gt.registerFunctionPackage("so",new ShiroUtils ());
- * 在模版中通过 so.isGuest() 
+ * 在模版中通过 so.isGuest()
+ * @author eric
  */
 public class ShiroUtils {
     /**
@@ -71,7 +74,6 @@ public class ShiroUtils {
     public static String principal(Map<?, ?> map) {
         String strValue = null;
         if (getSubject() != null) {
-
             // Get the principal to print out
             Object principal;
             String type = map != null ? (String) map.get("type") : null;
@@ -80,6 +82,7 @@ public class ShiroUtils {
             } else {
                 principal = getPrincipalFromClassName(type);
             }
+
             String property = map != null ? (String) map.get("property") : null;
             // Get the string value of the principal
             if (principal != null) {
@@ -89,7 +92,6 @@ public class ShiroUtils {
                     strValue = getPrincipalProperty(principal, property);
                 }
             }
-
         }
 
         if (strValue != null) {
@@ -128,23 +130,18 @@ public class ShiroUtils {
      * @return
      */
     public static boolean hasAnyRole(String roleNames) {
+
         boolean hasAnyRole = false;
-
         Subject subject = getSubject();
-
         if (subject != null) {
-
-            // Iterate through roles and check to see if the user has one of the
-            // roles
-            for (String role : roleNames.split(",")) {
-
+            // Iterate through roles and check to see if the user has one of the roles
+            List<String> roleList = Splitter.on(",").splitToList(roleNames);
+            for (String role : roleList) {
                 if (subject.hasRole(role.trim())) {
                     hasAnyRole = true;
                     break;
                 }
-
             }
-
         }
 
         return hasAnyRole;
@@ -178,7 +175,7 @@ public class ShiroUtils {
             Class<?> cls = Class.forName(type);
             principal = getSubject().getPrincipals().oneByType(cls);
         } catch (ClassNotFoundException e) {
-
+            e.printStackTrace();
         }
         return principal;
     }
@@ -188,14 +185,11 @@ public class ShiroUtils {
 
         try {
             BeanInfo bi = Introspector.getBeanInfo(principal.getClass());
-
-            // Loop through the properties to get the string value of the
-            // specified property
+            // Loop through the properties to get the string value of the specified property
             boolean foundProperty = false;
             for (PropertyDescriptor pd : bi.getPropertyDescriptors()) {
                 if (pd.getName().equals(property)) {
-                    Object value = pd.getReadMethod().invoke(principal,
-                            (Object[]) null);
+                    Object value = pd.getReadMethod().invoke(principal, (Object[]) null);
                     strValue = String.valueOf(value);
                     foundProperty = true;
                     break;
@@ -233,8 +227,8 @@ public class ShiroUtils {
      * @return true-校验一致 否则 false
      */
     public static boolean checkPwd(String newPwd, String oldPwd, String oldSalt2) {
-        //SimpleHash hash = new SimpleHash("md5", newPwd, oldSalt2, 2);
-        //return hash.toHex().equals(oldPwd);
+        // SimpleHash hash = new SimpleHash("md5", newPwd, oldSalt2, 2);
+        // return hash.toHex().equals(oldPwd);
         String newP = EncryptUtils.encryptPassword(newPwd, oldSalt2);
         return newP.equals(oldPwd);
     }

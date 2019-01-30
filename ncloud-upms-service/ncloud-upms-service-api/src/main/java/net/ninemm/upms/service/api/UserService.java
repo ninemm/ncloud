@@ -2,6 +2,7 @@ package net.ninemm.upms.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
 import io.jboot.db.model.JbootModel;
 import net.ninemm.upms.service.model.User;
 
@@ -26,6 +27,13 @@ public interface UserService  {
      */
     public List<User> findAll();
 
+    /**
+     * find all account
+     *
+     * @param mobile
+     * @return all Record
+     */
+    public List<Record> findAllAccount(String mobile);
 
     /**
      * delete model by primary key
@@ -116,6 +124,14 @@ public interface UserService  {
      * @return
      */
     public List<User> findByMobile(String mobile);
+
+    /**
+     * find user by mobile and deptId
+     * @param mobile
+     * @param deptId
+     * @return
+     */
+    public User findByMobileAndDeptId(String mobile, String deptId);
     
     /**
      * find user by username

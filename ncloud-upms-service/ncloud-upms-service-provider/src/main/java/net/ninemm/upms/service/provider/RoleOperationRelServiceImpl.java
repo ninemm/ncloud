@@ -1,5 +1,6 @@
 package net.ninemm.upms.service.provider;
 
+import com.jfinal.plugin.activerecord.Db;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.service.JbootServiceBase;
 import net.ninemm.upms.service.api.RoleOperationRelService;
@@ -12,8 +13,15 @@ import java.util.List;
 @Singleton
 public class RoleOperationRelServiceImpl extends JbootServiceBase<RoleOperationRel> implements RoleOperationRelService {
 
-    public List<RoleOperationRel> findListByRoleId(String roleId) {
-        return DAO.findListByColumn("role_id", roleId);
+    @Override
+    public List<String> findListByRoleId(String roleId) {
+        String sql = "select operation_id from upms_role_operation_rel where role_id = ?";
+        return Db.query(sql, roleId);
     }
 
+    @Override
+    public void deleteByModuleId(String roleId, String moduleId) {
+        String sql = "delete from upms_role_operation_rel where role_id = ? and module_id = ?";
+        Db.delete(sql, roleId, moduleId);
+    }
 }

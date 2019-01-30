@@ -22,6 +22,7 @@ import io.jboot.Jboot;
 import io.jboot.utils.StrUtils;
 import net.ninemm.base.common.CacheKey;
 import net.ninemm.base.common.Consts;
+import net.ninemm.base.plugin.shiro.ShiroUtils;
 import net.ninemm.base.web.base.BaseController;
 
 import java.util.Map;
@@ -47,7 +48,11 @@ public class BaseAppController extends BaseController {
 
     @NotAction
     public String getDataArea() {
-        return Jboot.me().getCache().get(CacheKey.CACHE_PARENT_DATA_AREA, getUserId());
+        boolean isManager = ShiroUtils.hasAnyRole("001,002,003,004,005,006,007,008,009,011,012,013,014");
+        if (isManager) {
+            return Jboot.me().getCache().get(CacheKey.CACHE_PARENT_DATA_AREA, getUserId());
+        }
+        return null;
     }
 
     @Override

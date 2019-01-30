@@ -120,4 +120,6 @@ public interface OperationService  {
      * @return java.util.List<net.ninemm.upms.service.model.Role>
      */
     public List<String> findAllPermissionByUserId(String userId, String roleIds);
+
+    public List<Operation> findListByModuleId(String moduleId);
 }

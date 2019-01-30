@@ -108,4 +108,7 @@ public interface RoleOperationRelService  {
 
     public void keep(List<? extends Model> models, String... attrs);
 
+    public List<String> findListByRoleId(String roleId);
+
+    public void deleteByModuleId(String roleId, String moduleId);
 }

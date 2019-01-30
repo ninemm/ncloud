@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
 import io.jboot.Jboot;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.cache.annotation.Cacheable;
@@ -75,6 +76,27 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
     @Override
     public User findByUsername(String username) {
         return DAO.findFirstByColumn("username", username);
+    }
+
+    /**
+     * find user by mobile and deptId
+     *
+     * @param mobile
+     * @param deptId
+     * @return
+     */
+    @Override
+    public User findByMobileAndDeptId(String mobile, String deptId) {
+        Columns columns = Columns.create();
+        columns.eq("mobile", mobile);
+        columns.eq("department_id", deptId);
+        return DAO.findFirstByColumns(columns);
+    }
+
+    @Override
+    public List<Record> findAllAccount(String mobile) {
+        String sql = "select department_id as deptId, department_name as deptName from upms_user where mobile = ?";
+        return Db.find(sql, mobile);
     }
 
     /**

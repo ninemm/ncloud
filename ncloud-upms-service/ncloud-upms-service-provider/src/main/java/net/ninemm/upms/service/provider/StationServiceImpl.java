@@ -1,25 +1,31 @@
 package net.ninemm.upms.service.provider;
 
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
+import com.google.inject.Inject;
 import com.jfinal.kit.Kv;
-import com.jfinal.plugin.activerecord.Db;
-import com.jfinal.plugin.activerecord.Page;
-import com.jfinal.plugin.activerecord.Record;
-import com.jfinal.plugin.activerecord.SqlPara;
+import com.jfinal.plugin.activerecord.*;
 import io.jboot.Jboot;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.db.model.Columns;
 import io.jboot.utils.StrUtils;
 import net.ninemm.base.web.base.BaseService;
 import net.ninemm.upms.service.api.StationService;
+import net.ninemm.upms.service.model.RoleOperationRel;
 import net.ninemm.upms.service.model.Station;
+import net.ninemm.upms.service.model.StationOperationRel;
 
 import javax.inject.Singleton;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
 @Bean
 @Singleton
 public class StationServiceImpl extends BaseService<Station> implements StationService {
+
+    @Inject
+    StationOperationRelServiceImpl stationOperationRelService;
 
     @Override
     public Page<Station> paginate(int page, int pageSize, Map<String, Object> params) {
@@ -51,6 +57,45 @@ public class StationServiceImpl extends BaseService<Station> implements StationS
         }
 
         return Db.find(sqlBuilder.toString());
+    }
+
+    /**
+     * 更新角色权限
+     *
+     * @param roleId
+     * @param moduleId
+     * @param operationIds
+     * @return java.util.List<net.ninemm.upms.service.model.Role>
+     * @author Eric
+     * @date 2018-12-27 14:36
+     */
+    @Override
+    public void updatePermission(final String stationId, final String moduleId, final String operationIds) {
+
+        boolean updated = Db.tx(new IAtom() {
+            @Override
+            public boolean run() throws SQLException {
+
+                stationOperationRelService.deleteByModuleId(stationId, moduleId);
+                List<StationOperationRel> list = Lists.newArrayList();
+                if (StrUtils.isBlank(operationIds)) {
+                    return true;
+                }
+
+                Splitter.on(",").splitToList(operationIds).stream().forEach(operatorId -> {
+                    StationOperationRel sor = new StationOperationRel();
+                    sor.setId(StrUtils.uuid());
+                    sor.setStationId(stationId);
+                    sor.setModuleId(moduleId);
+                    sor.setOperationId(operatorId);
+
+                    list.add(sor);
+                });
+
+                Db.batchSave(list, list.size());
+                return true;
+            }
+        });
     }
 
     /**

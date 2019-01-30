@@ -12,47 +12,39 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
-package net.ninemm.base.plugin.jwt;
+package net.ninemm.upms.vo;
 
 import java.io.Serializable;
 
 /**
- * JwtToken
+ * menu下拉选项
  *
- * @author Eric
- */
-public class JwtToken implements Serializable {
+ * @author Eric.Huang
+ * @date 2019-01-29 15:23
+ * @package net.ninemm.upms.vo
+ **/
 
-	private static final long serialVersionUID = 1L;
+public class MenuOptionVO implements Serializable {
 
-	public JwtToken() {
+    String key;
+    String value;
+
+    public String getKey() {
+        return key;
     }
 
-    public JwtToken(String userId, String version) {
-        this.userId = userId;
-        this.version = version;
+    public void setKey(String key) {
+        this.key = key;
     }
 
-    /** 用户id */
-    private String userId;
-    /** 版本号 */
-    private String version;
-
-    public String getUserId() {
-        return userId;
+    public String getValue() {
+        return value;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
+    public void setValue(String value) {
+        this.value = value;
     }
 }

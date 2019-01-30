@@ -117,4 +117,14 @@ public interface StationService  {
 
     public List<Record> findListAsOptions(String dataArea);
 
+    /**
+     * 更新岗位权限
+     * @author Eric
+     * @date  2018-12-27 14:36
+     * @param stationId
+     * @param moduleId
+     * @param operationIds
+     * @return java.util.List<net.ninemm.upms.service.model.Role>
+     */
+    public void updatePermission(String stationId, String moduleId, String operationIds);
 }

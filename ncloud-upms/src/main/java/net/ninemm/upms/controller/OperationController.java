@@ -28,6 +28,7 @@ import io.jboot.web.cors.EnableCORS;
 import net.ninemm.upms.service.api.OperationService;
 import net.ninemm.upms.service.model.Operation;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -101,5 +102,11 @@ public class OperationController extends BaseAppController {
         }
         operationService.deleteById(id);
         renderJson(Ret.ok());
+    }
+
+    public void findListByModuleId() {
+        String moduleId = getPara(0);
+        List<Operation> list = operationService.findListByModuleId(moduleId);
+        renderJson(list);
     }
 }

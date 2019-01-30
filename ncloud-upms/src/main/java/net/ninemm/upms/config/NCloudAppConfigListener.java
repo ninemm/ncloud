@@ -104,7 +104,6 @@ public class NCloudAppConfigListener extends JbootAppListenerBase {
 
     @Override
     public void onGuiceConfigure(Binder binder) {
-
     }
 	
 }

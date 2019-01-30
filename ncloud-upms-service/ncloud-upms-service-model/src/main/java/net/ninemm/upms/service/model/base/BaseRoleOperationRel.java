@@ -33,4 +33,12 @@ public abstract class BaseRoleOperationRel<M extends BaseRoleOperationRel<M>> ex
 		return getStr("role_id");
 	}
 
+	public void setModuleId(java.lang.String moduleId) {
+		set("module_id", moduleId);
+	}
+
+	public java.lang.String getModuleId() {
+		return getStr("module_id");
+	}
+
 }

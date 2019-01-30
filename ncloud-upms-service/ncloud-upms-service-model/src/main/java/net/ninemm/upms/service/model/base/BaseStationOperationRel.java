@@ -33,4 +33,12 @@ public abstract class BaseStationOperationRel<M extends BaseStationOperationRel<
 		return getStr("operation_id");
 	}
 
+	public void setModuleId(java.lang.String moduleId) {
+		set("module_id", moduleId);
+	}
+
+	public java.lang.String getModuleId() {
+		return getStr("module_id");
+	}
+
 }

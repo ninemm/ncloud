@@ -90,8 +90,8 @@ public class DepartmentServiceImpl extends BaseService<Department> implements De
     @Override
     @Cacheable(name = "upms_department", key = "list:#(deptId)", liveSeconds = 86400)
     public List<Department> findAllParentDeptByDeptId(String deptId) {
-        SqlPara sqlPara = Db.getSqlPara("upms-dept.findAllParentDeptByDeptId", deptId);
-        return DAO.find(sqlPara);
+        SqlPara sql = Db.getSqlPara("upms-dept.findAllParentDeptByDeptId", deptId);
+        return DAO.find(sql);
     }
 
     @Override
@@ -114,7 +114,7 @@ public class DepartmentServiceImpl extends BaseService<Department> implements De
     }
 
     private String findNextDataArea(String parentId) {
-        String sql = "select max(data_area) from upms_department where parent_id = ? order by data_area desc";
+        String sql = "SELECT MAX(data_area) FROM upms_department WHERE parent_id = ? ORDER BY data_area DESC";
         String dataArea = Db.queryStr(sql, parentId);
         if (StrUtils.isBlank(dataArea)) {
             Department department = findById(parentId);

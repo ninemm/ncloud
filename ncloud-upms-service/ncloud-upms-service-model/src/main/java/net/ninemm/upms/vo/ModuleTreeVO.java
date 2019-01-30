@@ -28,12 +28,12 @@ import java.util.List;
  * @date 2018-12-15 13:39
  **/
 
-public class ModuleTreeVO implements TreeEntity {
+public class ModuleTreeVO<T extends ModuleTreeVO> implements TreeEntity {
 
     public String id;
     public String name;
     public String parentId;
-    public List<TreeEntity> children;
+    public List<T> children;
 
     public boolean disabled = false;
     public boolean isLeaf = true;
@@ -69,7 +69,7 @@ public class ModuleTreeVO implements TreeEntity {
         this.parentId = parentId;
     }
 
-    public List<TreeEntity> getChildren() {
+    public List<T> getChildren() {
         return children;
     }
 

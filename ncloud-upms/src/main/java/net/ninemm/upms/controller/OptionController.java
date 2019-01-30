@@ -1,7 +1,18 @@
 package net.ninemm.upms.controller;
 
+import com.google.common.base.Predicate;
+import com.google.inject.Inject;
+import com.jfinal.kit.Ret;
+import io.jboot.utils.StrUtils;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
+import net.ninemm.upms.service.api.OptionService;
+import net.ninemm.upms.service.model.Option;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 配置管理
@@ -14,13 +25,57 @@ import io.jboot.web.cors.EnableCORS;
 @EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
 public class OptionController extends BaseAppController {
 
-    public void list() {}
+    @Inject
+    OptionService optionService;
 
-    public void findById() {}
+    public void findAll() {
+        List<Option> list = optionService.findAllSystemSettingList();
+        Predicate<Option> p = new Predicate<Option>() {
+            @Override
+            public boolean apply(@Nullable Option option) {
+                if (StrUtils.isBlank(option.getOptionValue())) {
+                    return false;
+                }
+                return true;
+            }
+        };
+        list = list.stream().filter(p).collect(Collectors.toList());
+        Map<String, String> map = list.stream().collect(Collectors.toMap(Option::getOptionKey, Option::getOptionValue));
+        renderJson(map);
+    }
 
-    public void save() {}
+    public void saveOrUpdate() {
+        Map<String, Object> paraMap = getRawObject(Map.class);
+        if (paraMap == null || paraMap.isEmpty()) {
+            renderJson(Ret.fail("msg", "para is empty"));
+            return;
+        }
 
-    public void update() {}
+        /*HashMap<String, String> datasMap = Maps.newHashMap();
+        for (Map.Entry<String, String[]> entry : paraMap.entrySet()) {
+            if (entry.getValue() != null && entry.getValue().length > 0) {
+                String value = null;
+                for (String v : entry.getValue()) {
+                    if (StrUtils.isNotEmpty(v)) {
+                        value = v;
+                        break;
+                    }
+                }
+                datasMap.put(entry.getKey(), value);
+            }
+        }
+*/
 
-    public void delete() {}
+        for (Map.Entry<String, Object> entry : paraMap.entrySet()) {
+            String value = null;
+            Object object = entry.getValue();
+            if (object != null) {
+                value = object.toString();
+            }
+            optionService.saveOrUpdate(entry.getKey(), value);
+            // JPressOptions.set(entry.getKey(), entry.getValue());
+        }
+        renderJson(Ret.ok());
+    }
+
 }
