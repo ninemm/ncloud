@@ -5,6 +5,7 @@ import com.jfinal.plugin.activerecord.Page;
 import net.ninemm.upms.service.model.Dict;
 
 import java.util.List;
+import java.util.Map;
 
 public interface DictService  {
 
@@ -111,4 +112,14 @@ public interface DictService  {
     public List<Dict> findListByDictType(String type);
 
     public String findDictNameByKey(String key);
+
+    /**
+     * 分页
+     * @date  2019-01-31 13:30
+     * @param page
+     * @param pageSize
+     * @param params
+     * @return com.jfinal.plugin.activerecord.Page
+     */
+    public Page<Dict> paginate(int page, int pageSize, Map<String, Object> params);
 }

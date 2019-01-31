@@ -43,6 +43,11 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
             columns.likeAppendPercent("realname", realname);
         }
 
+        Object dataArea = params.get("dataArea");
+        if (dataArea != null) {
+            columns.like("data_area", dataArea);
+        }
+
         Object isAsc = params.get("isAsc");
         Object orderByField = params.get("orderByField");
         String orderBy = orderBy(orderByField, isAsc);

@@ -75,7 +75,7 @@ public class Consts {
 	public static final String SELLER_ACCOUNT_TYPE_SECOND = "0";
 
 	/** 树根节点默认ID */
-	public static final String TREE_DEFAULT_ROOT_ID = "0";
+	public static final Integer TREE_DEFAULT_ROOT_ID = 0;
 
 	/**
 	 * 超级管理员权限

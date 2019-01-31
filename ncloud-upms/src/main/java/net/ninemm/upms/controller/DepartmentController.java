@@ -65,7 +65,7 @@ public class DepartmentController extends BaseAppController {
 
     public void findDeptUserTree() {
 
-        String parentId = getPara("parentId", Consts.TREE_DEFAULT_ROOT_ID);
+        String parentId = getPara("parentId", Consts.TREE_DEFAULT_ROOT_ID.toString());
         Boolean isLoadUser = getParaToBoolean("isLoadUser");
         List<DeptTreeVO> treeList = Lists.newArrayList();
         if (isLoadUser != null && isLoadUser) {

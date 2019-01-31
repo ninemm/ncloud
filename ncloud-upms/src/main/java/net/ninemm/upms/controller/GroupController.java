@@ -82,10 +82,6 @@ public class GroupController extends BaseAppController {
         renderJson(Ret.ok().set("data", group));
     }
 
-    public void save() {}
-
-    public void update() {}
-
     public void saveOrUpdate() {
         Group group = getRawObject(Group.class);
         boolean result = groupService.saveOrUpdate(group);

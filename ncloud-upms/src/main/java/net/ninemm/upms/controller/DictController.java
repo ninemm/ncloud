@@ -16,7 +16,12 @@
 
 package net.ninemm.upms.controller;
 
+import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
+import com.jfinal.kit.Ret;
+import com.jfinal.kit.StrKit;
+import com.jfinal.plugin.activerecord.Page;
 import io.jboot.component.swagger.ParamType;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
@@ -28,8 +33,10 @@ import net.ninemm.base.common.RestResult;
 import net.ninemm.base.web.base.BaseController;
 import net.ninemm.upms.service.api.DictService;
 import net.ninemm.upms.service.model.Dict;
+import net.ninemm.upms.service.model.Group;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 数据字典接口
@@ -38,9 +45,9 @@ import java.util.List;
  * @date 2018-06-28 01:07
  **/
 
-@RequestMapping(value = "/api/dict/v1")
+@RequestMapping(value = "/api/v1/admin/dict")
 @Api(description = "数据字典接口文档", basePath = "/api/dict/v1", tags = "dict", position = 1)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowMethods = "POST,OPTIONS,GET,PUT,DELETE", allowCredentials = "true")
 public class DictController extends BaseController {
 
     @Inject
@@ -60,8 +67,65 @@ public class DictController extends BaseController {
         @ApiImplicitParam(name = "type", value = "字典类型", paramType = ParamType.QUERY, dataType = "string", required = true)
     })
     public void list() {
-        String type = getPara("type");
-        List<Dict> list = dictService.findListByDictType(type);
-        renderJson(RestResult.buildSuccess(list));
+        Map<String, Object> params = getAllParaMap();
+        Page<Dict> page = dictService.paginate(getPageNumber(), getPageSize(), params);
+        Map<String, Object> map = ImmutableMap.of("total", page.getTotalRow(), "records", page.getList());
+        renderJson(map);
+    }
+
+    @ApiOperation(value = "数据字典实体", httpMethod = "GET", notes = "Dict Object")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "Jwt", value = "Jwt", paramType = ParamType.HEADER, dataType = "string", required = true),
+        @ApiImplicitParam(name = "id", value = "字典ID", paramType = ParamType.QUERY, dataType = "string", required = true)
+    })
+    public void findById() {
+        String id = getPara(0);
+        if (StrKit.isBlank(id)) {
+            renderJson(Ret.fail());
+            return;
+        }
+
+        Dict dict = dictService.findById(id);
+        renderJson(Ret.ok().set("data", dict));
+    }
+
+    public void findTypeOptions() {}
+
+    @ApiOperation(value = "新增数据字典", httpMethod = "POST", notes = "Dict Object")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "Jwt", value = "Jwt", paramType = ParamType.HEADER, dataType = "string", required = true),
+        @ApiImplicitParam(name = "id", value = "字典ID", paramType = ParamType.QUERY, dataType = "string", required = true)
+    })
+    public void saveOrUpdate() {
+        Dict dict = getRawObject(Dict.class);
+        boolean result = dictService.saveOrUpdate(dict);
+        if (result) {
+            renderJson(Ret.ok());
+        } else {
+            renderJson(Ret.fail());
+        }
+    }
+
+    public void delete() {
+        String id = getPara(0);
+        if (StrKit.isBlank(id)) {
+            renderJson(Ret.fail());
+            return;
+        }
+        boolean deleted = dictService.deleteById(id);
+        if (deleted) {
+            renderJson(Ret.ok());
+            return;
+        }
+        renderJson(Ret.fail());
+    }
+
+    public void batchDelete() {
+        String userIds = getPara(0);
+        List<String> list = Splitter.on(",").splitToList(userIds);
+        for (String dictId : list) {
+            dictService.deleteById(dictId);
+        }
+        renderJson(Ret.ok());
     }
 }

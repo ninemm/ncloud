@@ -25,6 +25,7 @@ import com.jfinal.plugin.activerecord.Page;
 import io.jboot.utils.StrUtils;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
+import net.ninemm.upms.service.api.MenuService;
 import net.ninemm.upms.service.api.OperationService;
 import net.ninemm.upms.service.model.Operation;
 
@@ -44,6 +45,9 @@ public class OperationController extends BaseAppController {
 
     @Inject
     OperationService operationService;
+
+    @Inject
+    MenuService menuService;
 
     public void list() {
         Map<String, Object> params = getAllParaMap();
@@ -101,6 +105,17 @@ public class OperationController extends BaseAppController {
             return;
         }
         operationService.deleteById(id);
+        renderJson(Ret.ok());
+    }
+
+    public void addMenu() {
+        String id = getPara(0);
+        Operation operation = operationService.findById(id);
+        boolean saved = menuService.save(operation);
+        if (!saved) {
+            renderJson(Ret.fail());
+            return ;
+        }
         renderJson(Ret.ok());
     }
 

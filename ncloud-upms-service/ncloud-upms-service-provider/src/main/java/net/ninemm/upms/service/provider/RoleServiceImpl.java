@@ -13,6 +13,7 @@ import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Columns;
 import io.jboot.service.JbootServiceBase;
 import io.jboot.utils.StrUtils;
+import net.ninemm.base.web.base.BaseService;
 import net.ninemm.upms.service.api.RoleService;
 import net.ninemm.upms.service.model.Role;
 import net.ninemm.upms.service.model.RoleOperationRel;
@@ -25,7 +26,7 @@ import java.util.Map;
 @Bean
 @Singleton
 @JbootrpcService
-public class RoleServiceImpl extends JbootServiceBase<Role> implements RoleService {
+public class RoleServiceImpl extends BaseService<Role> implements RoleService {
 
     @Inject
     RoleOperationRelServiceImpl roleOperationRelService;
@@ -40,8 +41,8 @@ public class RoleServiceImpl extends JbootServiceBase<Role> implements RoleServi
 
         Object isAsc = params.get("isAsc");
         Object orderByField = params.get("orderByField");
-        // String orderBy = orderBy(orderByField, isAsc);
-        return DAO.paginateByColumns(page, pageSize, columns);
+         String orderBy = orderBy(orderByField, isAsc);
+        return DAO.paginateByColumns(page, pageSize, columns, orderBy);
     }
 
     @Override

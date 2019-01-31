@@ -18,6 +18,7 @@
 package net.ninemm.upms.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
@@ -29,6 +30,7 @@ import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.upload.UploadFile;
+import io.jboot.Jboot;
 import io.jboot.utils.StrUtils;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
@@ -37,9 +39,9 @@ import net.ninemm.base.plugin.excel.ExcelKit;
 import net.ninemm.base.utils.AttachmentUtils;
 import net.ninemm.upms.excel.listener.ExcelUserListener;
 import net.ninemm.upms.excel.model.UserPropertyModel;
-import net.ninemm.upms.service.api.GroupService;
-import net.ninemm.upms.service.api.StationService;
-import net.ninemm.upms.service.api.UserService;
+import net.ninemm.upms.service.api.*;
+import net.ninemm.upms.service.model.Dict;
+import net.ninemm.upms.service.model.Role;
 import net.ninemm.upms.service.model.User;
 
 import java.io.File;
@@ -64,6 +66,15 @@ public class UserController extends BaseAppController {
 
     @Inject
     StationService stationService;
+
+    @Inject
+    DictService dictService;
+
+    @Inject
+    RoleService roleService;
+
+    @Inject
+    OperationService operationService;
 
     public void list() {
         Map<String, Object> params = getAllParaMap();
@@ -130,7 +141,12 @@ public class UserController extends BaseAppController {
     public void findAllOptions() {
         List<Record> stationOptions = stationService.findListAsOptions(null);
         List<Record> groupOptions = groupService.findListAsOptions(null);
-        renderJson(Ret.ok().set("stationOptions", stationOptions).set("groupOptions", groupOptions));
+        List<Dict> typeOptions = dictService.findListByDictType("user_type");
+        renderJson(Ret.ok()
+            .set("stationOptions", stationOptions)
+            .set("groupOptions", groupOptions)
+            .set("typeOptions", typeOptions)
+        );
     }
 
     public void info() {
@@ -138,10 +154,21 @@ public class UserController extends BaseAppController {
         String userId = getUserId();
         User user = userService.findById(userId);
 
+        List<String> roleList = Lists.newArrayList();
+        List<String> roleIdList = Lists.newArrayList();
+        List<Role> list = roleService.findRoleListByUserId(userId);
+        list.stream().forEach(role -> {
+            roleList.add(role.getRoleCode());
+            roleIdList.add(role.getId());
+        });
+
+        String roleIds = Joiner.on(",").join(roleIdList);
+        List<String> permissions = operationService.findAllPermissionByUserId(userId, roleIds);
+
         Ret ret = Ret.ok();
         ret.set("sysUser", user);
-        ret.set("roles", "ROLE_ADMIN");
-        ret.set("permissions", Lists.newArrayList());
+        ret.set("roles", roleList.toArray());
+        ret.set("permissions", permissions.toArray());
         renderJson(ret);
     }
 

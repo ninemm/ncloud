@@ -3,6 +3,7 @@ package net.ninemm.upms.service.api;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import net.ninemm.upms.service.model.Menu;
+import net.ninemm.upms.service.model.Operation;
 
 import java.util.List;
 
@@ -51,8 +52,15 @@ public interface MenuService  {
      */
     public boolean save(Menu model);
 
-
     /**
+     * save model to database
+     *
+     * @param operation
+     * @return
+     */
+    public boolean save(Operation operation);
+
+   /**
      * save or update model
      *
      * @param model

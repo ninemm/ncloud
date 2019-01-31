@@ -5,9 +5,12 @@ import com.jfinal.plugin.activerecord.IAtom;
 import io.jboot.Jboot;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.db.model.Columns;
+import io.jboot.utils.StrUtils;
+import net.ninemm.base.common.Consts;
 import net.ninemm.base.web.base.BaseService;
 import net.ninemm.upms.service.api.MenuService;
 import net.ninemm.upms.service.model.Menu;
+import net.ninemm.upms.service.model.Operation;
 
 import javax.inject.Singleton;
 import java.sql.SQLException;
@@ -41,6 +44,28 @@ public class MenuServiceImpl extends BaseService<Menu> implements MenuService {
         columns.eq("parent_id", "0");
         columns.eq("is_parent", 1);
         return DAO.findListByColumns(columns, "order_list");
+    }
+
+    /**
+     * save model to database
+     *
+     * @param operation
+     * @return
+     */
+    @Override
+    public boolean save(Operation operation) {
+        Menu menu = new Menu();
+        menu.setId(StrUtils.uuid());
+        menu.setLevel(1);
+        menu.setOperatorId(operation.getId());
+        menu.setCode(operation.getOperationCode());
+
+        menu.setPath(operation.getOperationCode());
+        menu.setComponent(operation.getUrl());
+        menu.setName(operation.getOperationName());
+        menu.setIsParent(Consts.TREE_DEFAULT_ROOT_ID);
+        menu.setParentId(Consts.TREE_DEFAULT_ROOT_ID.toString());
+        return menu.save();
     }
 
     @Override

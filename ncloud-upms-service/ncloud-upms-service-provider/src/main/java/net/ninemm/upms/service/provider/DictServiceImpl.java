@@ -1,10 +1,12 @@
 package net.ninemm.upms.service.provider;
 
 import com.google.common.collect.ComparisonChain;
+import com.jfinal.plugin.activerecord.Page;
 import io.jboot.Jboot;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.core.cache.annotation.Cacheable;
-import io.jboot.service.JbootServiceBase;
+import io.jboot.db.model.Columns;
+import net.ninemm.base.web.base.BaseService;
 import net.ninemm.upms.service.api.DictService;
 import net.ninemm.upms.service.model.Dict;
 
@@ -12,13 +14,33 @@ import javax.inject.Singleton;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 @Bean
 @Singleton
-public class DictServiceImpl extends JbootServiceBase<Dict> implements DictService {
+public class DictServiceImpl extends BaseService<Dict> implements DictService {
 
     @Override
-    @Cacheable(name = "upms_dict", key = "list:#type")
+    public Page<Dict> paginate(int page, int pageSize, Map<String, Object> params) {
+        Columns columns = Columns.create();
+        Object groupName = params.get("dictName");
+        if (groupName != null) {
+            columns.likeAppendPercent("dict_name", groupName);
+        }
+
+        Object dataArea = params.get("dataArea");
+        if (dataArea != null) {
+            columns.like("data_area", dataArea);
+        }
+
+        Object isAsc = params.get("isAsc");
+        Object orderByField = params.get("orderByField");
+        String orderBy = orderBy(orderByField, isAsc);
+        return DAO.paginateByColumns(page, pageSize, columns, orderBy);
+    }
+
+    @Override
+    @Cacheable(name = "upms_dict", key = "list:#(type)")
     public List<Dict> findListByDictType(String type) {
         List<Dict> list = DAO.findListByColumn("type",type);
         Collections.sort(list, new Comparator<Dict>() {
@@ -33,7 +55,7 @@ public class DictServiceImpl extends JbootServiceBase<Dict> implements DictServi
     }
 
     @Override
-    @Cacheable(name = "upms_dict", key = "#key")
+    @Cacheable(name = "upms_dict", key = "#(key)")
     public String findDictNameByKey(String key) {
         Dict dict = DAO.findFirstByColumn("value", key);
         if (dict == null) {
@@ -72,7 +94,8 @@ public class DictServiceImpl extends JbootServiceBase<Dict> implements DictServi
         return super.update(model);
     }
 
-    private void clearAllCache() {
+    @Override
+    protected void clearAllCache() {
         Jboot.me().getCache().removeAll("upms_dict");
     }
 }
