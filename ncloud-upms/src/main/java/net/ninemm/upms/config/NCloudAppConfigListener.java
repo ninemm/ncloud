@@ -16,7 +16,6 @@
 
 package net.ninemm.upms.config;
 
-import com.google.inject.Binder;
 import com.jfinal.captcha.CaptchaManager;
 import com.jfinal.config.Constants;
 import com.jfinal.config.Interceptors;
@@ -25,10 +24,7 @@ import com.jfinal.template.Engine;
 import io.jboot.Jboot;
 import io.jboot.aop.jfinal.JfinalHandlers;
 import io.jboot.aop.jfinal.JfinalPlugins;
-import io.jboot.server.ContextListeners;
-import io.jboot.server.JbootServer;
-import io.jboot.server.Servlets;
-import io.jboot.server.listener.JbootAppListenerBase;
+import io.jboot.core.listener.JbootAppListenerBase;
 import net.ninemm.base.captcha.CaptchaCache;
 import net.ninemm.base.common.AppInfo;
 import net.ninemm.base.handler.OptionsHandler;
@@ -45,16 +41,16 @@ import net.ninemm.upms.interceptor.LogInterceptor;
 public class NCloudAppConfigListener extends JbootAppListenerBase {
 
 	@Override
-    public void onJfinalConstantConfig(Constants constants) {
+    public void onConstantConfig(Constants constants) {
     }
 
     @Override
-    public void onJfinalRouteConfig(Routes routes) {
+    public void onRouteConfig(Routes routes) {
 //        routes.setBaseViewPath("/template");
     }
 
     @Override
-    public void onJfinalEngineConfig(Engine engine) {
+    public void onEngineConfig(Engine engine) {
         engine.setDevMode(true);
         AppInfo app = Jboot.config(AppInfo.class);
         engine.addSharedObject("APP", app);
@@ -70,7 +66,7 @@ public class NCloudAppConfigListener extends JbootAppListenerBase {
     }
 
     @Override
-    public void onJfinalPluginConfig(JfinalPlugins plugins) {
+    public void onPluginConfig(JfinalPlugins plugins) {
     }
 
     @Override
@@ -79,31 +75,34 @@ public class NCloudAppConfigListener extends JbootAppListenerBase {
     }
 
     @Override
-    public void onJFinalStarted() {
-    }
-
-    @Override
-    public void onJFinalStop() {
-    }
-
-    @Override
-    public void onJbootStarted() {
+    public void onStart() {
         /** 集群模式下验证码使用 redis 缓存 */
         CaptchaManager.me().setCaptchaCache(new CaptchaCache());
         ShiroCacheUtils.clearAuthorizationInfoAll();
     }
 
     @Override
-    public void onAppStartBefore(JbootServer jbootServer) {
+    public void onStop() {
     }
 
+/*    @Override
+    public void onJbootStarted() {
+        *//** 集群模式下验证码使用 redis 缓存 *//*
+        CaptchaManager.me().setCaptchaCache(new CaptchaCache());
+        ShiroCacheUtils.clearAuthorizationInfoAll();
+    }*/
+
     @Override
+    public void onStartBefore() {
+    }
+
+/*    @Override
     public void onJbootDeploy(Servlets servlets, ContextListeners listeners) {
 
     }
 
     @Override
     public void onGuiceConfigure(Binder binder) {
-    }
+    }*/
 	
 }

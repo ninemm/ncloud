@@ -18,11 +18,11 @@
 package net.ninemm.upms.controller;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.inject.Inject;
+import com.jfinal.aop.Inject;
 import com.jfinal.kit.Ret;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.utils.StrUtils;
+import io.jboot.utils.StrUtil;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
 import net.ninemm.upms.service.api.SystemsService;
@@ -70,10 +70,10 @@ public class SystemsController extends BaseAppController {
 
     public void save() {
         Systems systems = getRawObject(Systems.class);
-        systems.setId(StrUtils.uuid());
+        systems.setId(StrUtil.uuid());
         systems.setCreateDate(new Date());
-        boolean saved = systemsService.save(systems);
-        if (saved) {
+        Object id = systemsService.save(systems);
+        if (id != null) {
             renderJson(Ret.ok());
         } else {
             renderJson(Ret.fail());

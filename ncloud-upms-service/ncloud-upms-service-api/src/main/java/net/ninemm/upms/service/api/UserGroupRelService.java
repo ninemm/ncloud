@@ -49,7 +49,7 @@ public interface UserGroupRelService  {
      * @param model
      * @return
      */
-    public boolean save(UserGroupRel model);
+    public Object save(UserGroupRel model);
 
 
     /**
@@ -58,7 +58,7 @@ public interface UserGroupRelService  {
      * @param model
      * @return if save or update success
      */
-    public boolean saveOrUpdate(UserGroupRel model);
+    public Object saveOrUpdate(UserGroupRel model);
 
 
     /**
@@ -79,34 +79,9 @@ public interface UserGroupRelService  {
      */
     public Page<? extends Model> paginate(int page, int pageSize);
 
+    /*public void keep(Model model, String... attrs);
 
-    public void join(Page<? extends Model> page, String joinOnField);
-
-    public void join(Page<? extends Model> page, String joinOnField, String[] attrs);
-
-    public void join(Page<? extends Model> page, String joinOnField, String joinName);
-
-    public void join(Page<? extends Model> page, String joinOnField, String joinName, String[] attrs);
-
-    public void join(List<? extends Model> models, String joinOnField);
-
-    public void join(List<? extends Model> models, String joinOnField, String[] attrs);
-
-    public void join(List<? extends Model> models, String joinOnField, String joinName);
-
-    public void join(List<? extends Model> models, String joinOnField, String joinName, String[] attrs);
-
-    public void join(Model model, String joinOnField);
-
-    public void join(Model model, String joinOnField, String[] attrs);
-
-    public void join(Model model, String joinOnField, String joinName);
-
-    public void join(Model model, String joinOnField, String joinName, String[] attrs);
-
-    public void keep(Model model, String... attrs);
-
-    public void keep(List<? extends Model> models, String... attrs);
+    public void keep(List<? extends Model> models, String... attrs);*/
 
     public int deleteByUserId(String userId);
 }

@@ -22,19 +22,17 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import com.google.inject.Inject;
 import com.jfinal.aop.Clear;
+import com.jfinal.aop.Inject;
 import com.jfinal.kit.PathKit;
 import com.jfinal.kit.Ret;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.upload.UploadFile;
-import io.jboot.Jboot;
-import io.jboot.utils.StrUtils;
+import io.jboot.utils.StrUtil;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
-import net.ninemm.base.interceptor.GlobalCacheInterceptor;
 import net.ninemm.base.plugin.excel.ExcelKit;
 import net.ninemm.base.utils.AttachmentUtils;
 import net.ninemm.upms.excel.listener.ExcelUserListener;
@@ -95,13 +93,13 @@ public class UserController extends BaseAppController {
         List<String> groupIds = Lists.newArrayList();
         String stationId = user.getStationId();
 
-        if (StrUtils.notBlank(stationId)) {
+        if (StrUtil.notBlank(stationId)) {
             stationIds = JSON.parseArray(user.getStationId(), String.class);
         }
         user.put("stationIds", stationIds);
 
         String groupId = user.getGroupId();
-        if (StrUtils.notBlank(stationId)) {
+        if (StrUtil.notBlank(stationId)) {
             groupIds = JSON.parseArray(user.getGroupId(), String.class);
         }
         user.put("groupIds", groupIds);
@@ -111,8 +109,8 @@ public class UserController extends BaseAppController {
 
     public void saveOrUpdate() {
         User user = getRawObject(User.class);
-        boolean result = userService.saveOrUpdate(user);
-        if (result) {
+        Object id = userService.saveOrUpdate(user);
+        if (id != null) {
             renderJson(Ret.ok());
         } else {
             renderJson(Ret.fail());

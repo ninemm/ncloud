@@ -16,15 +16,14 @@
 
 package net.ninemm.base.gencode.model;
 
-
-import io.jboot.config.annotation.PropertyConfig;
+import io.jboot.app.config.annotation.ConfigModel;
 
 /**
  * model代码生成配置
  * @author Eric
  *
  */
-@PropertyConfig(prefix="jboot.admin.model.ge")
+@ConfigModel(prefix="jboot.admin.model.ge")
 public class AppModelGeneratorConfig {
 
     /**

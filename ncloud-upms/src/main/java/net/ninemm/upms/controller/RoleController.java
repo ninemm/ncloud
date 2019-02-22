@@ -18,12 +18,11 @@
 package net.ninemm.upms.controller;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.inject.Inject;
+import com.jfinal.aop.Inject;
 import com.jfinal.kit.Ret;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
-import io.jboot.utils.StrUtils;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
 import io.swagger.annotations.ApiOperation;
@@ -82,8 +81,8 @@ public class RoleController extends BaseAppController {
 
     public void save() {
         Role role = getRawObject(Role.class);
-        boolean saved = roleService.save(role);
-        if (saved) {
+        Object id = roleService.save(role);
+        if (id != null) {
             renderJson(Ret.ok());
         } else {
             renderJson(Ret.fail());
@@ -102,8 +101,8 @@ public class RoleController extends BaseAppController {
 
     public void saveOrUpdate() {
         Role role = getRawObject(Role.class);
-        boolean result = roleService.saveOrUpdate(role);
-        if (result) {
+        Object id = roleService.saveOrUpdate(role);
+        if (id != null) {
             renderJson(Ret.ok());
         } else {
             renderJson(Ret.fail());

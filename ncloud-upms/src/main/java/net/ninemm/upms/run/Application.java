@@ -1,12 +1,13 @@
 package net.ninemm.upms.run;
 
 import io.jboot.Jboot;
+import io.jboot.app.JbootApplication;
 
 /**
  * 服务启动入口
  */
 public class Application {
     public static void main(String [] args){
-        Jboot.run(args);
+        JbootApplication.run(args);
     }
 }

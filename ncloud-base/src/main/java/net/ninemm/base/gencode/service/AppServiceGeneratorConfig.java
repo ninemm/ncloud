@@ -17,14 +17,13 @@
 package net.ninemm.base.gencode.service;
 
 
-import io.jboot.config.annotation.PropertyConfig;
-
+import io.jboot.app.config.annotation.ConfigModel;
 /**
  *
  * @author Eric Huang
  * @date 2018-06-28 12:33
  **/
-@PropertyConfig(prefix="jboot.admin.service.ge")
+@ConfigModel(prefix="jboot.admin.service.ge")
 public class AppServiceGeneratorConfig {
 
     /**

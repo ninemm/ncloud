@@ -13,7 +13,7 @@
 * 业务状态管理
 
 ### 技术选型
-* 核心框架：jboot 1.7.5/jfinal 3.4
+* 核心框架：jboot 2.0-rc.9/jfinal 3.6/JFinal-Undertow 1.5/JFinal-Weixin 2.3
 * 模板引擎：jfinal enjoy
 * 注册中心：consul/zookeeper
 * RPC：motan/dubbo

@@ -1,5 +1,6 @@
 package net.ninemm.upms.service.provider;
 
+import com.jfinal.aop.Inject;
 import com.jfinal.kit.Kv;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
@@ -8,7 +9,7 @@ import com.jfinal.plugin.activerecord.SqlPara;
 import io.jboot.Jboot;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.db.model.Columns;
-import io.jboot.utils.StrUtils;
+import io.jboot.utils.StrUtil;
 import net.ninemm.base.web.base.BaseService;
 import net.ninemm.upms.service.api.OperationService;
 import net.ninemm.upms.service.api.UserService;
@@ -16,13 +17,10 @@ import net.ninemm.upms.service.model.Operation;
 import net.ninemm.upms.service.model.User;
 import org.apache.curator.shaded.com.google.common.collect.Lists;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.List;
 import java.util.Map;
 
 @Bean
-@Singleton
 public class OperationServiceImpl extends BaseService<Operation> implements OperationService {
 
     @Inject
@@ -51,7 +49,7 @@ public class OperationServiceImpl extends BaseService<Operation> implements Oper
         User user = userService.findById(userId);
 
         String stationIds = user.getStationId();
-        if (StrUtils.notBlank(stationIds)) {
+        if (StrUtil.notBlank(stationIds)) {
             stationIds = stationIds.replace("\"", "")
                     .replaceAll("[\\[, \\]]", "");
             kv.set("stationIds", stationIds);
@@ -75,6 +73,6 @@ public class OperationServiceImpl extends BaseService<Operation> implements Oper
      */
     @Override
     protected void clearAllCache() {
-        Jboot.me().getCache().removeAll(Operation.CACHE_NAME);
+        Jboot.getCache().removeAll(Operation.CACHE_NAME);
     }
 }

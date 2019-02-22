@@ -5,14 +5,13 @@ import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import io.jboot.Jboot;
 import io.jboot.aop.annotation.Bean;
-import io.jboot.core.cache.annotation.Cacheable;
+import io.jboot.components.cache.annotation.Cacheable;
 import io.jboot.db.model.Columns;
-import io.jboot.utils.StrUtils;
+import io.jboot.utils.StrUtil;
 import net.ninemm.base.web.base.BaseService;
 import net.ninemm.upms.service.api.GroupService;
 import net.ninemm.upms.service.model.Group;
 
-import javax.inject.Singleton;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +22,6 @@ import java.util.Map;
  */
 
 @Bean
-@Singleton
 public class GroupServiceImpl extends BaseService<Group> implements GroupService {
 
     @Override
@@ -61,7 +59,7 @@ public class GroupServiceImpl extends BaseService<Group> implements GroupService
     public List<Record> findListAsOptions(String dataArea) {
         StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append("select id, group_name as name from upms_group where 1=1");
-        if (StrUtils.isNotBlank(dataArea)) {
+        if (StrUtil.isNotBlank(dataArea)) {
             sqlBuilder.append(" AND data_area = ?");
         }
 
@@ -73,6 +71,6 @@ public class GroupServiceImpl extends BaseService<Group> implements GroupService
      */
     @Override
     protected void clearAllCache() {
-        Jboot.me().getCache().removeAll(Group.CACHE_NAME);
+        Jboot.getCache().removeAll(Group.CACHE_NAME);
     }
 }

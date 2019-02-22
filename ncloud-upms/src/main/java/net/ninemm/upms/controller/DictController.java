@@ -18,24 +18,21 @@ package net.ninemm.upms.controller;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableMap;
-import com.google.inject.Inject;
 import com.jfinal.kit.Ret;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.component.swagger.ParamType;
+import io.jboot.components.rpc.annotation.RPCInject;
+import io.jboot.support.swagger.ParamType;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import net.ninemm.base.common.RestResult;
 import net.ninemm.base.web.base.BaseController;
 import net.ninemm.upms.service.api.DictService;
 import net.ninemm.upms.service.api.DictTypeService;
 import net.ninemm.upms.service.model.Dict;
-import net.ninemm.upms.service.model.DictType;
-import net.ninemm.upms.service.model.Group;
 
 import java.util.List;
 import java.util.Map;
@@ -52,9 +49,9 @@ import java.util.Map;
 @EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowMethods = "POST,OPTIONS,GET,PUT,DELETE", allowCredentials = "true")
 public class DictController extends BaseController {
 
-    @Inject
+    @RPCInject
     DictService dictService;
-    @Inject
+    @RPCInject
     DictTypeService dictTypeService;
 
     /**
@@ -102,8 +99,8 @@ public class DictController extends BaseController {
     })
     public void saveOrUpdate() {
         Dict dict = getRawObject(Dict.class);
-        boolean result = dictService.saveOrUpdate(dict);
-        if (result) {
+        Object result = dictService.saveOrUpdate(dict);
+        if (result != null) {
             renderJson(Ret.ok());
         } else {
             renderJson(Ret.fail());

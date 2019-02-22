@@ -16,13 +16,13 @@
 
 package net.ninemm.base.common;
 
-import io.jboot.config.annotation.PropertyConfig;
+import io.jboot.app.config.annotation.ConfigModel;
 
 /**
  * 应用信息
  * @author eric
  */
-@PropertyConfig(prefix = "jboot.admin.app")
+@ConfigModel(prefix = "jboot.admin.app")
 public class AppInfo {
 
     private String name;

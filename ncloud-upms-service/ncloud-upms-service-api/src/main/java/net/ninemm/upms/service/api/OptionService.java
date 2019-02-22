@@ -49,7 +49,7 @@ public interface OptionService  {
      * @param model
      * @return
      */
-    public boolean save(Option model);
+    public Object save(Option model);
 
 
     /**
@@ -58,7 +58,7 @@ public interface OptionService  {
      * @param model
      * @return if save or update success
      */
-    public boolean saveOrUpdate(Option model);
+    public Object saveOrUpdate(Option model);
 
     /**
      * save or update model
@@ -67,7 +67,7 @@ public interface OptionService  {
      * @param value
      * @return if save or update success
      */
-    public boolean saveOrUpdate(String key, String value);
+    public Object saveOrUpdate(String key, String value);
 
     /**
      * update data model
@@ -87,34 +87,9 @@ public interface OptionService  {
      */
     public Page<? extends Model> paginate(int page, int pageSize);
 
+    /*   public void keep(Model model, String... attrs);
 
-    public void join(Page<? extends Model> page, String joinOnField);
-
-    public void join(Page<? extends Model> page, String joinOnField, String[] attrs);
-
-    public void join(Page<? extends Model> page, String joinOnField, String joinName);
-
-    public void join(Page<? extends Model> page, String joinOnField, String joinName, String[] attrs);
-
-    public void join(List<? extends Model> models, String joinOnField);
-
-    public void join(List<? extends Model> models, String joinOnField, String[] attrs);
-
-    public void join(List<? extends Model> models, String joinOnField, String joinName);
-
-    public void join(List<? extends Model> models, String joinOnField, String joinName, String[] attrs);
-
-    public void join(Model model, String joinOnField);
-
-    public void join(Model model, String joinOnField, String[] attrs);
-
-    public void join(Model model, String joinOnField, String joinName);
-
-    public void join(Model model, String joinOnField, String joinName, String[] attrs);
-
-    public void keep(Model model, String... attrs);
-
-    public void keep(List<? extends Model> models, String... attrs);
+    public void keep(List<? extends Model> models, String... attrs);*/
 
     /**
      * 获取系统配置信息

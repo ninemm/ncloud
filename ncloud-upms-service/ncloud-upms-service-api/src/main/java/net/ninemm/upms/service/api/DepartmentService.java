@@ -3,11 +3,12 @@ package net.ninemm.upms.service.api;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.db.model.JbootModel;
+import io.jboot.service.JbootServiceJoiner;
 import net.ninemm.upms.service.model.Department;
 
 import java.util.List;
 
-public interface DepartmentService<M extends JbootModel<M>>  {
+public interface DepartmentService<M extends JbootModel<M>> extends JbootServiceJoiner {
 
     /**
      * find model by primary key
@@ -50,7 +51,7 @@ public interface DepartmentService<M extends JbootModel<M>>  {
      * @param model
      * @return
      */
-    public boolean save(M model);
+    public Object save(M model);
 
 
     /**
@@ -59,7 +60,7 @@ public interface DepartmentService<M extends JbootModel<M>>  {
      * @param model
      * @return if save or update success
      */
-    public boolean saveOrUpdate(M model);
+    public Object saveOrUpdate(M model);
 
 
     /**
@@ -81,7 +82,7 @@ public interface DepartmentService<M extends JbootModel<M>>  {
     public Page<? extends Model> paginate(int page, int pageSize);
 
 
-    public void join(Page<? extends Model> page, String joinOnField);
+    /*public void join(Page<? extends Model> page, String joinOnField);
 
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);
 
@@ -95,19 +96,19 @@ public interface DepartmentService<M extends JbootModel<M>>  {
 
     public void join(List<? extends Model> models, String joinOnField, String joinName);
 
-    public void join(List<? extends Model> models, String joinOnField, String joinName, String[] attrs);
+    public void join(List<? extends Model> models, String joinOnField, String joinName, String[] attrs);*/
 
-    public void join(Model model, String joinOnField);
+    /*public void join(Model model, String joinOnField);
 
     public void join(Model model, String joinOnField, String[] attrs);
 
     public void join(Model model, String joinOnField, String joinName);
 
-    public void join(Model model, String joinOnField, String joinName, String[] attrs);
+    public void join(Model model, String joinOnField, String joinName, String[] attrs);*/
 
-    public void keep(Model model, String... attrs);
+    /*public void keep(Model model, String... attrs);
 
-    public void keep(List<? extends Model> models, String... attrs);
+    public void keep(List<? extends Model> models, String... attrs);*/
 
     public List<? extends Model> findAllAsSort();
 

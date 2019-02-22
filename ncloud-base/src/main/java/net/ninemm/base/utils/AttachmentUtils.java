@@ -15,12 +15,12 @@
  */
 package net.ninemm.base.utils;
 
-import cn.hutool.core.io.FileUtil;
+//import cn.hutool.core.io.FileUtil;
 import com.jfinal.kit.PathKit;
 import com.jfinal.log.Log;
 import com.jfinal.upload.UploadFile;
-import io.jboot.utils.FileUtils;
-import io.jboot.utils.StrUtils;
+import io.jboot.utils.FileUtil;
+import io.jboot.utils.StrUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,20 +45,20 @@ public class AttachmentUtils {
 			return null;
 		}
 
-		File newfile = newAttachemnetFile(FileUtils.getSuffix(file.getName()));
+		File newfile = newAttachemnetFile(FileUtil.getSuffix(file.getName()));
 
 		if (!newfile.getParentFile().exists()) {
 			newfile.getParentFile().mkdirs();
 		}
 
 		try {
-			FileUtil.move(file, newfile, true);
+			cn.hutool.core.io.FileUtil.move(file, newfile, true);
 		} catch (Exception e) {
 			LOG.error(e.toString(), e);
 		}
 
 		String attachmentRoot = PathKit.getWebRootPath();
-		return FileUtils.removePrefix(newfile.getAbsolutePath(), attachmentRoot);
+		return FileUtil.removePrefix(newfile.getAbsolutePath(), attachmentRoot);
 	}
 
 	public static File newAttachemnetFile(String suffix) {
@@ -101,7 +101,7 @@ public class AttachmentUtils {
 				.append(File.separator).append("attachment")
 				.append(File.separator).append(new SimpleDateFormat("yyyyMMdd").format(new Date()))
 				.append(File.separator).append(uuid)
-				.append(FileUtils.getSuffix(file.getName()));
+				.append(FileUtil.getSuffix(file.getName()));
 
 		File newfile = new File(newFileName.toString());
 
@@ -111,7 +111,7 @@ public class AttachmentUtils {
 
 		file.renameTo(newfile);
 
-		return FileUtils.removePrefix(newfile.getAbsolutePath(), webRoot);
+		return FileUtil.removePrefix(newfile.getAbsolutePath(), webRoot);
 	}
 
 	static List<String> imageSuffix = new ArrayList<String>();
@@ -127,15 +127,15 @@ public class AttachmentUtils {
 	}
 
 	public static boolean isImage(String path) {
-		String sufffix = FileUtils.getSuffix(path);
-		if (StrUtils.isNotBlank(sufffix)) {
+		String sufffix = FileUtil.getSuffix(path);
+		if (StrUtil.isNotBlank(sufffix)) {
 			return imageSuffix.contains(sufffix.toLowerCase());
 		}
 		return false;
 	}
 
 	public static void main(String[] args) {
-		System.out.println(FileUtils.getSuffix("xxx.jpg"));
+		System.out.println(FileUtil.getSuffix("xxx.jpg"));
 	}
 
 }

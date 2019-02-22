@@ -7,20 +7,18 @@ import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.SqlPara;
 import io.jboot.Jboot;
 import io.jboot.aop.annotation.Bean;
-import io.jboot.core.cache.annotation.Cacheable;
+import io.jboot.components.cache.annotation.Cacheable;
 import io.jboot.db.model.Columns;
 import io.jboot.service.JbootServiceBase;
 import net.ninemm.upms.service.api.ModuleService;
 import net.ninemm.upms.service.model.Module;
 
-import javax.inject.Singleton;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 @Bean
-@Singleton
 public class ModuleServiceImpl extends JbootServiceBase<Module> implements ModuleService {
 
     @Override
@@ -56,7 +54,7 @@ public class ModuleServiceImpl extends JbootServiceBase<Module> implements Modul
     }
 
     @Override
-    public boolean save(Module model) {
+    public Object save(Module model) {
         String parentId = model.getParentId();
         if (StrKit.isBlank(parentId)) {
             return false;
@@ -80,7 +78,7 @@ public class ModuleServiceImpl extends JbootServiceBase<Module> implements Modul
                 }
 
                 // clear all cache
-                Jboot.me().getCache().removeAll("upms_module");
+                Jboot.getCache().removeAll("upms_module");
                 return true;
             }
         });

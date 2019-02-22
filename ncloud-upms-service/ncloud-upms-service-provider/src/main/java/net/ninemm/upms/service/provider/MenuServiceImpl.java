@@ -5,19 +5,17 @@ import com.jfinal.plugin.activerecord.IAtom;
 import io.jboot.Jboot;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.db.model.Columns;
-import io.jboot.utils.StrUtils;
+import io.jboot.utils.StrUtil;
 import net.ninemm.base.common.Consts;
 import net.ninemm.base.web.base.BaseService;
 import net.ninemm.upms.service.api.MenuService;
 import net.ninemm.upms.service.model.Menu;
 import net.ninemm.upms.service.model.Operation;
 
-import javax.inject.Singleton;
 import java.sql.SQLException;
 import java.util.List;
 
 @Bean
-@Singleton
 public class MenuServiceImpl extends BaseService<Menu> implements MenuService {
 
     @Override
@@ -53,9 +51,9 @@ public class MenuServiceImpl extends BaseService<Menu> implements MenuService {
      * @return
      */
     @Override
-    public boolean save(Operation operation) {
+    public Object save(Operation operation) {
         Menu menu = new Menu();
-        menu.setId(StrUtils.uuid());
+        menu.setId(StrUtil.uuid());
         menu.setLevel(1);
         menu.setOperatorId(operation.getId());
         menu.setCode(operation.getOperationCode());
@@ -69,7 +67,7 @@ public class MenuServiceImpl extends BaseService<Menu> implements MenuService {
     }
 
     @Override
-    public boolean saveOrUpdate(Menu model) {
+    public Object saveOrUpdate(Menu model) {
 
         boolean result = Db.tx(new IAtom() {
             @Override
@@ -101,6 +99,6 @@ public class MenuServiceImpl extends BaseService<Menu> implements MenuService {
      */
     @Override
     protected void clearAllCache() {
-        Jboot.me().getCache().removeAll(Menu.CACHE_NAME);
+        Jboot.getCache().removeAll(Menu.CACHE_NAME);
     }
 }

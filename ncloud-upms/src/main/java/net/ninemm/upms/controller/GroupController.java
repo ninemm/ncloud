@@ -18,7 +18,7 @@
 package net.ninemm.upms.controller;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.inject.Inject;
+import com.jfinal.aop.Inject;
 import com.jfinal.kit.Ret;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Page;
@@ -84,8 +84,8 @@ public class GroupController extends BaseAppController {
 
     public void saveOrUpdate() {
         Group group = getRawObject(Group.class);
-        boolean result = groupService.saveOrUpdate(group);
-        if (result) {
+        Object id = groupService.saveOrUpdate(group);
+        if (id != null) {
             renderJson(Ret.ok());
         } else {
             renderJson(Ret.fail());

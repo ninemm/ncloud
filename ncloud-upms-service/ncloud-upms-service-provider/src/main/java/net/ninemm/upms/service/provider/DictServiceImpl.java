@@ -4,20 +4,20 @@ import com.google.common.collect.ComparisonChain;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.Jboot;
 import io.jboot.aop.annotation.Bean;
-import io.jboot.core.cache.annotation.Cacheable;
+import io.jboot.components.cache.annotation.Cacheable;
+import io.jboot.components.rpc.annotation.RPCBean;
 import io.jboot.db.model.Columns;
 import net.ninemm.base.web.base.BaseService;
 import net.ninemm.upms.service.api.DictService;
 import net.ninemm.upms.service.model.Dict;
 
-import javax.inject.Singleton;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
 @Bean
-@Singleton
+@RPCBean
 public class DictServiceImpl extends BaseService<Dict> implements DictService {
 
     @Override
@@ -82,13 +82,13 @@ public class DictServiceImpl extends BaseService<Dict> implements DictService {
     }
 
     @Override
-    public boolean save(Dict model) {
+    public Object save(Dict model) {
         clearAllCache();
         return super.save(model);
     }
 
     @Override
-    public boolean saveOrUpdate(Dict model) {
+    public Object saveOrUpdate(Dict model) {
         clearAllCache();
         return super.saveOrUpdate(model);
     }
@@ -101,6 +101,6 @@ public class DictServiceImpl extends BaseService<Dict> implements DictService {
 
     @Override
     protected void clearAllCache() {
-        Jboot.me().getCache().removeAll("upms_dict");
+        Jboot.getCache().removeAll("upms_dict");
     }
 }

@@ -6,10 +6,7 @@ import io.jboot.service.JbootServiceBase;
 import net.ninemm.upms.service.api.UserGroupRelService;
 import net.ninemm.upms.service.model.UserGroupRel;
 
-import javax.inject.Singleton;
-
 @Bean
-@Singleton
 public class UserGroupRelServiceImpl extends JbootServiceBase<UserGroupRel> implements UserGroupRelService {
 
     @Override

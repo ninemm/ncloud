@@ -17,7 +17,7 @@
 package net.ninemm.base.plugin.jwt;
 
 import io.jboot.Jboot;
-import io.jboot.utils.StrUtils;
+import io.jboot.utils.StrUtil;
 import net.ninemm.base.common.CacheKey;
 import net.ninemm.base.plugin.shiro.ShiroCacheUtils;
 import org.apache.shiro.authc.*;
@@ -48,8 +48,8 @@ public abstract class AbstractJwtAuthorizingRealm extends AuthorizingRealm {
         JwtAuthenticationToken jwtToken = (JwtAuthenticationToken) token;
         String userId = (String) jwtToken.getPrincipal();
 
-        String uidCache = Jboot.me().getCache().get(CacheKey.CACHE_JWT_TOKEN, userId);
-        if (StrUtils.isNotBlank(uidCache)) {
+        String uidCache = Jboot.getCache().get(CacheKey.CACHE_JWT_TOKEN, userId);
+        if (StrUtil.isNotBlank(uidCache)) {
             /** token 已被加入黑名单 */
             throw new UnknownAccountException();
         }

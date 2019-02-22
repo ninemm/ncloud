@@ -2,12 +2,13 @@ package net.ninemm.upms.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.service.JbootServiceJoiner;
 import net.ninemm.upms.service.model.Menu;
 import net.ninemm.upms.service.model.Operation;
 
 import java.util.List;
 
-public interface MenuService  {
+public interface MenuService extends JbootServiceJoiner {
 
     /**
      * find model by primary key
@@ -50,7 +51,7 @@ public interface MenuService  {
      * @param model
      * @return
      */
-    public boolean save(Menu model);
+    public Object save(Menu model);
 
     /**
      * save model to database
@@ -58,7 +59,7 @@ public interface MenuService  {
      * @param operation
      * @return
      */
-    public boolean save(Operation operation);
+    public Object save(Operation operation);
 
    /**
      * save or update model
@@ -66,7 +67,7 @@ public interface MenuService  {
      * @param model
      * @return if save or update success
      */
-    public boolean saveOrUpdate(Menu model);
+    public Object saveOrUpdate(Menu model);
 
 
     /**
@@ -87,34 +88,11 @@ public interface MenuService  {
      */
     public Page<? extends Model> paginate(int page, int pageSize);
 
-
-    public void join(Page<? extends Model> page, String joinOnField);
-
-    public void join(Page<? extends Model> page, String joinOnField, String[] attrs);
-
-    public void join(Page<? extends Model> page, String joinOnField, String joinName);
-
-    public void join(Page<? extends Model> page, String joinOnField, String joinName, String[] attrs);
-
-    public void join(List<? extends Model> models, String joinOnField);
-
-    public void join(List<? extends Model> models, String joinOnField, String[] attrs);
-
-    public void join(List<? extends Model> models, String joinOnField, String joinName);
-
-    public void join(List<? extends Model> models, String joinOnField, String joinName, String[] attrs);
-
-    public void join(Model model, String joinOnField);
-
-    public void join(Model model, String joinOnField, String[] attrs);
-
-    public void join(Model model, String joinOnField, String joinName);
-
-    public void join(Model model, String joinOnField, String joinName, String[] attrs);
-
+/*
     public void keep(Model model, String... attrs);
 
     public void keep(List<? extends Model> models, String... attrs);
+*/
 
     public List<Menu> findListByParentId(String parentId);
 

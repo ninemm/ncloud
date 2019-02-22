@@ -4,12 +4,13 @@ import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import io.jboot.db.model.JbootModel;
+import io.jboot.service.JbootServiceJoiner;
 import net.ninemm.upms.service.model.User;
 
 import java.util.List;
 import java.util.Map;
 
-public interface UserService  {
+public interface UserService extends JbootServiceJoiner {
 
     /**
      * find model by primary key
@@ -59,7 +60,7 @@ public interface UserService  {
      * @param model
      * @return
      */
-    public boolean save(User model);
+    public Object save(User model);
 
 
     /**
@@ -68,7 +69,7 @@ public interface UserService  {
      * @param model
      * @return if save or update success
      */
-    public boolean saveOrUpdate(User model);
+    public Object saveOrUpdate(User model);
 
 
     /**
@@ -89,34 +90,9 @@ public interface UserService  {
      */
     public Page<User> paginate(int page, int pageSize);
 
+    /*public void keep(Model model, String... attrs);
 
-    public void join(Page<? extends Model> page, String joinOnField);
-
-    public void join(Page<? extends Model> page, String joinOnField, String[] attrs);
-
-    public void join(Page<? extends Model> page, String joinOnField, String joinName);
-
-    public void join(Page<? extends Model> page, String joinOnField, String joinName, String[] attrs);
-
-    public void join(List<? extends Model> models, String joinOnField);
-
-    public void join(List<? extends Model> models, String joinOnField, String[] attrs);
-
-    public void join(List<? extends Model> models, String joinOnField, String joinName);
-
-    public void join(List<? extends Model> models, String joinOnField, String joinName, String[] attrs);
-
-    public void join(Model model, String joinOnField);
-
-    public void join(Model model, String joinOnField, String[] attrs);
-
-    public void join(Model model, String joinOnField, String joinName);
-
-    public void join(Model model, String joinOnField, String joinName, String[] attrs);
-
-    public void keep(Model model, String... attrs);
-
-    public void keep(List<? extends Model> models, String... attrs);
+    public void keep(List<? extends Model> models, String... attrs);*/
 
     /**
      * find user by mobile

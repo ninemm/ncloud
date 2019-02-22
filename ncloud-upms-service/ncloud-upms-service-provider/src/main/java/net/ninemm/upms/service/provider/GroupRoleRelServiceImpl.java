@@ -8,16 +8,14 @@ import com.jfinal.plugin.activerecord.IAtom;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.db.model.Column;
 import io.jboot.service.JbootServiceBase;
-import io.jboot.utils.StrUtils;
+import io.jboot.utils.StrUtil;
 import net.ninemm.upms.service.api.GroupRoleRelService;
 import net.ninemm.upms.service.model.GroupRoleRel;
 
-import javax.inject.Singleton;
 import java.sql.SQLException;
 import java.util.List;
 
 @Bean
-@Singleton
 public class GroupRoleRelServiceImpl extends JbootServiceBase<GroupRoleRel> implements GroupRoleRelService {
 
     @Override
@@ -34,7 +32,7 @@ public class GroupRoleRelServiceImpl extends JbootServiceBase<GroupRoleRel> impl
     @Override
     public boolean update(String groupId, String roleIds) {
 
-        if (!StrUtils.areNotEmpty(groupId, roleIds)) {
+        if (!StrUtil.areNotEmpty(groupId, roleIds)) {
             return true;
         }
 
@@ -54,7 +52,7 @@ public class GroupRoleRelServiceImpl extends JbootServiceBase<GroupRoleRel> impl
                 roleIdList.stream().forEach(roleId -> {
                     if (!list.contains(roleId)) {
                         GroupRoleRel groupRoleRel = new GroupRoleRel();
-                        groupRoleRel.setId(StrUtils.uuid());
+                        groupRoleRel.setId(StrUtil.uuid());
                         groupRoleRel.setGroupId(groupId);
                         groupRoleRel.setRoleId(roleId);
                         list.add(groupRoleRel);

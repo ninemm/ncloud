@@ -20,7 +20,7 @@ import com.jfinal.aop.Interceptor;
 import com.jfinal.aop.Invocation;
 import com.jfinal.kit.LogKit;
 import com.jfinal.kit.StrKit;
-import io.jboot.component.jwt.JwtManager;
+import io.jboot.support.jwt.JwtManager;
 import io.jboot.web.controller.JbootController;
 import net.ninemm.base.common.Consts;
 import net.ninemm.base.common.RestResult;

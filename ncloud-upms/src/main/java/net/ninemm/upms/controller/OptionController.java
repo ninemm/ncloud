@@ -1,9 +1,9 @@
 package net.ninemm.upms.controller;
 
 import com.google.common.base.Predicate;
-import com.google.inject.Inject;
+import com.jfinal.aop.Inject;
 import com.jfinal.kit.Ret;
-import io.jboot.utils.StrUtils;
+import io.jboot.utils.StrUtil;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
 import net.ninemm.upms.service.api.OptionService;
@@ -33,7 +33,7 @@ public class OptionController extends BaseAppController {
         Predicate<Option> p = new Predicate<Option>() {
             @Override
             public boolean apply(@Nullable Option option) {
-                if (StrUtils.isBlank(option.getOptionValue())) {
+                if (StrUtil.isBlank(option.getOptionValue())) {
                     return false;
                 }
                 return true;

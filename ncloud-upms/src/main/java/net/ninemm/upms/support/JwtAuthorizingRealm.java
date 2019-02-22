@@ -18,13 +18,8 @@ package net.ninemm.upms.support;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
-import com.google.inject.Inject;
-import com.jfinal.aop.Aop;
-import com.jfinal.aop.AopFactory;
 import io.jboot.Jboot;
-import io.jboot.aop.JbootInjectManager;
-import io.jboot.core.rpc.JbootrpcManager;
-import io.jboot.utils.StrUtils;
+import io.jboot.utils.StrUtil;
 import net.ninemm.base.common.CacheKey;
 import net.ninemm.base.plugin.jwt.AbstractJwtAuthorizingRealm;
 import net.ninemm.base.plugin.jwt.JwtAuthenticationToken;
@@ -51,8 +46,8 @@ public class JwtAuthorizingRealm extends AbstractJwtAuthorizingRealm {
         JwtAuthenticationToken jwtToken = (JwtAuthenticationToken) token;
         String userId = (String) jwtToken.getPrincipal();
 
-        String uidCache = Jboot.me().getCache().get(CacheKey.CACHE_JWT_TOKEN, userId);
-        if (StrUtils.isNotBlank(uidCache)) {
+        String uidCache = Jboot.getCache().get(CacheKey.CACHE_JWT_TOKEN, userId);
+        if (StrUtil.isNotBlank(uidCache)) {
             /** token 已被加入黑名单 */
             throw new UnknownAccountException();
         }
@@ -76,7 +71,7 @@ public class JwtAuthorizingRealm extends AbstractJwtAuthorizingRealm {
         List<String> roleIdList = Lists.newArrayList();
 
         /** 用户角色 */
-        RoleService roleService = Jboot.service(RoleService.class);
+        RoleService roleService = Jboot.bean(RoleService.class);
         List<Role> list = roleService.findRoleListByUserId(userId);
         list.stream().forEach(role -> {
             roleList.add(role.getRoleCode());

@@ -51,7 +51,7 @@ public interface OperationService  {
      * @param model
      * @return
      */
-    public boolean save(Operation model);
+    public Object save(Operation model);
 
 
     /**
@@ -60,7 +60,7 @@ public interface OperationService  {
      * @param model
      * @return if save or update success
      */
-    public boolean saveOrUpdate(Operation model);
+    public Object saveOrUpdate(Operation model);
 
 
     /**
@@ -81,34 +81,9 @@ public interface OperationService  {
      */
     public Page<? extends Model> paginate(int page, int pageSize);
 
+/*    public void keep(Model model, String... attrs);
 
-    public void join(Page<? extends Model> page, String joinOnField);
-
-    public void join(Page<? extends Model> page, String joinOnField, String[] attrs);
-
-    public void join(Page<? extends Model> page, String joinOnField, String joinName);
-
-    public void join(Page<? extends Model> page, String joinOnField, String joinName, String[] attrs);
-
-    public void join(List<? extends Model> models, String joinOnField);
-
-    public void join(List<? extends Model> models, String joinOnField, String[] attrs);
-
-    public void join(List<? extends Model> models, String joinOnField, String joinName);
-
-    public void join(List<? extends Model> models, String joinOnField, String joinName, String[] attrs);
-
-    public void join(Model model, String joinOnField);
-
-    public void join(Model model, String joinOnField, String[] attrs);
-
-    public void join(Model model, String joinOnField, String joinName);
-
-    public void join(Model model, String joinOnField, String joinName, String[] attrs);
-
-    public void keep(Model model, String... attrs);
-
-    public void keep(List<? extends Model> models, String... attrs);
+    public void keep(List<? extends Model> models, String... attrs);*/
 
     public Page<Operation> paginate(int page, int pageSize, Map<String, Object> params);
 

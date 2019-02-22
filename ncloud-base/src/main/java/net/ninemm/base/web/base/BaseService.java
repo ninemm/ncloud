@@ -45,13 +45,13 @@ public abstract class BaseService<M extends JbootModel<M>> extends JbootServiceB
     }
 
     @Override
-    public boolean save(M model) {
+    public Object save(M model) {
         clearAllCache();
         return super.save(model);
     }
 
     @Override
-    public boolean saveOrUpdate(M model) {
+    public Object saveOrUpdate(M model) {
         clearAllCache();
         return super.saveOrUpdate(model);
     }

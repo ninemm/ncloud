@@ -1,14 +1,14 @@
 package net.ninemm.upms.interceptor;
 
-import com.google.inject.Inject;
+import com.jfinal.aop.Inject;
 import com.jfinal.aop.Interceptor;
 import com.jfinal.aop.Invocation;
 import com.jfinal.core.Controller;
 import com.jfinal.kit.Ret;
 import com.jfinal.kit.StrKit;
-import io.jboot.utils.EncryptCookieUtils;
-import io.jboot.utils.RequestUtils;
-import io.jboot.utils.StrUtils;
+import io.jboot.utils.CookieUtil;
+import io.jboot.utils.RequestUtil;
+import io.jboot.utils.StrUtil;
 import io.jboot.web.controller.JbootController;
 import net.ninemm.base.common.Consts;
 import net.ninemm.upms.service.api.SystemLogService;
@@ -41,10 +41,10 @@ public class LogInterceptor implements Interceptor {
         }
 
         SystemLog log = new SystemLog();
-        log.setId(StrUtils.uuid());
-        log.setIp(RequestUtils.getIpAddress(controller.getRequest()));
+        log.setId(StrUtil.uuid());
+        log.setIp(RequestUtil.getIpAddress(controller.getRequest()));
         log.setAccept(controller.getRequest().getRequestURI());
-        log.setReferer(RequestUtils.getReferer(controller.getRequest()));
+        log.setReferer(RequestUtil.getReferer(controller.getRequest()));
 
         log.setMethod(request.getMethod());
         log.setCookie(request.getHeader("Cookie"));
@@ -56,7 +56,7 @@ public class LogInterceptor implements Interceptor {
         log.setAcceptEncoding(request.getHeader("Accept-Encoding"));
         log.setXrequestedwith(request.getHeader("X-Requested-With"));
 
-        String uid = EncryptCookieUtils.get(controller, Consts.COOKIE_USER_ID);
+        String uid = CookieUtil.get(controller, Consts.COOKIE_USER_ID);
         if (StrKit.notBlank(uid)) {
             log.setUserId(uid);
         } else if (controller instanceof JbootController) {

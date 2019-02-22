@@ -19,8 +19,8 @@ package net.ninemm.base.interceptor;
 import com.jfinal.aop.Interceptor;
 import com.jfinal.aop.Invocation;
 import com.jfinal.core.Controller;
-import io.jboot.utils.ArrayUtils;
-import io.jboot.utils.StrUtils;
+import io.jboot.utils.ArrayUtil;
+import io.jboot.utils.StrUtil;
 import io.jboot.web.controller.JbootController;
 import net.ninemm.base.common.RestResult;
 
@@ -51,7 +51,7 @@ public class NotNullParaInterceptor implements Interceptor {
         }
 
         String[] paraKeys = notNullPara.value();
-        if (ArrayUtils.isNullOrEmpty(paraKeys)) {
+        if (ArrayUtil.isNullOrEmpty(paraKeys)) {
             inv.invoke();
             return;
         }
@@ -69,7 +69,7 @@ public class NotNullParaInterceptor implements Interceptor {
 
 
     private void renderError(Invocation inv, String param, String errorRedirect) {
-        if (StrUtils.isNotBlank(errorRedirect)) {
+        if (StrUtil.isNotBlank(errorRedirect)) {
             inv.getController().redirect(errorRedirect);
             return;
         }

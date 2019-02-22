@@ -2,12 +2,13 @@ package net.ninemm.upms.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
+import io.jboot.service.JbootServiceJoiner;
 import net.ninemm.upms.service.model.Systems;
 
 import java.util.List;
 import java.util.Map;
 
-public interface SystemsService  {
+public interface SystemsService extends JbootServiceJoiner {
 
     /**
      * find model by primary key
@@ -50,7 +51,7 @@ public interface SystemsService  {
      * @param model
      * @return
      */
-    public boolean save(Systems model);
+    public Object save(Systems model);
 
 
     /**
@@ -59,7 +60,7 @@ public interface SystemsService  {
      * @param model
      * @return if save or update success
      */
-    public boolean saveOrUpdate(Systems model);
+    public Object saveOrUpdate(Systems model);
 
 
     /**
@@ -80,34 +81,9 @@ public interface SystemsService  {
      */
     public Page<Systems> paginate(int page, int pageSize);
 
+    /*public void keep(Model model, String... attrs);
 
-    public void join(Page<? extends Model> page, String joinOnField);
-
-    public void join(Page<? extends Model> page, String joinOnField, String[] attrs);
-
-    public void join(Page<? extends Model> page, String joinOnField, String joinName);
-
-    public void join(Page<? extends Model> page, String joinOnField, String joinName, String[] attrs);
-
-    public void join(List<? extends Model> models, String joinOnField);
-
-    public void join(List<? extends Model> models, String joinOnField, String[] attrs);
-
-    public void join(List<? extends Model> models, String joinOnField, String joinName);
-
-    public void join(List<? extends Model> models, String joinOnField, String joinName, String[] attrs);
-
-    public void join(Model model, String joinOnField);
-
-    public void join(Model model, String joinOnField, String[] attrs);
-
-    public void join(Model model, String joinOnField, String joinName);
-
-    public void join(Model model, String joinOnField, String joinName, String[] attrs);
-
-    public void keep(Model model, String... attrs);
-
-    public void keep(List<? extends Model> models, String... attrs);
+    public void keep(List<? extends Model> models, String... attrs);*/
 
     public List<Systems> findListAsSelect();
 

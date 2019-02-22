@@ -8,12 +8,10 @@ import net.ninemm.base.web.base.BaseService;
 import net.ninemm.upms.service.api.SystemsService;
 import net.ninemm.upms.service.model.Systems;
 
-import javax.inject.Singleton;
 import java.util.List;
 import java.util.Map;
 
 @Bean
-@Singleton
 public class SystemsServiceImpl extends BaseService<Systems> implements SystemsService {
 
     @Override
@@ -38,13 +36,13 @@ public class SystemsServiceImpl extends BaseService<Systems> implements SystemsS
     }
 
     @Override
-    public boolean save(Systems model) {
+    public Object save(Systems model) {
         clearAllCache();
         return super.save(model);
     }
 
     @Override
-    public boolean saveOrUpdate(Systems model) {
+    public Object saveOrUpdate(Systems model) {
         clearAllCache();
         return super.saveOrUpdate(model);
     }
@@ -63,6 +61,6 @@ public class SystemsServiceImpl extends BaseService<Systems> implements SystemsS
 
     @Override
     protected void clearAllCache() {
-        Jboot.me().getCache().removeAll(Systems.CACHE_NAME);
+        Jboot.getCache().removeAll(Systems.CACHE_NAME);
     }
 }

@@ -17,14 +17,12 @@
 
 package net.ninemm.upms.controller;
 
-import com.google.inject.Inject;
 import com.jfinal.aop.Clear;
-import com.jfinal.captcha.Captcha;
-import com.jfinal.captcha.CaptchaManager;
+import com.jfinal.aop.Inject;
 import com.jfinal.kit.Ret;
 import io.jboot.Jboot;
-import io.jboot.component.swagger.ParamType;
-import io.jboot.utils.StrUtils;
+import io.jboot.support.swagger.ParamType;
+import io.jboot.utils.StrUtil;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
 import io.swagger.annotations.Api;
@@ -41,8 +39,6 @@ import net.ninemm.upms.service.api.DepartmentService;
 import net.ninemm.upms.service.api.UserService;
 import net.ninemm.upms.service.model.Department;
 import net.ninemm.upms.service.model.User;
-
-import java.util.List;
 
 /**
  * 用户登录认证
@@ -95,12 +91,12 @@ public class AuthController extends BaseAppController {
         }
 
         String dataArea = department.getDataArea();
-        if (StrUtils.notBlank(dataArea)) {
-            Jboot.me().getCache().put(CacheKey.CACHE_PARENT_DATA_AREA, user.getId(), dataArea);
+        if (StrUtil.notBlank(dataArea)) {
+            Jboot.getCache().put(CacheKey.CACHE_PARENT_DATA_AREA, user.getId(), dataArea);
         }
 
         /** 登录成功移除用户退出标识 */
-        Jboot.me().getCache().remove(CacheKey.CACHE_JWT_TOKEN, user.getId());
+        Jboot.getCache().remove(CacheKey.CACHE_JWT_TOKEN, user.getId());
         setJwtAttr(Consts.JWT_USER_ID, user.getId());
 
         Ret ret = Ret.ok();
@@ -118,10 +114,10 @@ public class AuthController extends BaseAppController {
     public void logout() {
 
         String userId = getUserId();
-        Jboot.me().getCache().put(CacheKey.CACHE_JWT_TOKEN, getUserId(), getUserId(), 2 * 60 * 60);
+        Jboot.getCache().put(CacheKey.CACHE_JWT_TOKEN, getUserId(), getUserId(), 2 * 60 * 60);
 
-        Jboot.me().getCache().remove(CacheKey.CACHE_LOGINED_USER, getUserId());
-        Jboot.me().getCache().remove(CacheKey.CACHE_PARENT_DATA_AREA, getUserId());
+        Jboot.getCache().remove(CacheKey.CACHE_LOGINED_USER, getUserId());
+        Jboot.getCache().remove(CacheKey.CACHE_PARENT_DATA_AREA, getUserId());
 //        Jboot.me().getCache().remove(CacheKey.CACHE_LOGINED_USER,getUserId() + ":" + CacheKey.CACHE_KEY_ROLE);
         renderJson(RestResult.buildSuccess("退出成功！"));
     }

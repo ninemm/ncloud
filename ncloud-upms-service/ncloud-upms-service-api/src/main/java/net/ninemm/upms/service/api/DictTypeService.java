@@ -2,11 +2,13 @@ package net.ninemm.upms.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
-import net.ninemm.upms.service.model.SystemLog;
+import io.jboot.service.JbootServiceJoiner;
+import net.ninemm.upms.service.model.DictType;
 
 import java.util.List;
+import java.util.Map;
 
-public interface SystemLogService  {
+public interface DictTypeService extends JbootServiceJoiner {
 
     /**
      * find model by primary key
@@ -14,15 +16,15 @@ public interface SystemLogService  {
      * @param id
      * @return
      */
-    public SystemLog findById(Object id);
+    public DictType findById(Object id);
 
 
     /**
      * find all model
      *
-     * @return all <SystemLog
+     * @return all <DictType
      */
-    public List<SystemLog> findAll();
+    public List<DictType> findAll();
 
 
     /**
@@ -40,7 +42,7 @@ public interface SystemLogService  {
      * @param model
      * @return
      */
-    public boolean delete(SystemLog model);
+    public boolean delete(DictType model);
 
 
     /**
@@ -49,7 +51,7 @@ public interface SystemLogService  {
      * @param model
      * @return
      */
-    public Object save(SystemLog model);
+    public Object save(DictType model);
 
 
     /**
@@ -58,7 +60,7 @@ public interface SystemLogService  {
      * @param model
      * @return if save or update success
      */
-    public Object saveOrUpdate(SystemLog model);
+    public Object saveOrUpdate(DictType model);
 
 
     /**
@@ -67,7 +69,7 @@ public interface SystemLogService  {
      * @param model
      * @return
      */
-    public boolean update(SystemLog model);
+    public boolean update(DictType model);
 
 
     /**
@@ -79,10 +81,17 @@ public interface SystemLogService  {
      */
     public Page<? extends Model> paginate(int page, int pageSize);
 
-/*
-    public void keep(Model model, String... attrs);
+/*    public void keep(Model model, String... attrs);
 
-    public void keep(List<? extends Model> models, String... attrs);
-*/
+    public void keep(List<? extends Model> models, String... attrs);*/
 
+    /**
+     * 分页
+     * @date  2019-01-31 13:30
+     * @param page
+     * @param pageSize
+     * @param params
+     * @return com.jfinal.plugin.activerecord.Page
+     */
+    public Page<DictType> paginate(int page, int pageSize, Map<String, Object> params);
 }

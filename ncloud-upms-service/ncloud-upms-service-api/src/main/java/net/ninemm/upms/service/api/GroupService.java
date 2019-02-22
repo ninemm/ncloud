@@ -57,7 +57,7 @@ public interface GroupService  {
      * @param model
      * @return
      */
-    public boolean save(Group model);
+    public Object save(Group model);
 
 
     /**
@@ -66,7 +66,7 @@ public interface GroupService  {
      * @param model
      * @return if save or update success
      */
-    public boolean saveOrUpdate(Group model);
+    public Object saveOrUpdate(Group model);
 
 
     /**
@@ -87,34 +87,9 @@ public interface GroupService  {
      */
     public Page<? extends Model> paginate(int page, int pageSize);
 
+/*    public void keep(Model model, String... attrs);
 
-    public void join(Page<? extends Model> page, String joinOnField);
-
-    public void join(Page<? extends Model> page, String joinOnField, String[] attrs);
-
-    public void join(Page<? extends Model> page, String joinOnField, String joinName);
-
-    public void join(Page<? extends Model> page, String joinOnField, String joinName, String[] attrs);
-
-    public void join(List<? extends Model> models, String joinOnField);
-
-    public void join(List<? extends Model> models, String joinOnField, String[] attrs);
-
-    public void join(List<? extends Model> models, String joinOnField, String joinName);
-
-    public void join(List<? extends Model> models, String joinOnField, String joinName, String[] attrs);
-
-    public void join(Model model, String joinOnField);
-
-    public void join(Model model, String joinOnField, String[] attrs);
-
-    public void join(Model model, String joinOnField, String joinName);
-
-    public void join(Model model, String joinOnField, String joinName, String[] attrs);
-
-    public void keep(Model model, String... attrs);
-
-    public void keep(List<? extends Model> models, String... attrs);
+    public void keep(List<? extends Model> models, String... attrs);*/
 
     public List<Record> findListAsOptions(String dataArea);
 

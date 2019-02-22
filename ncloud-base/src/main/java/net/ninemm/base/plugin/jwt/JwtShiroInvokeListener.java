@@ -18,10 +18,10 @@ package net.ninemm.base.plugin.jwt;
 
 import com.jfinal.core.Controller;
 import com.jfinal.log.Log;
-import io.jboot.component.jwt.JwtManager;
-import io.jboot.component.shiro.JbootShiroInvokeListener;
-import io.jboot.component.shiro.processer.AuthorizeResult;
-import io.jboot.utils.StrUtils;
+import io.jboot.support.jwt.JwtManager;
+import io.jboot.support.shiro.JbootShiroInvokeListener;
+import io.jboot.support.shiro.processer.AuthorizeResult;
+import io.jboot.utils.StrUtil;
 import io.jboot.web.controller.JbootController;
 import io.jboot.web.fixedinterceptor.FixedInvocation;
 import net.ninemm.base.common.Consts;
@@ -46,7 +46,7 @@ public class JwtShiroInvokeListener implements JbootShiroInvokeListener {
        JbootController controller = (JbootController) inv.getController();
        String jwtToken = controller.getHeader(JwtManager.me().getHttpHeaderName());
 
-       if (StrUtils.isBlank(jwtToken)) {
+       if (StrUtil.isBlank(jwtToken)) {
            inv.invoke();
            return;
        }

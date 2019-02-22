@@ -6,11 +6,9 @@ import io.jboot.service.JbootServiceBase;
 import net.ninemm.upms.service.api.RoleOperationRelService;
 import net.ninemm.upms.service.model.RoleOperationRel;
 
-import javax.inject.Singleton;
 import java.util.List;
 
 @Bean
-@Singleton
 public class RoleOperationRelServiceImpl extends JbootServiceBase<RoleOperationRel> implements RoleOperationRelService {
 
     @Override

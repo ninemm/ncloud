@@ -19,7 +19,7 @@ package net.ninemm.upms.controller;
 import com.jfinal.core.NotAction;
 import com.jfinal.log.Log;
 import io.jboot.Jboot;
-import io.jboot.utils.StrUtils;
+import io.jboot.utils.StrUtil;
 import net.ninemm.base.common.CacheKey;
 import net.ninemm.base.common.Consts;
 import net.ninemm.base.plugin.shiro.ShiroUtils;
@@ -50,7 +50,7 @@ public class BaseAppController extends BaseController {
     public String getDataArea() {
         boolean isManager = ShiroUtils.hasAnyRole("001,002,003,004,005,006,007,008,009,011,012,013,014");
         if (isManager) {
-            return Jboot.me().getCache().get(CacheKey.CACHE_PARENT_DATA_AREA, getUserId());
+            return Jboot.getCache().get(CacheKey.CACHE_PARENT_DATA_AREA, getUserId());
         }
         return null;
     }
@@ -60,7 +60,7 @@ public class BaseAppController extends BaseController {
         Map<String, Object> params = super.getAllParaMap();
         String dataArea = getDataArea();
 
-        if (StrUtils.notBlank(dataArea)) {
+        if (StrUtil.notBlank(dataArea)) {
             params.put("dataArea", dataArea + "%");
         } else {
             params.put("userId", getUserId());
@@ -90,15 +90,15 @@ public class BaseAppController extends BaseController {
             return false;
         }
         String version = (String) map.get(Consts.RequestKeys.VERSION);
-        if(StrUtils.isBlank(version)){
+        if(StrUtil.isBlank(version)){
             return false;
         }
         String platform = (String) map.get(Consts.RequestKeys.PLATFORM);
-        if(StrUtils.isBlank(platform)){
+        if(StrUtil.isBlank(platform)){
             return false;
         }
         String data = (String) map.get(Consts.RequestKeys.DATA);
-        if(StrUtils.isBlank(data)){
+        if(StrUtil.isBlank(data)){
             return false;
         }
 

@@ -18,7 +18,7 @@ package net.ninemm.base.utils;
 import com.jfinal.core.Controller;
 import com.jfinal.kit.HashKit;
 import com.jfinal.kit.PropKit;
-import io.jboot.utils.StrUtils;
+import io.jboot.utils.StrUtil;
 
 import java.math.BigInteger;
 
@@ -75,7 +75,7 @@ public class CookieUtils {
 	}
 
 	public static String getFromCookieInfo(String encryptKey, String cookieValue) {
-		if (StrUtils.isNotBlank(cookieValue)) {
+		if (StrUtil.isNotBlank(cookieValue)) {
 			String[] cookieStrings = cookieValue.split(COOKIE_SEPARATOR);
 			if (null != cookieStrings && LEN == cookieStrings.length) {
 				String encryptValue = cookieStrings[0];

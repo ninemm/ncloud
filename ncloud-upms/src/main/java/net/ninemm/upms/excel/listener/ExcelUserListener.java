@@ -19,8 +19,8 @@ package net.ninemm.upms.excel.listener;
 
 import com.alibaba.excel.metadata.BaseRowModel;
 import com.google.common.collect.Lists;
-import com.google.inject.Inject;
-import io.jboot.utils.StrUtils;
+import com.jfinal.aop.Inject;
+import io.jboot.utils.StrUtil;
 import net.ninemm.base.plugin.excel.ExcelListener;
 import net.ninemm.upms.excel.model.UserPropertyModel;
 import net.ninemm.upms.service.api.GroupService;
@@ -65,13 +65,13 @@ public class ExcelUserListener<T extends BaseRowModel> extends ExcelListener {
                 User user = userService.findByUsername(model.getUsername());
                 if (user == null) {
                     user = new User();
-                    user.setId(StrUtils.uuid());
+                    user.setId(StrUtil.uuid());
                     user.setUsername(model.getUsername());
                     user.setMobile(model.getMobile());
                     user.setRealname(model.getRealname());
 
                     String groupId = groupService.findGroupIdByGroupName(model.getGroupName());
-                    if (StrUtils.notBlank(groupId)) {
+                    if (StrUtil.notBlank(groupId)) {
                         user.setGroupId(groupId);
                         user.setGroupName(model.getGroupName());
                     }

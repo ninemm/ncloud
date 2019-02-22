@@ -2,15 +2,16 @@ package net.ninemm.upms.service.provider;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
+import com.jfinal.aop.Inject;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import io.jboot.Jboot;
 import io.jboot.aop.annotation.Bean;
-import io.jboot.core.cache.annotation.Cacheable;
+import io.jboot.components.cache.annotation.Cacheable;
 import io.jboot.db.model.Columns;
-import io.jboot.utils.StrUtils;
+import io.jboot.utils.StrUtil;
 import net.ninemm.base.utils.EncryptUtils;
 import net.ninemm.base.web.base.BaseService;
 import net.ninemm.upms.service.api.GroupService;
@@ -19,14 +20,11 @@ import net.ninemm.upms.service.api.UserService;
 import net.ninemm.upms.service.model.User;
 import net.ninemm.upms.service.model.UserGroupRel;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
 @Bean
-@Singleton
 public class UserServiceImpl extends BaseService<User> implements UserService {
 
     @Inject
@@ -117,7 +115,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
     }
 
     @Override
-    public boolean saveOrUpdate(User user) {
+    public Object saveOrUpdate(User user) {
 
         boolean result = Db.tx(new IAtom() {
             @Override
@@ -127,7 +125,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
                 clearCacheByKey(User.CACHE_NAME, buildCacheKey(user.getId()));
 
                 // 删除已有的用户组
-                if (StrUtils.notBlank(user.getId())) {
+                if (StrUtil.notBlank(user.getId())) {
                     userGroupRelService.deleteByUserId(user.getId());
                 } else {
                     String salt = EncryptUtils.salt();
@@ -137,11 +135,11 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
 
                 List<String> stationList = JSON.parseArray(user.getStationId(), String.class);
                 String[] idArray = new String[stationList.size()];
-                String stationIds = StrUtils.join(stationList.toArray(idArray), ",");
+                String stationIds = StrUtil.join(stationList.toArray(idArray), ",");
 
                 List<String> groupList = JSON.parseArray(user.getGroupId(), String.class);
                 String[] groupIdArray = new String[groupList.size()];
-                String groupIds = StrUtils.join(groupList.toArray(groupIdArray), ",");
+                String groupIds = StrUtil.join(groupList.toArray(groupIdArray), ",");
 
                 if (!user.saveOrUpdate()) {
                     return false;
@@ -150,7 +148,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
                 List<UserGroupRel> userGroupRelList = Lists.newArrayList();
                 groupList.stream().forEach(groupId -> {
                     UserGroupRel userGroupRel = new UserGroupRel();
-                    userGroupRel.setId(StrUtils.uuid());
+                    userGroupRel.setId(StrUtil.uuid());
                     userGroupRel.setUserId(user.getId());
                     userGroupRel.setGroupId(groupId);
                     userGroupRelList.add(userGroupRel);
@@ -184,13 +182,13 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
                     user.setPassword(EncryptUtils.encryptPassword(user.getPassword(), salt));
 
                     String groupId = groupService.findGroupIdByGroupName(user.getGroupName());
-                    if (StrUtils.notBlank(groupId)) {
+                    if (StrUtil.notBlank(groupId)) {
                         user.setGroupId(groupId);
                     }
                     user.saveOrUpdate();
 
                     UserGroupRel userGroupRel = new UserGroupRel();
-                    userGroupRel.setId(StrUtils.uuid());
+                    userGroupRel.setId(StrUtil.uuid());
                     userGroupRel.setUserId(user.getId());
                     userGroupRel.setGroupId(groupId);
                     userGroupRelList.add(userGroupRel);
@@ -210,17 +208,17 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
             return false;
         }
         userGroupRelService.deleteByUserId(id.toString());
-        Jboot.me().getCache().remove(User.CACHE_NAME, buildCacheKey(id.toString()));
+        Jboot.getCache().remove(User.CACHE_NAME, buildCacheKey(id.toString()));
         return super.deleteById(id);
     }
 
     @Override
     protected void clearAllCache() {
-        Jboot.me().getCache().removeAll(User.CACHE_NAME);
+        Jboot.getCache().removeAll(User.CACHE_NAME);
     }
 
     private void clearCacheByKey(String cacheName, String key) {
-        Jboot.me().getCache().remove(cacheName, key);
+        Jboot.getCache().remove(cacheName, key);
     }
 
     private String buildCacheKey(String id) {

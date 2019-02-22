@@ -21,7 +21,7 @@ import com.jfinal.aop.Interceptor;
 import com.jfinal.aop.Invocation;
 import com.jfinal.core.Controller;
 import com.jfinal.weixin.sdk.utils.IOUtils;
-import io.jboot.utils.StrUtils;
+import io.jboot.utils.StrUtil;
 import net.ninemm.base.common.Consts;
 import net.ninemm.base.common.ResultCode;
 import org.slf4j.Logger;
@@ -55,7 +55,7 @@ public class UnpackInterceptor implements Interceptor {
 
             String version = (String) param.get(Consts.RequestKeys.VERSION);
             String platform = (String) param.get(Consts.RequestKeys.PLATFORM);
-            if(StrUtils.isBlank(version) || StrUtils.isBlank(platform)){
+            if(StrUtil.isBlank(version) || StrUtil.isBlank(platform)){
                 Map<String, Object> result = new HashMap<String, Object>();
                 result.put(Consts.ResponseKeys.STATUS, ResultCode.PARAM_ERROR);
                 result.put(Consts.ResponseKeys.MESSAGE, "参数异常！");

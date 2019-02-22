@@ -19,11 +19,11 @@ package net.ninemm.upms.controller;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableMap;
-import com.google.inject.Inject;
+import com.jfinal.aop.Inject;
 import com.jfinal.kit.Ret;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.component.swagger.ParamType;
+import io.jboot.support.swagger.ParamType;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
 import io.swagger.annotations.Api;
@@ -32,7 +32,6 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import net.ninemm.base.web.base.BaseController;
 import net.ninemm.upms.service.api.DictTypeService;
-import net.ninemm.upms.service.model.Dict;
 import net.ninemm.upms.service.model.DictType;
 
 import java.util.List;
@@ -96,8 +95,8 @@ public class DictTypeController extends BaseController {
     })
     public void saveOrUpdate() {
         DictType dictType = getRawObject(DictType.class);
-        boolean result = dictTypeService.saveOrUpdate(dictType);
-        if (result) {
+        Object id = dictTypeService.saveOrUpdate(dictType);
+        if (id != null) {
             renderJson(Ret.ok());
         } else {
             renderJson(Ret.fail());

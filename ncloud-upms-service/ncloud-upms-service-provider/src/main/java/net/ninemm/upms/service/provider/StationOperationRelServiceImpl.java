@@ -4,14 +4,11 @@ import com.jfinal.plugin.activerecord.Db;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.service.JbootServiceBase;
 import net.ninemm.upms.service.api.StationOperationRelService;
-import net.ninemm.upms.service.model.RoleOperationRel;
 import net.ninemm.upms.service.model.StationOperationRel;
 
-import javax.inject.Singleton;
 import java.util.List;
 
 @Bean
-@Singleton
 public class StationOperationRelServiceImpl extends JbootServiceBase<StationOperationRel> implements StationOperationRelService {
 
     @Override

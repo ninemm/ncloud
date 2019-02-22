@@ -18,11 +18,11 @@
 package net.ninemm.upms.controller;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.inject.Inject;
+import com.jfinal.aop.Inject;
 import com.jfinal.kit.Ret;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.utils.StrUtils;
+import io.jboot.utils.StrUtil;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
 import net.ninemm.upms.service.api.MenuService;
@@ -69,9 +69,9 @@ public class OperationController extends BaseAppController {
 
     public void save() {
         Operation operation = getRawObject(Operation.class);
-        operation.setId(StrUtils.uuid());
-        boolean saved = operationService.save(operation);
-        if (saved) {
+        operation.setId(StrUtil.uuid());
+        Object id = operationService.save(operation);
+        if (id != null) {
             renderJson(Ret.ok());
         } else {
             renderJson(Ret.fail());
@@ -90,8 +90,8 @@ public class OperationController extends BaseAppController {
 
     public void saveOrUpdate() {
         Operation operation = getRawObject(Operation.class);
-        boolean result = operationService.saveOrUpdate(operation);
-        if (result) {
+        Object id = operationService.saveOrUpdate(operation);
+        if (id != null) {
             renderJson(Ret.ok());
         } else {
             renderJson(Ret.fail());
@@ -111,8 +111,8 @@ public class OperationController extends BaseAppController {
     public void addMenu() {
         String id = getPara(0);
         Operation operation = operationService.findById(id);
-        boolean saved = menuService.save(operation);
-        if (!saved) {
+        Object newId = menuService.save(operation);
+        if (newId != null) {
             renderJson(Ret.fail());
             return ;
         }

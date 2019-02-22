@@ -2,30 +2,25 @@ package net.ninemm.upms.service.provider;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
-import com.google.inject.Inject;
+import com.jfinal.aop.Inject;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import io.jboot.Jboot;
 import io.jboot.aop.annotation.Bean;
-import io.jboot.core.rpc.annotation.JbootrpcService;
 import io.jboot.db.model.Columns;
-import io.jboot.service.JbootServiceBase;
-import io.jboot.utils.StrUtils;
+import io.jboot.utils.StrUtil;
 import net.ninemm.base.web.base.BaseService;
 import net.ninemm.upms.service.api.RoleService;
 import net.ninemm.upms.service.model.Role;
 import net.ninemm.upms.service.model.RoleOperationRel;
 
-import javax.inject.Singleton;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
 @Bean
-@Singleton
-@JbootrpcService
 public class RoleServiceImpl extends BaseService<Role> implements RoleService {
 
     @Inject
@@ -49,7 +44,7 @@ public class RoleServiceImpl extends BaseService<Role> implements RoleService {
     public List<Record> findListAsOptions(String dataArea) {
         StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append("select id, role_name as name from upms_role where 1=1");
-        if (StrUtils.isNotBlank(dataArea)) {
+        if (StrUtil.isNotBlank(dataArea)) {
             sqlBuilder.append(" AND data_area = ?");
         }
 
@@ -81,13 +76,13 @@ public class RoleServiceImpl extends BaseService<Role> implements RoleService {
 
                 roleOperationRelService.deleteByModuleId(roleId, moduleId);
                 List<RoleOperationRel> list = Lists.newArrayList();
-                if (StrUtils.isBlank(operationIds)) {
+                if (StrUtil.isBlank(operationIds)) {
                     return true;
                 }
 
                 Splitter.on(",").splitToList(operationIds).stream().forEach(operatorId -> {
                     RoleOperationRel ror = new RoleOperationRel();
-                    ror.setId(StrUtils.uuid());
+                    ror.setId(StrUtil.uuid());
                     ror.setRoleId(roleId);
                     ror.setModuleId(moduleId);
                     ror.setOperationId(operatorId);
@@ -105,6 +100,6 @@ public class RoleServiceImpl extends BaseService<Role> implements RoleService {
      * 清除 model 缓存
      */
     protected void clearAllCache() {
-        Jboot.me().getCache().removeAll(Role.CACHE_NAME);
+        Jboot.getCache().removeAll(Role.CACHE_NAME);
     }
 }

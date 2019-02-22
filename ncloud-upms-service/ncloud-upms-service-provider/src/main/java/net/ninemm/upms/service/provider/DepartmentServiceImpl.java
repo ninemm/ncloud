@@ -5,23 +5,23 @@ import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.SqlPara;
 import io.jboot.Jboot;
 import io.jboot.aop.annotation.Bean;
-import io.jboot.core.cache.annotation.Cacheable;
+import io.jboot.components.cache.annotation.Cacheable;
+import io.jboot.components.rpc.annotation.RPCBean;
 import io.jboot.db.model.Columns;
-import io.jboot.utils.StrUtils;
+import io.jboot.utils.StrUtil;
 import net.ninemm.base.web.base.BaseService;
 import net.ninemm.upms.service.api.DepartmentService;
 import net.ninemm.upms.service.model.Department;
 
-import javax.inject.Singleton;
 import java.sql.SQLException;
 import java.util.List;
 
 @Bean
-@Singleton
+@RPCBean
 public class DepartmentServiceImpl extends BaseService<Department> implements DepartmentService<Department> {
 
     @Override
-    public boolean saveOrUpdate(Department dept) {
+    public Object saveOrUpdate(Department dept) {
 
         boolean saved = Db.tx(new IAtom() {
             @Override
@@ -32,7 +32,7 @@ public class DepartmentServiceImpl extends BaseService<Department> implements De
                     dept.setIsParent(0);
                 }
 
-                if (StrUtils.isBlank(dept.getId())) {
+                if (StrUtil.isBlank(dept.getId())) {
                     String dataArea = findNextDataArea(dept.getParentId());
                     dept.setDataArea(dataArea);
                 }
@@ -116,7 +116,7 @@ public class DepartmentServiceImpl extends BaseService<Department> implements De
     private String findNextDataArea(String parentId) {
         String sql = "SELECT MAX(data_area) FROM upms_department WHERE parent_id = ? ORDER BY data_area DESC";
         String dataArea = Db.queryStr(sql, parentId);
-        if (StrUtils.isBlank(dataArea)) {
+        if (StrUtil.isBlank(dataArea)) {
             Department department = findById(parentId);
             dataArea = department.getDataArea();
             return dataArea + "001";
@@ -126,7 +126,7 @@ public class DepartmentServiceImpl extends BaseService<Department> implements De
 
     @Override
     public void clearAllCache() {
-        Jboot.me().getCache().removeAll(Department.CACHE_NAME);
+        Jboot.getCache().removeAll(Department.CACHE_NAME);
     }
 
 }

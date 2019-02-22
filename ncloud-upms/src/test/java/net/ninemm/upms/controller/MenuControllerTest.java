@@ -18,9 +18,9 @@
 package net.ninemm.upms.controller;
 
 import com.google.common.collect.Lists;
-import com.google.inject.Inject;
 import com.jfinal.aop.Clear;
-import io.jboot.Jboot;
+import com.jfinal.aop.Inject;
+import io.jboot.app.JbootApplication;
 import io.jboot.web.controller.JbootController;
 import io.jboot.web.controller.annotation.RequestMapping;
 import net.ninemm.base.interceptor.GlobalCacheInterceptor;
@@ -39,11 +39,11 @@ public class MenuControllerTest extends JbootController {
     MenuService menuService;
 
     public static void main(String[] args) {
-        Jboot.setBootArg("jboot.datasource.type", "mysql");
-        Jboot.setBootArg("jboot.datasource.url", "jdbc:mysql://127.0.0.1:3306/ncloud");
-        Jboot.setBootArg("jboot.datasource.user", "root");
-        Jboot.setBootArg("jboot.datasource.password", "123456");
-        Jboot.run(args);
+        JbootApplication.setBootArg("jboot.datasource.type", "mysql");
+        JbootApplication.setBootArg("jboot.datasource.url", "jdbc:mysql://127.0.0.1:3306/ncloud");
+        JbootApplication.setBootArg("jboot.datasource.user", "root");
+        JbootApplication.setBootArg("jboot.datasource.password", "123456");
+        JbootApplication.run(args);
     }
 
     public void menuTree() {

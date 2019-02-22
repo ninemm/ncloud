@@ -18,7 +18,7 @@ package net.ninemm.base.utils;
 
 import com.jfinal.kit.StrKit;
 import io.jboot.Jboot;
-import io.jboot.component.redis.JbootRedis;
+import io.jboot.support.redis.JbootRedis;
 import org.joda.time.DateTime;
 
 /**
@@ -30,7 +30,7 @@ import org.joda.time.DateTime;
 
 public class SystemSerialUtil {
 
-    private JbootRedis jbootRedis = Jboot.me().getRedis();
+    private JbootRedis jbootRedis = Jboot.getRedis();
 
     public String getSequence(String type, String sellerCode, String name){
 

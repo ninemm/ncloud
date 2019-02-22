@@ -17,15 +17,14 @@
 package net.ninemm.base.gencode.serviceimpl;
 
 
-import io.jboot.config.annotation.PropertyConfig;
-
+import io.jboot.app.config.annotation.ConfigModel;
 /**
  * api代码生成配置
  *
  * @author Eric Huang
  * @date 2018-06-28 12:33
  */
-@PropertyConfig(prefix="jboot.admin.serviceimpl.ge")
+@ConfigModel(prefix="jboot.admin.serviceimpl.ge")
 public class AppServiceImplGeneratorConfig {
 
     /**

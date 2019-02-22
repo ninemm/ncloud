@@ -18,7 +18,7 @@
 package net.ninemm.upms.controller;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.inject.Inject;
+import com.jfinal.aop.Inject;
 import com.jfinal.kit.Ret;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Page;
@@ -74,8 +74,8 @@ public class StationController extends BaseAppController {
 
     public void saveOrUpdate() {
         Station station = getRawObject(Station.class);
-        boolean result = stationService.saveOrUpdate(station);
-        if (result) {
+        Object id = stationService.saveOrUpdate(station);
+        if (id != null) {
             renderJson(Ret.ok());
         } else {
             renderJson(Ret.fail());

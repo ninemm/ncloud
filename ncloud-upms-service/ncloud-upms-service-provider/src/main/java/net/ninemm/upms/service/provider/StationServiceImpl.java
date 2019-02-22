@@ -2,26 +2,23 @@ package net.ninemm.upms.service.provider;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
-import com.google.inject.Inject;
+import com.jfinal.aop.Inject;
 import com.jfinal.kit.Kv;
 import com.jfinal.plugin.activerecord.*;
 import io.jboot.Jboot;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.db.model.Columns;
-import io.jboot.utils.StrUtils;
+import io.jboot.utils.StrUtil;
 import net.ninemm.base.web.base.BaseService;
 import net.ninemm.upms.service.api.StationService;
-import net.ninemm.upms.service.model.RoleOperationRel;
 import net.ninemm.upms.service.model.Station;
 import net.ninemm.upms.service.model.StationOperationRel;
 
-import javax.inject.Singleton;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
 @Bean
-@Singleton
 public class StationServiceImpl extends BaseService<Station> implements StationService {
 
     @Inject
@@ -52,7 +49,7 @@ public class StationServiceImpl extends BaseService<Station> implements StationS
     public List<Record> findListAsOptions(String dataArea) {
         StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append("select id, station_name as name from upms_station where 1=1");
-        if (StrUtils.isNotBlank(dataArea)) {
+        if (StrUtil.isNotBlank(dataArea)) {
             sqlBuilder.append(" AND data_area = ?");
         }
 
@@ -78,13 +75,13 @@ public class StationServiceImpl extends BaseService<Station> implements StationS
 
                 stationOperationRelService.deleteByModuleId(stationId, moduleId);
                 List<StationOperationRel> list = Lists.newArrayList();
-                if (StrUtils.isBlank(operationIds)) {
+                if (StrUtil.isBlank(operationIds)) {
                     return true;
                 }
 
                 Splitter.on(",").splitToList(operationIds).stream().forEach(operatorId -> {
                     StationOperationRel sor = new StationOperationRel();
-                    sor.setId(StrUtils.uuid());
+                    sor.setId(StrUtil.uuid());
                     sor.setStationId(stationId);
                     sor.setModuleId(moduleId);
                     sor.setOperationId(operatorId);
@@ -103,6 +100,6 @@ public class StationServiceImpl extends BaseService<Station> implements StationS
      */
     @Override
     protected void clearAllCache() {
-        Jboot.me().getCache().removeAll(Station.CACHE_NAME);
+        Jboot.getCache().removeAll(Station.CACHE_NAME);
     }
 }

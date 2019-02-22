@@ -50,7 +50,7 @@ public interface DictService  {
      * @param model
      * @return
      */
-    public boolean save(Dict model);
+    public Object save(Dict model);
 
 
     /**
@@ -59,7 +59,7 @@ public interface DictService  {
      * @param model
      * @return if save or update success
      */
-    public boolean saveOrUpdate(Dict model);
+    public Object saveOrUpdate(Dict model);
 
 
     /**
@@ -81,7 +81,7 @@ public interface DictService  {
     public Page<? extends Model> paginate(int page, int pageSize);
 
 
-    public void join(Page<? extends Model> page, String joinOnField);
+    /*public void join(Page<? extends Model> page, String joinOnField);
 
     public void join(Page<? extends Model> page, String joinOnField, String[] attrs);
 
@@ -107,7 +107,7 @@ public interface DictService  {
 
     public void keep(Model model, String... attrs);
 
-    public void keep(List<? extends Model> models, String... attrs);
+    public void keep(List<? extends Model> models, String... attrs);*/
 
     public List<Dict> findListByDictType(String type);
 

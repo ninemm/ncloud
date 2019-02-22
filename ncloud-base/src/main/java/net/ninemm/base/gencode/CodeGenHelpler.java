@@ -18,7 +18,7 @@ package net.ninemm.base.gencode;
 
 import com.google.common.collect.Lists;
 import com.jfinal.plugin.activerecord.generator.TableMeta;
-import io.jboot.utils.StrUtils;
+import io.jboot.utils.StrUtil;
 
 import java.util.List;
 import java.util.Set;
@@ -41,9 +41,9 @@ public class CodeGenHelpler extends io.jboot.codegen.CodeGenHelpler {
      **/
     public static void includeTables(List<TableMeta> list, String includeTables) {
 
-        if (StrUtils.isNotBlank(includeTables)) {
+        if (StrUtil.isNotBlank(includeTables)) {
             List<TableMeta> newTableMetaList = Lists.newArrayList();
-            Set<String> includeTableSet = StrUtils.splitToSet(includeTables.toLowerCase(), ",");
+            Set<String> includeTableSet = StrUtil.splitToSet(includeTables.toLowerCase(), ",");
             for (TableMeta tableMeta : list) {
                 if (includeTableSet.contains(tableMeta.name.toLowerCase())) {
                     System.out.println("include table : " + tableMeta.name);

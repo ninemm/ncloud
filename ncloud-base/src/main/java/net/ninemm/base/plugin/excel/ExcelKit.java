@@ -24,7 +24,7 @@ import com.alibaba.excel.metadata.BaseRowModel;
 import com.alibaba.excel.metadata.Sheet;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import com.google.common.collect.Lists;
-import io.jboot.utils.FileUtils;
+import io.jboot.utils.FileUtil;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -169,7 +169,7 @@ public class ExcelKit {
      */
     private static ExcelReader getReader(File file, ExcelListener excelListener) {
 
-        String suffixName = FileUtils.getSuffix(file.getName());
+        String suffixName = FileUtil.getSuffix(file.getName());
         if (suffixName == null || !fileSuffix.contains(suffixName)) {
             throw new ExcelException("文件格式错误");
         }

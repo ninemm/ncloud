@@ -17,9 +17,8 @@
 
 package net.ninemm.upms.controller;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.google.inject.Inject;
+import com.jfinal.aop.Inject;
 import com.jfinal.kit.Ret;
 import com.jfinal.kit.StrKit;
 import io.jboot.web.controller.annotation.RequestMapping;
@@ -83,8 +82,8 @@ public class MenuController extends BaseAppController {
 
     public void saveOrUpdate() {
         Menu menu = getRawObject(Menu.class);
-        boolean result = menuService.saveOrUpdate(menu);
-        if (result) {
+        Object id = menuService.saveOrUpdate(menu);
+        if (id != null) {
             renderJson(Ret.ok());
         } else {
             renderJson(Ret.fail());

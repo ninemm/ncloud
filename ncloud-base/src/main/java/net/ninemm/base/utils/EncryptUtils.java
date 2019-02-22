@@ -16,7 +16,7 @@
 package net.ninemm.base.utils;
 
 import com.jfinal.kit.HashKit;
-import io.jboot.utils.StrUtils;
+import io.jboot.utils.StrUtil;
 
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -63,7 +63,7 @@ public class EncryptUtils extends HashKit {
 		query.append(secret);
 		for (String key : keys) {
 			String value = params.get(key);
-			if (StrUtils.areNotEmpty(key, value)) {
+			if (StrUtil.areNotEmpty(key, value)) {
 				query.append(key).append(value);
 			}
 		}
