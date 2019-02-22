@@ -23,15 +23,20 @@ public class DictServiceImpl extends BaseService<Dict> implements DictService {
     @Override
     public Page<Dict> paginate(int page, int pageSize, Map<String, Object> params) {
         Columns columns = Columns.create();
-        Object groupName = params.get("dictName");
-        if (groupName != null) {
-            columns.likeAppendPercent("dict_name", groupName);
+        Object dictName = params.get("name");
+        if (dictName != null) {
+            columns.likeAppendPercent("name", dictName);
         }
 
-        Object dataArea = params.get("dataArea");
-        if (dataArea != null) {
-            columns.like("data_area", dataArea);
+        Object dictType = params.get("type");
+        if (dictType != null) {
+            columns.eq("type", dictType);
         }
+
+//        Object dataArea = params.get("dataArea");
+//        if (dataArea != null) {
+//            columns.like("data_area", dataArea);
+//        }
 
         Object isAsc = params.get("isAsc");
         Object orderByField = params.get("orderByField");

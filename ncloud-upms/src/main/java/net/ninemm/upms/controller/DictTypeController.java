@@ -12,6 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
 package net.ninemm.upms.controller;
@@ -29,13 +30,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import net.ninemm.base.common.RestResult;
 import net.ninemm.base.web.base.BaseController;
-import net.ninemm.upms.service.api.DictService;
 import net.ninemm.upms.service.api.DictTypeService;
 import net.ninemm.upms.service.model.Dict;
 import net.ninemm.upms.service.model.DictType;
-import net.ninemm.upms.service.model.Group;
 
 import java.util.List;
 import java.util.Map;
@@ -47,13 +45,11 @@ import java.util.Map;
  * @date 2018-06-28 01:07
  **/
 
-@RequestMapping(value = "/api/v1/admin/dict")
-@Api(description = "字典类型接口文档", basePath = "/api/v1/admin/dict", tags = "dict", position = 1)
+@RequestMapping(value = "/api/v1/admin/dictType")
+@Api(description = "数据字典接口文档", basePath = "/api/v1/admin/dictType", tags = "dict", position = 1)
 @EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowMethods = "POST,OPTIONS,GET,PUT,DELETE", allowCredentials = "true")
-public class DictController extends BaseController {
+public class DictTypeController extends BaseController {
 
-    @Inject
-    DictService dictService;
     @Inject
     DictTypeService dictTypeService;
 
@@ -72,9 +68,7 @@ public class DictController extends BaseController {
     })
     public void list() {
         Map<String, Object> params = getAllParaMap();
-        Page<Dict> page = dictService.paginate(getPageNumber(), getPageSize(), params);
-        String[] attrs = {"name"};
-        dictTypeService.join(page, "type", "dictType", attrs);
+        Page<DictType> page = dictTypeService.paginate(getPageNumber(), getPageSize(), params);
         Map<String, Object> map = ImmutableMap.of("total", page.getTotalRow(), "records", page.getList());
         renderJson(map);
     }
@@ -91,8 +85,8 @@ public class DictController extends BaseController {
             return;
         }
 
-        Dict dict = dictService.findById(id);
-        renderJson(Ret.ok().set("data", dict));
+        DictType dictType = dictTypeService.findById(id);
+        renderJson(Ret.ok().set("data", dictType));
     }
 
     @ApiOperation(value = "新增数据字典", httpMethod = "POST", notes = "Dict Object")
@@ -101,8 +95,8 @@ public class DictController extends BaseController {
         @ApiImplicitParam(name = "id", value = "字典ID", paramType = ParamType.QUERY, dataType = "string", required = true)
     })
     public void saveOrUpdate() {
-        Dict dict = getRawObject(Dict.class);
-        boolean result = dictService.saveOrUpdate(dict);
+        DictType dictType = getRawObject(DictType.class);
+        boolean result = dictTypeService.saveOrUpdate(dictType);
         if (result) {
             renderJson(Ret.ok());
         } else {
@@ -116,7 +110,7 @@ public class DictController extends BaseController {
             renderJson(Ret.fail());
             return;
         }
-        boolean deleted = dictService.deleteById(id);
+        boolean deleted = dictTypeService.deleteById(id);
         if (deleted) {
             renderJson(Ret.ok());
             return;
@@ -125,10 +119,10 @@ public class DictController extends BaseController {
     }
 
     public void batchDelete() {
-        String dictTypeIds = getPara(0);
-        List<String> list = Splitter.on(",").splitToList(dictTypeIds);
-        for (String dictTypeId : list) {
-            dictService.deleteById(dictTypeId);
+        String userIds = getPara(0);
+        List<String> list = Splitter.on(",").splitToList(userIds);
+        for (String dictId : list) {
+            dictTypeService.deleteById(dictId);
         }
         renderJson(Ret.ok());
     }

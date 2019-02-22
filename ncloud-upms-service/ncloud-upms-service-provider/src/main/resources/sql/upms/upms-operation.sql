@@ -9,19 +9,19 @@ left join `operation` o on r.operation_id = o.id where r.role_id in
 UNION ALL
 select o.url from `station_operation_rel` r
 left join `operation` o on r.operation_id = o.id
-WHERE LOCATE(?, r.station_id) > 0
+WHERE LOCATE(r.station_id, ?) > 0
 #end
 
 #sql("findOperationPermissionByUserId")
   SELECT o.url
   FROM `upms_role_operation_rel` ro
   LEFT JOIN `upms_operation` o ON ro.operation_id = o.id
-  WHERE LOCATE(#para(roleIds), ro.role_id) > 0
+  WHERE LOCATE(ro.role_id, #para(roleIds)) > 0
   #if(stationIds)
   UNION
   SELECT o.url
   FROM `upms_station_operation_rel` s
   LEFT JOIN `upms_operation` o ON s.operation_id = o.id
-  WHERE LOCATE(#para(stationIds), s.station_id) > 0
+  WHERE LOCATE(s.station_id, #para(stationIds)) > 0
   #end
 #end

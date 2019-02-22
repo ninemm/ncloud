@@ -70,7 +70,7 @@ public class AuthController extends BaseAppController {
         @ApiImplicitParam(name = "choicedUserId", value = "选中的用户", paramType = ParamType.FORM, dataType = "string", required = false),
         @ApiImplicitParam(name = "choicedSellerId", value = "选中的账套", paramType = ParamType.FORM, dataType = "string", required = false)
     })
-    @NotNullPara({"mobile", "password", "deptId"})
+    @NotNullPara({"mobile", "password"})
     @Clear(GlobalCacheInterceptor.class)
     public void login(String mobile, String password, String deptId) {
 
@@ -79,7 +79,8 @@ public class AuthController extends BaseAppController {
             return;
         }
 
-        User user = userService.findByMobileAndDeptId(mobile, deptId);
+//        User user = userService.findByMobileAndDeptId(mobile, deptId);
+        User user = userService.findByUsername(mobile);
         boolean checkPwd = ShiroUtils.checkPwd(password, user.getPassword(), user.getSalt());
         if (!checkPwd) {
             renderJson(Ret.fail());
