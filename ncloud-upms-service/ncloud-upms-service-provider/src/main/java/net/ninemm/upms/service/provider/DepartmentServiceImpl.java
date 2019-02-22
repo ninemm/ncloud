@@ -17,7 +17,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Bean
-@RPCBean
 public class DepartmentServiceImpl extends BaseService<Department> implements DepartmentService<Department> {
 
     @Override

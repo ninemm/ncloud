@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 @Bean
-@RPCBean
 public class DictServiceImpl extends BaseService<Dict> implements DictService {
 
     @Override
