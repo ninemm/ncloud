@@ -18,10 +18,10 @@ package net.ninemm.upms.controller;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableMap;
+import com.jfinal.aop.Inject;
 import com.jfinal.kit.Ret;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Page;
-import io.jboot.components.rpc.annotation.RPCInject;
 import io.jboot.support.swagger.ParamType;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
@@ -49,9 +49,9 @@ import java.util.Map;
 @EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowMethods = "POST,OPTIONS,GET,PUT,DELETE", allowCredentials = "true")
 public class DictController extends BaseController {
 
-    @RPCInject
+    @Inject
     DictService dictService;
-    @RPCInject
+    @Inject
     DictTypeService dictTypeService;
 
     /**
@@ -61,7 +61,6 @@ public class DictController extends BaseController {
      * @param [type]
      * @return void
      **/
-
     @ApiOperation(value = "数据字典类型列表", httpMethod = "GET", notes = "Dict List")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "Jwt", value = "Jwt", paramType = ParamType.HEADER, dataType = "string", required = true),
@@ -71,7 +70,7 @@ public class DictController extends BaseController {
         Map<String, Object> params = getAllParaMap();
         Page<Dict> page = dictService.paginate(getPageNumber(), getPageSize(), params);
         String[] attrs = {"name"};
-        dictTypeService.join(page, "type", "dictType", attrs);
+        dictTypeService.join(page, "type_id", "dictType", attrs);
         Map<String, Object> map = ImmutableMap.of("total", page.getTotalRow(), "records", page.getList());
         renderJson(map);
     }

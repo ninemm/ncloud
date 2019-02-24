@@ -36,9 +36,17 @@ public abstract class BaseDict<M extends BaseDict<M>> extends JbootModel<M> impl
 	public void setType(java.lang.String type) {
 		set("type", type);
 	}
-	
+
 	public java.lang.String getType() {
 		return getStr("type");
+	}
+
+	public void setTypeId(java.lang.String typeId) {
+		set("type_id", typeId);
+	}
+
+	public java.lang.String getTypeId() {
+		return getStr("type_id");
 	}
 
 	public void setKey(java.lang.String key) {

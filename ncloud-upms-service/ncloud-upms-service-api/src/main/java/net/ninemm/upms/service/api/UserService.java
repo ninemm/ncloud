@@ -90,6 +90,16 @@ public interface UserService extends JbootServiceJoiner {
      */
     public Page<User> paginate(int page, int pageSize);
 
+    /**
+     * 带参数的分页
+     *
+     * @param page
+     * @param pageSize
+     * @param params
+     * @return
+     */
+    public Page<User> paginate(int page, int pageSize, Map<String, Object> params);
+
     /*public void keep(Model model, String... attrs);
 
     public void keep(List<? extends Model> models, String... attrs);*/
@@ -125,7 +135,7 @@ public interface UserService extends JbootServiceJoiner {
      */
     public boolean batchSave(List<User> list);
 
-    public Page<User> paginate(int page, int pageSize, Map<String, Object> params);
+
 
     /**
      * find user by dept id

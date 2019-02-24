@@ -8,6 +8,7 @@ import java.io.Serializable;
 
 /**
  * ShiroCache工具类
+ * @author eric
  */
 public class ShiroCacheUtils {
 	private static CacheManager cacheManager;

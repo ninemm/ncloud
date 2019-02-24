@@ -24,6 +24,14 @@
 * 调用监控：hystrix-dashboard
 * 链路跟踪：zipkin
 
+### Jboot配置文件说明
+在Jboot应用中，可以通过以下几种方式给Jboot应用进行配置
+* jboot.properties配置文件
+* 环境变量
+* JVM系统属性
+* 启动参数
+
+    注意：如果同一个属性被多处配置，那么Jboot读取配置的优先顺序是：启动参数》JVM系统属性》环境变量》Jboot.properties配置
 
 ### 模块说明
 项目为使用Maven构建的多模块项目

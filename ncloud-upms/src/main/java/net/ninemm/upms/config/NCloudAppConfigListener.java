@@ -25,6 +25,7 @@ import io.jboot.Jboot;
 import io.jboot.aop.jfinal.JfinalHandlers;
 import io.jboot.aop.jfinal.JfinalPlugins;
 import io.jboot.core.listener.JbootAppListenerBase;
+import io.jboot.web.fixedinterceptor.FixedInterceptors;
 import net.ninemm.base.captcha.CaptchaCache;
 import net.ninemm.base.common.AppInfo;
 import net.ninemm.base.handler.OptionsHandler;
@@ -64,6 +65,9 @@ public class NCloudAppConfigListener extends JbootAppListenerBase {
         interceptors.add(new GlobalCacheInterceptor());
         interceptors.add(new LogInterceptor());
     }
+
+    @Override
+    public void onFixedInterceptorConfig(FixedInterceptors fixedInterceptors) {}
 
     @Override
     public void onPluginConfig(JfinalPlugins plugins) {

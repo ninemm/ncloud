@@ -4,6 +4,7 @@ import com.google.common.collect.ComparisonChain;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.Jboot;
 import io.jboot.aop.annotation.Bean;
+import io.jboot.components.cache.annotation.CacheEvict;
 import io.jboot.components.cache.annotation.Cacheable;
 import io.jboot.components.rpc.annotation.RPCBean;
 import io.jboot.db.model.Columns;
@@ -69,6 +70,7 @@ public class DictServiceImpl extends BaseService<Dict> implements DictService {
     }
 
     @Override
+    @CacheEvict(name = "upms_dict")
     public boolean deleteById(Object id) {
         clearAllCache();
         return super.deleteById(id);

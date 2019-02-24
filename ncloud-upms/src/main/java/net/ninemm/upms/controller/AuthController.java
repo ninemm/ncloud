@@ -25,6 +25,7 @@ import io.jboot.support.swagger.ParamType;
 import io.jboot.utils.StrUtil;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
+import io.jboot.web.validate.CaptchaValidate;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -47,7 +48,7 @@ import net.ninemm.upms.service.model.User;
  * @date 2018-12-26 21:46
  **/
 @RequestMapping(value = "/auth")
-@Api(description = "用户登录，注销", basePath = "/", tags = "auth", position = 99)
+@Api(description = "用户登录，注销", basePath = "/auth", tags = "auth", position = 99)
 @EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
 public class AuthController extends BaseAppController {
 
@@ -70,13 +71,14 @@ public class AuthController extends BaseAppController {
     @Clear(GlobalCacheInterceptor.class)
     public void login(String mobile, String password, String deptId) {
 
-        if (!validateCaptcha(Consts.CAPTCHA_CODE)) {
-            renderJson(Ret.fail("errorMessage", "验证码错误"));
-            return;
-        }
+//        if (!validateCaptcha(Consts.CAPTCHA_CODE)) {
+//            renderJson(Ret.fail("errorMessage", "验证码错误"));
+//            return;
+//        }
 
 //        User user = userService.findByMobileAndDeptId(mobile, deptId);
         User user = userService.findByUsername(mobile);
+//        User user = userService.findByMobileAndPassword(mobile, password);
         boolean checkPwd = ShiroUtils.checkPwd(password, user.getPassword(), user.getSalt());
         if (!checkPwd) {
             renderJson(Ret.fail());
