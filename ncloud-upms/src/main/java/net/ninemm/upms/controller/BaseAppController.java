@@ -16,14 +16,17 @@
 
 package net.ninemm.upms.controller;
 
+import com.jfinal.aop.Inject;
 import com.jfinal.core.NotAction;
 import com.jfinal.log.Log;
 import io.jboot.Jboot;
 import io.jboot.utils.StrUtil;
+import net.ninemm.base.common.AppInfo;
 import net.ninemm.base.common.CacheKey;
 import net.ninemm.base.common.Consts;
 import net.ninemm.base.plugin.shiro.ShiroUtils;
 import net.ninemm.base.web.base.BaseController;
+import net.ninemm.upms.service.api.OptionService;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -39,6 +42,9 @@ public class BaseAppController extends BaseController {
 
     private static final Log LOG = Log.getLog(BaseAppController.class);
 
+    @Inject
+    OptionService optionService;
+
     private Map<String, Object> responseMap = new TreeMap<String, Object>();
 
     @NotAction
@@ -48,6 +54,12 @@ public class BaseAppController extends BaseController {
 
     @NotAction
     public String getDataArea() {
+
+        String platformType = getPlatFormType();
+        if (StrUtil.equals(Consts.PLATFORM_TYPE_VALUE, platformType)) {
+            return null;
+        }
+
         boolean isManager = ShiroUtils.hasAnyRole("001,002,003,004,005,006,007,008,009,011,012,013,014");
         if (isManager) {
             return Jboot.getCache().get(CacheKey.CACHE_PARENT_DATA_AREA, getUserId());
@@ -103,6 +115,11 @@ public class BaseAppController extends BaseController {
         }
 
         return true;
+    }
+
+    protected String getPlatFormType() {
+        AppInfo appInfo = Jboot.config(AppInfo.class);
+        return appInfo.getType();
     }
 
 }

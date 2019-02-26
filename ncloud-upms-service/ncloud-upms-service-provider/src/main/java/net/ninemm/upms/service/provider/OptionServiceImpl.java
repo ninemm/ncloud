@@ -2,6 +2,7 @@ package net.ninemm.upms.service.provider;
 
 import io.jboot.aop.annotation.Bean;
 import io.jboot.components.cache.annotation.CacheEvict;
+import io.jboot.components.cache.annotation.Cacheable;
 import io.jboot.service.JbootServiceBase;
 import net.ninemm.upms.service.api.OptionService;
 import net.ninemm.upms.service.model.Option;
@@ -39,4 +40,9 @@ public class OptionServiceImpl extends JbootServiceBase<Option> implements Optio
         return DAO.find(sql);
     }
 
+    @Override
+    @Cacheable(name = "option", key = "#(key)")
+    public Option findByKey(String key) {
+        return DAO.findFirstByColumn("option_key", key);
+    }
 }

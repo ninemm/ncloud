@@ -176,5 +176,6 @@ public class Consts {
 	public static final String ES_INDEX_STORE = "tcloud";
 	public static final String ES_INDEX_TYPE_CUSTOMER = "customer";
 
-
+	/** 平台类型 */
+	public static final String PLATFORM_TYPE_VALUE = "sys-manage";
 }

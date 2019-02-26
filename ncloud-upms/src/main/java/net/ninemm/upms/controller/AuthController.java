@@ -71,13 +71,13 @@ public class AuthController extends BaseAppController {
     @Clear(GlobalCacheInterceptor.class)
     public void login(String mobile, String password, String deptId) {
 
-//        if (!validateCaptcha(Consts.CAPTCHA_CODE)) {
-//            renderJson(Ret.fail("errorMessage", "验证码错误"));
-//            return;
-//        }
+        if (!validateCaptcha(Consts.CAPTCHA_CODE)) {
+            renderJson(Ret.fail("errorMessage", "验证码错误"));
+            return;
+        }
 
-//        User user = userService.findByMobileAndDeptId(mobile, deptId);
-        User user = userService.findByUsername(mobile);
+        User user = userService.findByMobileAndDeptId(mobile, deptId);
+//        User user = userService.findByUsername(mobile);
 //        User user = userService.findByMobileAndPassword(mobile, password);
         boolean checkPwd = ShiroUtils.checkPwd(password, user.getPassword(), user.getSalt());
         if (!checkPwd) {

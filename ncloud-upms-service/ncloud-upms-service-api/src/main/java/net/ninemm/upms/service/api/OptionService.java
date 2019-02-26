@@ -16,6 +16,13 @@ public interface OptionService  {
      */
     public Option findById(Object id);
 
+    /**
+     * find model by option_key
+     *
+     * @param key
+     * @return
+     */
+    public Option findByKey(String key);
 
     /**
      * find all model
@@ -98,5 +105,7 @@ public interface OptionService  {
      * @return list
      */
     public List<Option> findAllSystemSettingList();
+
+
 
 }

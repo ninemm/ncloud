@@ -27,6 +27,7 @@ public class AppInfo {
 
     private String name;
     private String org;
+    private String type;
     private String orgWebsite;
     private String resourceHost;
     private String copyRight;
@@ -45,6 +46,14 @@ public class AppInfo {
 
     public void setOrg(String org) {
         this.org = org;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getOrgWebsite() {
@@ -73,9 +82,10 @@ public class AppInfo {
 
     @Override
     public String toString() {
-        return "AppInfo{" +
+        return "AppInfo {" +
             "name='" + name + '\'' +
             ", org='" + org + '\'' +
+            ", type='" + type + '\'' +
             ", orgWebsite='" + orgWebsite + '\'' +
             ", resourceHost='" + resourceHost + '\'' +
             ", copyRight='" + copyRight + '\'' +
