@@ -37,12 +37,10 @@ public class AppJbootServiceImplGenerator extends BaseModelGenerator {
     public AppJbootServiceImplGenerator(String servicePackage, String modelPacket, String serviceImplPackage) {
         super(serviceImplPackage, PathKit.getWebRootPath() + "/src/main/java/" + serviceImplPackage.replace(".", "/"));
 
-
         this.modelPacket = modelPacket;
         this.servicePackage = servicePackage;
         this.serviceImplPackage = serviceImplPackage;
-        this.template = "io/jboot/codegen/service/service_impl_template.jf";
-
+        this.template = "io/jboot/codegen/service/service_impl_template.tp";
 
     }
 
@@ -71,6 +69,7 @@ public class AppJbootServiceImplGenerator extends BaseModelGenerator {
         data.set("tableMeta", tableMeta);
         data.set("basePackage", servicePackage);
         data.set("modelPackage", modelPacket);
+        data.set("implName", "impl");
 
         Engine engine = Engine.use("forServiceImpl");
         tableMeta.baseModelContent = engine.getTemplate(template).renderToString(data);
