@@ -63,7 +63,9 @@ public class DictTypeController extends BaseController {
     @ApiOperation(value = "数据字典类型列表", httpMethod = "GET", notes = "Dict List")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "Jwt", value = "Jwt", paramType = ParamType.HEADER, dataType = "string", required = true),
-        @ApiImplicitParam(name = "type", value = "字典类型", paramType = ParamType.QUERY, dataType = "string", required = true)
+        @ApiImplicitParam(name = "name", value = "类型名称", paramType = ParamType.QUERY, dataType = "string", required = true),
+        @ApiImplicitParam(name = "page", value = "页码", paramType = ParamType.QUERY, dataType = "int", required = true),
+        @ApiImplicitParam(name = "limit", value = "每页数量", paramType = ParamType.QUERY, dataType = "int", required = true)
     })
     public void list() {
         Map<String, Object> params = getAllParaMap();
@@ -88,7 +90,7 @@ public class DictTypeController extends BaseController {
         renderJson(Ret.ok().set("data", dictType));
     }
 
-    @ApiOperation(value = "新增数据字典", httpMethod = "POST", notes = "Dict Object")
+    @ApiOperation(value = "新增或更新数据字典", httpMethod = "POST, PUT", notes = "Dict Object")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "Jwt", value = "Jwt", paramType = ParamType.HEADER, dataType = "string", required = true),
         @ApiImplicitParam(name = "id", value = "字典ID", paramType = ParamType.QUERY, dataType = "string", required = true)
@@ -103,6 +105,11 @@ public class DictTypeController extends BaseController {
         }
     }
 
+    @ApiOperation(value = "删除字典类型", httpMethod = "DELETE", notes = "DELETE Dict Object")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "Jwt", value = "Jwt", paramType = ParamType.HEADER, dataType = "string", required = true),
+        @ApiImplicitParam(name = "id", value = "字典ID", paramType = ParamType.QUERY, dataType = "string", required = true)
+    })
     public void delete() {
         String id = getPara(0);
         if (StrKit.isBlank(id)) {
@@ -117,6 +124,11 @@ public class DictTypeController extends BaseController {
         renderJson(Ret.fail());
     }
 
+    @ApiOperation(value = "批量删除字典类型", httpMethod = "DELETE", notes = "DELETE Dict Object")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "Jwt", value = "Jwt", paramType = ParamType.HEADER, dataType = "string", required = true),
+        @ApiImplicitParam(name = "ids", value = "字典IDs", paramType = ParamType.QUERY, dataType = "string", required = true)
+    })
     public void batchDelete() {
         String userIds = getPara(0);
         List<String> list = Splitter.on(",").splitToList(userIds);

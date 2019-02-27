@@ -47,7 +47,6 @@ public class NCloudAppConfigListener extends JbootAppListenerBase {
 
     @Override
     public void onRouteConfig(Routes routes) {
-//        routes.setBaseViewPath("/template");
     }
 
     @Override
@@ -89,24 +88,8 @@ public class NCloudAppConfigListener extends JbootAppListenerBase {
     public void onStop() {
     }
 
-/*    @Override
-    public void onJbootStarted() {
-        *//** 集群模式下验证码使用 redis 缓存 *//*
-        CaptchaManager.me().setCaptchaCache(new CaptchaCache());
-        ShiroCacheUtils.clearAuthorizationInfoAll();
-    }*/
-
     @Override
     public void onStartBefore() {
     }
 
-/*    @Override
-    public void onJbootDeploy(Servlets servlets, ContextListeners listeners) {
-
-    }
-
-    @Override
-    public void onGuiceConfigure(Binder binder) {
-    }*/
-	
 }

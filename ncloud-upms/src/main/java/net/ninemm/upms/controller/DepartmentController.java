@@ -103,8 +103,6 @@ public class DepartmentController extends BaseAppController {
         renderJson(Ret.ok());
     }
 
-    public void update() {}
-
     public void saveOrUpdate() {
         Department department = getRawObject(Department.class);
         Object result = departmentService.saveOrUpdate(department);

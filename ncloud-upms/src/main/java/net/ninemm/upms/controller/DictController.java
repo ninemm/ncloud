@@ -45,7 +45,7 @@ import java.util.Map;
  **/
 
 @RequestMapping(value = "/api/v1/admin/dict")
-@Api(description = "字典类型接口文档", basePath = "/api/v1/admin/dict", tags = "dict", position = 1)
+@Api(description = "字典接口文档", basePath = "/api/v1/admin/dict", tags = "dict", position = 1)
 @EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowMethods = "POST,OPTIONS,GET,PUT,DELETE", allowCredentials = "true")
 public class DictController extends BaseController {
 
@@ -61,15 +61,18 @@ public class DictController extends BaseController {
      * @param [type]
      * @return void
      **/
-    @ApiOperation(value = "数据字典类型列表", httpMethod = "GET", notes = "Dict List")
+    @ApiOperation(value = "数据字典列表", httpMethod = "GET", notes = "Dict List")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "Jwt", value = "Jwt", paramType = ParamType.HEADER, dataType = "string", required = true),
-        @ApiImplicitParam(name = "type", value = "字典类型", paramType = ParamType.QUERY, dataType = "string", required = true)
+        @ApiImplicitParam(name = "type_id", value = "字典类型", paramType = ParamType.QUERY, dataType = "string", required = true),
+        @ApiImplicitParam(name = "name", value = "字典名称", paramType = ParamType.QUERY, dataType = "string", required = true),
+        @ApiImplicitParam(name = "page", value = "页码", paramType = ParamType.QUERY, dataType = "int", required = true),
+        @ApiImplicitParam(name = "limit", value = "每页数量", paramType = ParamType.QUERY, dataType = "int", required = true)
     })
     public void list() {
         Map<String, Object> params = getAllParaMap();
         Page<Dict> page = dictService.paginate(getPageNumber(), getPageSize(), params);
-        String[] attrs = {"name"};
+        String[] attrs = { "name" };
         dictTypeService.join(page, "type_id", "dictType", attrs);
         Map<String, Object> map = ImmutableMap.of("total", page.getTotalRow(), "records", page.getList());
         renderJson(map);
@@ -106,6 +109,11 @@ public class DictController extends BaseController {
         }
     }
 
+    @ApiOperation(value = "删除数据字典", httpMethod = "DELETE", notes = "DELETE Dict Object")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "Jwt", value = "Jwt", paramType = ParamType.HEADER, dataType = "string", required = true),
+        @ApiImplicitParam(name = "id", value = "字典ID", paramType = ParamType.QUERY, dataType = "string", required = true)
+    })
     public void delete() {
         String id = getPara(0);
         if (StrKit.isBlank(id)) {
@@ -120,6 +128,11 @@ public class DictController extends BaseController {
         renderJson(Ret.fail());
     }
 
+    @ApiOperation(value = "批量删除数据字典", httpMethod = "DELETE", notes = "DELETE Dict Object")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "Jwt", value = "Jwt", paramType = ParamType.HEADER, dataType = "string", required = true),
+        @ApiImplicitParam(name = "ids", value = "字典IDs", paramType = ParamType.QUERY, dataType = "string", required = true)
+    })
     public void batchDelete() {
         String dictTypeIds = getPara(0);
         List<String> list = Splitter.on(",").splitToList(dictTypeIds);
