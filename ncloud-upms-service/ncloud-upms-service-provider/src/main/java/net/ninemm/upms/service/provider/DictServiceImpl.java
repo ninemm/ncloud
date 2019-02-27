@@ -28,9 +28,9 @@ public class DictServiceImpl extends BaseService<Dict> implements DictService {
             columns.likeAppendPercent("name", dictName);
         }
 
-        Object dictType = params.get("type");
+        Object dictType = params.get("type_id");
         if (dictType != null) {
-            columns.eq("type", dictType);
+            columns.eq("type_id", dictType);
         }
 
 //        Object dataArea = params.get("dataArea");
