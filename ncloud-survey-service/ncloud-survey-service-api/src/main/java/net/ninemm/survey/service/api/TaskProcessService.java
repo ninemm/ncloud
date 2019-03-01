@@ -1,12 +1,12 @@
 package net.ninemm.survey.service.api;
 
 import com.jfinal.plugin.activerecord.Page;
-import net.ninemm.survey.service.model.Project;
+import net.ninemm.survey.service.model.TaskProcess;
 import io.jboot.db.model.Columns;
 
 import java.util.List;
 
-public interface ProjectService  {
+public interface TaskProcessService  {
 
     /**
      * find model by primary key
@@ -14,15 +14,15 @@ public interface ProjectService  {
      * @param id
      * @return
      */
-    public Project findById(Object id);
+    public TaskProcess findById(Object id);
 
 
     /**
      * find all model
      *
-     * @return all <Project
+     * @return all <TaskProcess
      */
-    public List<Project> findAll();
+    public List<TaskProcess> findAll();
 
 
     /**
@@ -40,7 +40,7 @@ public interface ProjectService  {
      * @param model
      * @return
      */
-    public boolean delete(Project model);
+    public boolean delete(TaskProcess model);
 
 
     /**
@@ -49,7 +49,7 @@ public interface ProjectService  {
      * @param model
      * @return id value if save success
      */
-    public Object save(Project model);
+    public Object save(TaskProcess model);
 
 
     /**
@@ -58,7 +58,7 @@ public interface ProjectService  {
      * @param model
      * @return id value if save or update success
      */
-    public Object saveOrUpdate(Project model);
+    public Object saveOrUpdate(TaskProcess model);
 
 
     /**
@@ -67,7 +67,7 @@ public interface ProjectService  {
      * @param model
      * @return
      */
-    public boolean update(Project model);
+    public boolean update(TaskProcess model);
 
 
     /**
@@ -77,7 +77,7 @@ public interface ProjectService  {
      * @param pageSize
      * @return page data
      */
-    public Page<Project> paginate(int page, int pageSize);
+    public Page<TaskProcess> paginate(int page, int pageSize);
 
 
     /**
@@ -88,7 +88,7 @@ public interface ProjectService  {
      * @param columns
      * @return page data
      */
-    public Page<Project> paginateByColumns(int page, int pageSize, Columns columns);
+    public Page<TaskProcess> paginateByColumns(int page, int pageSize, Columns columns);
 
 
     /**
@@ -100,10 +100,7 @@ public interface ProjectService  {
      * @param orderBy
      * @return page data
      */
-    public Page<Project> paginateByColumns(int page, int pageSize, Columns columns, String orderBy);
+    public Page<TaskProcess> paginateByColumns(int page, int pageSize, Columns columns, String orderBy);
 
 
-    List<Project> findByProjectName(String name, Page pagePara);
-
-    Page<Project> paginateByColumns(Integer pageNumber, Integer pageSize, Columns colum, String startDate, String endDate, String orderBy);
 }

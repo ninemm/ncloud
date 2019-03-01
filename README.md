@@ -39,11 +39,11 @@
 * ncloud: 父模块，主要管理依赖
 * ncloud-base: 框架相关代码
 * ncloud-oauth: 权限认证模块
-* ncloud-upms: upms接口模块
-* ncloud-upms-service: upms接口服务模块，包含api, model, provider三个子模块
-* ncloud-upms-service-api: upms服务API模块，定义服务端与客户端API标准
-* ncloud-upms-service-model: upms服务实体模块，定义服务所需model，vo，状态类
-* ncloud-upms-service-provider: upms服务实现模块，针对API的实现
+* ncloud-survey: survey接口模块
+* ncloud-survey-service: survey接口服务模块，包含api, model, provider三个子模块
+* ncloud-survey-service-api: survey服务API模块，定义服务端与客户端API标准
+* ncloud-survey-service-model: survey服务实体模块，定义服务所需model，vo，状态类
+* ncloud-survey-service-provider: survey服务实现模块，针对API的实现
 
 ### 项目使用
 
@@ -51,10 +51,10 @@
 
     1. 启动consul或zookeeper，目前配置文件默认是consul+motan，如需替换dubbo+zookeeper 可参考下面的配置进行更改
     2. 启动redis，需要配置密码为123456，可在配置文件进行修改
-    3. 如需更改db/redis/consul/zookeeper等配置请更新客户端配置文件：ncloud-upms/resources/jboot.properties
-    4. 如需更改db/redis/consul/zookeeper等配置请更新服务端配置文件：ncloud-upms-service-provider/resources/jboot.properties
-    5. 启动客户端，客户端启动入口：net.ninemm.upms.run.Application(ncloud-upms)
-    6. 启动服务端，服务端启动入口：net.ninemm.upms.run.Application(ncloud-upms-service-provider)
+    3. 如需更改db/redis/consul/zookeeper等配置请更新客户端配置文件：ncloud-survey/resources/jboot.properties
+    4. 如需更改db/redis/consul/zookeeper等配置请更新服务端配置文件：ncloud-survey-service-provider/resources/jboot.properties
+    5. 启动客户端，客户端启动入口：net.ninemm.survey.run.Application(ncloud-survey)
+    6. 启动服务端，服务端启动入口：net.ninemm.survey.run.Application(ncloud-survey-service-provider)
     7. 
     
     附加：
@@ -93,9 +93,9 @@ dubbo + zookeeper配置示例
 2、执行代码生成类     
 
     代码生成入口：
-    service interface api 生成：net.ninemm.upms.gencode.GenCode (tcloud-service-api)
-    model 实体生成： net.ninemm.upms.gencode.GenCode (tcloud-service-model)
-    service impl 实现层生成： net.ninemm.upms.gencode.GenCode (tcloud-service-api-provider)
+    service interface api 生成：net.ninemm.survey.gencode.GenCode (tcloud-service-api)
+    model 实体生成： net.ninemm.survey.gencode.GenCode (tcloud-service-model)
+    service impl 实现层生成： net.ninemm.survey.gencode.GenCode (tcloud-service-api-provider)
     
 provider实现类生成配置文件示例：
 
