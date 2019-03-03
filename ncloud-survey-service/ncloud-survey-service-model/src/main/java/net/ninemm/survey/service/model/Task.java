@@ -8,5 +8,5 @@ import net.ninemm.survey.service.model.base.BaseTask;
  */
 @Table(tableName = "survey_task", primaryKey = "id")
 public class Task extends BaseTask<Task> {
-	
+	public static final String CACHE_NAME = "survey_task";
 }

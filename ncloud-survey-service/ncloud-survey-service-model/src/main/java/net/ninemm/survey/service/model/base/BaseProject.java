@@ -32,6 +32,14 @@ public abstract class BaseProject<M extends BaseProject<M>> extends JbootModel<M
 	public java.lang.String getProjectCategory() {
 		return getStr("project_category");
 	}
+	
+	public void setProjectCategoryName(java.lang.String projectCategoryName) {
+		set("project_category_name", projectCategoryName);
+	}
+	
+	public java.lang.String getProjectCategoryName() {
+		return getStr("project_category_name");
+	}
 
 	public void setDescription(java.lang.String description) {
 		set("description", description);

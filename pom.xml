@@ -10,8 +10,8 @@
     <version>1.0</version>
     <modules>
         <module>ncloud-base</module>
-        <module>ncloud-survey-service</module>
-        <module>ncloud-survey</module>
+        <module>ncloud-upms</module>
+        <module>ncloud-upms-service</module>
         <module>ncloud-oauth</module>
         <module>ncloud-oauth-service</module>
         <module>ncloud-survey</module>

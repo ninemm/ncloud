@@ -8,5 +8,5 @@ import net.ninemm.survey.service.model.base.BaseProject;
  */
 @Table(tableName = "survey_project", primaryKey = "id")
 public class Project extends BaseProject<Project> {
-	
+	public static final String CACHE_NAME="survey_project";
 }

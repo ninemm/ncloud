@@ -106,4 +106,7 @@ public interface ProjectService  {
     List<Project> findByProjectName(String name, Page pagePara);
 
     Page<Project> paginateByColumns(Integer pageNumber, Integer pageSize, Columns colum, String startDate, String endDate, String orderBy);
+
+
+	void clearAllCache();
 }

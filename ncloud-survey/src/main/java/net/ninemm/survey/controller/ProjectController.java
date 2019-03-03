@@ -1,20 +1,3 @@
-/*
- * Copyright (c) 2015-2018, Eric Huang 黄鑫 (ninemm@126.com).
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
-
 package net.ninemm.survey.controller;
 
 import com.alibaba.fastjson.JSONObject;
@@ -53,8 +36,13 @@ public class ProjectController extends BaseAppController {
     ProjectService projectService;
     @Inject
     UserService userService;
+    
     public void index() {
-
+    	String userId = getUserId();
+        Columns colum = Columns.create("creater_id", userId);
+        Page<Project> page = projectService.paginateByColumns(getPageNumber(), getPageSize(), colum," create_date desc ");
+        Map<String, Object> map = ImmutableBiMap.of("total", page.getTotalRow(), "records", page.getList());
+        renderJson(map);
     }
 
     @ApiOperation(value = "数据字典列表", httpMethod = "GET", notes = "getall")
@@ -63,20 +51,12 @@ public class ProjectController extends BaseAppController {
         renderJson(allProject);
     }
 
-
-    @NotNullPara("id")
-    public void findById(String id) {
-        Project project = projectService.findById(id);
+    public void findById() {
+    	JSONObject rawObject = getRawObject();
+        Project project = projectService.findById(rawObject.get("id"));
         renderJson(project);
     }
 
-    public void findByName() {
-        String name = getPara("name");
-        Columns colum = Columns.create("project_name", name);
-        Page<Project> page = projectService.paginateByColumns(getPageNumber(), getPageSize(), colum);
-        Map<String, Object> map = ImmutableBiMap.of("total", page.getTotalRow(), "records", page.getList());
-        renderJson(map);
-    }
 
     /**
      * 多字段查询
@@ -84,9 +64,11 @@ public class ProjectController extends BaseAppController {
     public void findByColum() {
         JSONObject rawObject = getRawObject();
 
-        Columns colum = Columns.create("status",rawObject.get("status"))
-                .create("project_category",rawObject.get("projectCategory"))
-                .create("creater_id",rawObject.get("createrId"));
+        Columns colum = Columns.create();
+        colum.eq("status", rawObject.get("status"));
+        colum.eq("project_category", rawObject.get("projectCategory"));
+        colum.eq("creater_id", rawObject.get("createrId"));
+        colum.like("project_name", "projectName");
         colum.like("data_area",rawObject.get("dataArea"));
         colum.ge("create_date",rawObject.get("startDate"));
         colum.le("create_date",rawObject.get("endDate"));
@@ -114,12 +96,7 @@ public class ProjectController extends BaseAppController {
         }
         Object result = projectService.saveOrUpdate(project);
         if (result != null) {
-            Ret ret = Ret.create();
-            ret.set("result",result);
-            ret.set("userId",userId);
-            ret.set("dataArea",user.getDataArea());
-            ret.set("deptId",user.getDepartmentId());
-            Jboot.sendEvent(MessageAction.PROJECT_MANAGE_ADD,ret);
+            Jboot.sendEvent(MessageAction.PROJECT_MANAGE_ADD,project);
             renderJson(Ret.ok());
         } else {
             renderJson(Ret.fail());
@@ -127,12 +104,15 @@ public class ProjectController extends BaseAppController {
     }
 
     public void delete() {
-        String id = getPara("id");
-        if (StrKit.isBlank(id)) {
-            renderJson(Ret.fail());
-            return;
+    	JSONObject rawObject = getRawObject();
+    	Project project = projectService.findById(rawObject.get("id"));
+    	if(project==null){
+    		renderJson(Ret.fail());
+    		return ;
+    	}
+        if(projectService.deleteById(rawObject.get("id"))){
+        	Jboot.sendEvent(MessageAction.PROJECT_MANAGE_DEL,project);
         }
-        projectService.deleteById(id);
         renderJson(Ret.ok());
     }
 }

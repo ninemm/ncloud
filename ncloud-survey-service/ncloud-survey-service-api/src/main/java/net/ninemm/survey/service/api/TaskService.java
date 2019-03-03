@@ -103,4 +103,10 @@ public interface TaskService  {
     public Page<Task> paginateByColumns(int page, int pageSize, Columns columns, String orderBy);
 
 
+	public void deleteByProjectId(String projectId);
+
+
+	void clearAllCache();
+
+
 }

@@ -1,6 +1,8 @@
 package net.ninemm.survey.service.provider;
 
 import com.jfinal.plugin.activerecord.Page;
+
+import io.jboot.Jboot;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.db.model.Columns;
 import io.jboot.utils.StrUtil;
@@ -32,5 +34,10 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
                 ? paginate(pageNumber, pageSize, selectPartSql, fromPartSql)
                 : paginate(pageNumber, pageSize, selectPartSql, fromPartSql, columns.getValueArray());*/
         return null;
+    }
+    
+    @Override
+    public void clearAllCache() {
+        Jboot.getCache().removeAll(Project.CACHE_NAME);
     }
 }
