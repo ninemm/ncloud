@@ -102,5 +102,5 @@ public interface TaskRelService  {
      */
     public Page<TaskRel> paginateByColumns(int page, int pageSize, Columns columns, String orderBy);
 
-
+    void clearAllCache();
 }

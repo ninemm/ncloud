@@ -16,6 +16,7 @@
 
 package net.ninemm.base.gencode.serviceimpl;
 
+import com.jfinal.kit.PathKit;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.generator.TableMeta;
 import io.jboot.Jboot;
@@ -80,7 +81,13 @@ public class AppServiceImplGenerator {
             CodeGenHelpler.excludeTables(tableMetaList, config.getExcludedtable());
         }
 
-        new AppJbootServiceImplGenerator(servicepackage , modelPackage, serviceimplpackage).generate(tableMetaList);
+        String project = Jboot.configValue("jboot.admin.serviceimpl.ge.project");
+        String path = Jboot.configValue("jboot.admin.serviceimpl.ge.path");
+
+        String modelPath = PathKit.getWebRootPath().substring(0,PathKit.getWebRootPath().indexOf(project)).replace("\\", "/");
+        String implDir = modelPath+  path + serviceimplpackage.replace(".", "/");
+
+        new AppJbootServiceImplGenerator(servicepackage , modelPackage, serviceimplpackage,implDir).generate(tableMetaList);
 
         System.out.println("service generate finished !!!");
 

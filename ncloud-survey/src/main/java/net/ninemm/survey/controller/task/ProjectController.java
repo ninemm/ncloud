@@ -1,29 +1,23 @@
-package net.ninemm.survey.controller;
+package net.ninemm.survey.controller.task;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableBiMap;
 import com.jfinal.aop.Inject;
-import com.jfinal.kit.Kv;
 import com.jfinal.kit.Ret;
-import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.Jboot;
 import io.jboot.db.model.Columns;
-import io.jboot.support.swagger.ParamType;
 import io.jboot.utils.StrUtil;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import net.ninemm.base.interceptor.NotNullPara;
 import net.ninemm.base.message.MessageAction;
+import net.ninemm.survey.controller.BaseAppController;
 import net.ninemm.survey.service.api.ProjectService;
 import net.ninemm.survey.service.model.Project;
 import net.ninemm.upms.service.api.UserService;
 import net.ninemm.upms.service.model.User;
-
 
 import java.util.List;
 import java.util.Map;
@@ -39,8 +33,8 @@ public class ProjectController extends BaseAppController {
     
     public void index() {
     	String userId = getUserId();
-        Columns colum = Columns.create("creater_id", userId);
-        Page<Project> page = projectService.paginateByColumns(getPageNumber(), getPageSize(), colum," create_date desc ");
+        Columns columns = Columns.create("creater_id", userId);
+        Page<Project> page = projectService.paginateByColumns(getPageNumber(), getPageSize(), columns," create_date desc ");
         Map<String, Object> map = ImmutableBiMap.of("total", page.getTotalRow(), "records", page.getList());
         renderJson(map);
     }
@@ -52,8 +46,8 @@ public class ProjectController extends BaseAppController {
     }
 
     public void findById() {
-    	JSONObject rawObject = getRawObject();
-        Project project = projectService.findById(rawObject.get("id"));
+        String id = getPara("id");
+        Project project = projectService.findById(id);
         renderJson(project);
     }
 
@@ -64,21 +58,21 @@ public class ProjectController extends BaseAppController {
     public void findByColum() {
         JSONObject rawObject = getRawObject();
 
-        Columns colum = Columns.create();
-        colum.eq("status", rawObject.get("status"));
-        colum.eq("project_category", rawObject.get("projectCategory"));
-        colum.eq("creater_id", rawObject.get("createrId"));
-        colum.like("project_name", "projectName");
-        colum.like("data_area",rawObject.get("dataArea"));
-        colum.ge("create_date",rawObject.get("startDate"));
-        colum.le("create_date",rawObject.get("endDate"));
+        Columns columns = Columns.create();
+        columns.eq("status", rawObject.get("status"));
+        columns.eq("project_category", rawObject.get("projectCategory"));
+        columns.eq("creater_id", rawObject.get("createrId"));
+        columns.like("project_name", "projectName");
+        columns.like("data_area",rawObject.get("dataArea"));
+        columns.ge("create_date",rawObject.get("startDate"));
+        columns.le("create_date",rawObject.get("endDate"));
 
         String orderBy = rawObject.get("orderBy")==null?null:rawObject.get("orderBy").toString();
         if(StrUtil.isBlank(orderBy)){
             orderBy=" create_date desc ";
         }
 
-        Page<Project> page = projectService.paginateByColumns(getPageNumber(), getPageSize(), colum,orderBy);
+        Page<Project> page = projectService.paginateByColumns(getPageNumber(), getPageSize(), columns,orderBy);
         Map<String, Object> map = ImmutableBiMap.of("total", page.getTotalRow(), "records", page.getList());
         renderJson(map);
     }
@@ -96,7 +90,7 @@ public class ProjectController extends BaseAppController {
         }
         Object result = projectService.saveOrUpdate(project);
         if (result != null) {
-            Jboot.sendEvent(MessageAction.PROJECT_MANAGE_ADD,project);
+            //Jboot.sendEvent(MessageAction.PROJECT_MANAGE_ADD,project);
             renderJson(Ret.ok());
         } else {
             renderJson(Ret.fail());
@@ -104,14 +98,14 @@ public class ProjectController extends BaseAppController {
     }
 
     public void delete() {
-    	JSONObject rawObject = getRawObject();
-    	Project project = projectService.findById(rawObject.get("id"));
+        String id = getPara("id");
+        Project project = projectService.findById(id);
     	if(project==null){
     		renderJson(Ret.fail());
     		return ;
     	}
-        if(projectService.deleteById(rawObject.get("id"))){
-        	Jboot.sendEvent(MessageAction.PROJECT_MANAGE_DEL,project);
+        if(projectService.deleteById(id)){
+        	Jboot.sendEvent(MessageAction.Task.PROJECT_MANAGE_DEL,project);
         }
         renderJson(Ret.ok());
     }

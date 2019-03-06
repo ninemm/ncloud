@@ -8,5 +8,5 @@ import net.ninemm.survey.service.model.base.BaseTaskRel;
  */
 @Table(tableName = "survey_task_rel", primaryKey = "id")
 public class TaskRel extends BaseTaskRel<TaskRel> {
-	
+    public static final String CACHE_NAME="survey_task_rel";
 }

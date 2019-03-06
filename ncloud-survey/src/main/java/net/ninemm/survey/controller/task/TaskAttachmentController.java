@@ -15,9 +15,8 @@
  *
  */
 
-package net.ninemm.survey.controller;
-import java.util.Date;
-import java.util.Map;
+package net.ninemm.survey.controller.task;
+
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableBiMap;
 import com.jfinal.aop.Inject;
@@ -28,35 +27,28 @@ import io.jboot.utils.StrUtil;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
 import io.swagger.annotations.Api;
-import net.ninemm.survey.service.api.TaskProcessService;
-import net.ninemm.survey.service.model.TaskProcess;
+import net.ninemm.survey.controller.BaseAppController;
+import net.ninemm.survey.service.api.TaskAttachmentService;
+import net.ninemm.survey.service.model.TaskAttachment;
 import net.ninemm.upms.service.api.UserService;
 import net.ninemm.upms.service.model.User;
 
-@RequestMapping(value = "/taskProcess")
-@Api(description = "任务管理", basePath = "/taskProcess", tags = "", position = 3)
+import java.util.Date;
+import java.util.Map;
+
+@RequestMapping(value = "/taskAttachmentProcess")
+@Api(description = "任务附件", basePath = "/taskAttachmentProcess", tags = "", position = 3)
 @EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
-public class TaskProcessController extends BaseAppController {
+public class TaskAttachmentController extends BaseAppController {
 	@Inject
-	TaskProcessService taskProcessService;
+	TaskAttachmentService taskAttachmentService;
 	@Inject
 	UserService userService;
 
-	public void index() {
-		String userId = getUserId();
-		Columns colum = Columns.create("task_id", userId);
-		Page<TaskProcess> page = taskProcessService.paginateByColumns(getPageNumber(), getPageSize(), colum,
-				" create_date desc ");
-		Map<String, Object> map = ImmutableBiMap.of("total", page.getTotalRow(), "records", page.getList());
-		renderJson(map);
-	}
-
 	public void findById(String id) {
-		JSONObject rawObject = getRawObject();
-		TaskProcess task = taskProcessService.findById(rawObject.get("id"));
-		renderJson(task);
+		TaskAttachment taskAttachment = taskAttachmentService.findById(getPara("id"));
+		renderJson(taskAttachment);
 	}
-
 
 	/**
 	 * 
@@ -64,38 +56,36 @@ public class TaskProcessController extends BaseAppController {
 	public void findByColum() {
 		JSONObject rawObject = getRawObject();
 
-		Columns colum = Columns.create();
-		colum.eq("status", rawObject.get("status"));
-		colum.eq("type", rawObject.get("type"));
-		colum.eq("project_id", rawObject.get("projectId"));
-		colum.eq("publisher_id", rawObject.get("publisherId"));
-		colum.like("title", rawObject.get("title"));
-		colum.like("data_area", rawObject.get("dataArea"));
-		colum.ge("create_date", rawObject.get("startDate"));
-		colum.le("create_date", rawObject.get("endDate"));
+		Columns columns = Columns.create();
+		columns.eq("task_id", rawObject.get("taskId"));
+		columns.like("attachment_name", rawObject.get("attachmentName"));
+		columns.like("data_area", rawObject.get("dataArea"));
+		columns.ge("create_date", rawObject.get("startDate"));
+		columns.le("create_date", rawObject.get("endDate"));
 
 		String orderBy = rawObject.get("orderBy") == null ? null : rawObject.get("orderBy").toString();
 		if (StrUtil.isBlank(orderBy)) {
 			orderBy = " create_date desc ";
 		}
 
-		Page<TaskProcess> page = taskProcessService.paginateByColumns(getPageNumber(), getPageSize(), colum, orderBy);
+		Page<TaskAttachment> page = taskAttachmentService.paginateByColumns(getPageNumber(), getPageSize(), columns, orderBy);
 		Map<String, Object> map = ImmutableBiMap.of("total", page.getTotalRow(), "records", page.getList());
 		renderJson(map);
 	}
 
 	public void saveOrUpdate() {
-		TaskProcess task = getRawObject(TaskProcess.class);
+		TaskAttachment taskAttachment = getRawObject(TaskAttachment.class);
 
-		if (!StrUtil.isNotEmpty(task.getId())) {
+		if (!StrUtil.isNotEmpty(taskAttachment.getId())) {
 			String userId = getUserId();
 			User user = userService.findById(userId);
-			String name = user.getRealname();
-
+			taskAttachment.setDeptId(user.getDepartmentId());
+			taskAttachment.setDataArea(user.getDataArea());
+			taskAttachment.setModifyDate(new Date());
 		} else {
-			task.setModifyDate(new Date());
+			taskAttachment.setModifyDate(new Date());
 		}
-		Object result = taskProcessService.saveOrUpdate(task);
+		Object result = taskAttachmentService.saveOrUpdate(taskAttachment);
 		if (result != null) {
 			renderJson(Ret.ok());
 		} else {
@@ -104,12 +94,16 @@ public class TaskProcessController extends BaseAppController {
 	}
 
 	public void delete() {
-		JSONObject rawObject = getRawObject();
-		if (taskProcessService.deleteById(rawObject.get("id"))) {
+		if (taskAttachmentService.deleteById(getPara("id"))) {
 			renderJson(Ret.ok());
 		} else {
 			renderJson(Ret.fail());
 		}
+	}
+
+	public void deleteByTaskId() {
+		taskAttachmentService.deleteByTaskId(getPara("taskId"));
+		renderJson(Ret.ok());
 	}
 
 }

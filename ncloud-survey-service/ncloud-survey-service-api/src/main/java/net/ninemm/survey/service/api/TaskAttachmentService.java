@@ -102,5 +102,12 @@ public interface TaskAttachmentService  {
      */
     public Page<TaskAttachment> paginateByColumns(int page, int pageSize, Columns columns, String orderBy);
 
+    /**
+     *
+     * @param taskId
+     * @return
+     */
+    void deleteByTaskId(String taskId);
 
+    void clearAllCache();
 }

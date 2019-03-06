@@ -99,6 +99,7 @@ public class RoleServiceImpl extends BaseService<Role> implements RoleService {
     /**
      * 清除 model 缓存
      */
+    @Override
     protected void clearAllCache() {
         Jboot.getCache().removeAll(Role.CACHE_NAME);
     }

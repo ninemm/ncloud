@@ -8,5 +8,5 @@ import net.ninemm.survey.service.model.base.BaseTaskProcess;
  */
 @Table(tableName = "survey_task_process", primaryKey = "id")
 public class TaskProcess extends BaseTaskProcess<TaskProcess> {
-	
+    public static final String CACHE_NAME="survey_task_process";
 }

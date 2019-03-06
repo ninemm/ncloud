@@ -24,15 +24,6 @@ public class ProjectServiceImpl extends JbootServiceBase<Project> implements Pro
 
     @Override
     public Page<Project> paginateByColumns(Integer pageNumber, Integer pageSize, Columns columns, String startDate, String endDate, String orderBy) {
-        /*if(StrUtil.isBlank(orderBy)){
-            orderBy=" create_date desc ";
-        }
-        String selectPartSql = _getDialect().forPaginateSelect("*");
-        String fromPartSql = _getDialect().forPaginateFrom(_getTableName(), columns.getList(), orderBy);
-
-        return columns.isEmpty()
-                ? paginate(pageNumber, pageSize, selectPartSql, fromPartSql)
-                : paginate(pageNumber, pageSize, selectPartSql, fromPartSql, columns.getValueArray());*/
         return null;
     }
     

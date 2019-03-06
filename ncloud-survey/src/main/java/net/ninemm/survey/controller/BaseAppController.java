@@ -55,23 +55,22 @@ public class BaseAppController extends BaseController {
 
     @NotAction
     public String getDataArea() {
-
         String platformType = getPlatFormType();
         if (StrUtil.equals(Consts.PLATFORM_TYPE_VALUE, platformType)) {
             return null;
         }
-
+        System.out.println( );
         boolean isManager = ShiroUtils.hasAnyRole("001,002,003,004,005,006,007,008,009,011,012,013,014");
         if (isManager) {
             return Jboot.getCache().get(CacheKey.CACHE_PARENT_DATA_AREA, getUserId());
         }
         return null;
     }
-
+    @Override
     protected Integer getPageNumber() {
         return getParaToInt("page", 1);
     }
-
+    @Override
     protected Integer getPageSize() {
         return getParaToInt("limit", Consts.PAGE_DEFAULT_SIZE);
     }

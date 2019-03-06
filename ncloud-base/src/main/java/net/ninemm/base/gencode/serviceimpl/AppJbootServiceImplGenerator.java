@@ -34,8 +34,8 @@ public class AppJbootServiceImplGenerator extends BaseModelGenerator {
     private String servicePackage;
     private String serviceImplPackage;
 
-    public AppJbootServiceImplGenerator(String servicePackage, String modelPacket, String serviceImplPackage) {
-        super(serviceImplPackage, PathKit.getWebRootPath() + "/src/main/java/" + serviceImplPackage.replace(".", "/"));
+    public AppJbootServiceImplGenerator(String servicePackage, String modelPacket, String serviceImplPackage,String dir) {
+        super(serviceImplPackage, dir);
 
         this.modelPacket = modelPacket;
         this.servicePackage = servicePackage;

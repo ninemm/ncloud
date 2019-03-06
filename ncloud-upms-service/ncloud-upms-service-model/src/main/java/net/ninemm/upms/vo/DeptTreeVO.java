@@ -88,4 +88,6 @@ public class DeptTreeVO<T extends DeptTreeVO> implements TreeEntity {
     public void setLeaf(boolean leaf) {
         isLeaf = leaf;
     }
+
+
 }

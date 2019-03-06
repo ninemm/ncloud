@@ -47,8 +47,12 @@ public class AppModelGenerator {
         String modelPackage = config.getModelpackage();
         String baseModelPackage = modelPackage + ".base";
 
-        String modelDir = PathKit.getWebRootPath() + "/src/main/java/" + modelPackage.replace(".", "/");
-        String baseModelDir = PathKit.getWebRootPath() + "/src/main/java/" + baseModelPackage.replace(".", "/");
+        String project = Jboot.configValue("jboot.admin.model.ge.project");
+        String path = Jboot.configValue("jboot.admin.model.ge.path");
+
+        String modelPath = PathKit.getWebRootPath().substring(0,PathKit.getWebRootPath().indexOf(project)).replace("\\", "/");
+        String modelDir = modelPath+  path + modelPackage.replace(".", "/");
+        String baseModelDir = modelPath+  path + baseModelPackage.replace(".", "/");
 
         System.out.println("start generate...");
         System.out.println("generate dir:" + modelDir);

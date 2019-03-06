@@ -102,5 +102,11 @@ public interface TaskProcessService  {
      */
     public Page<TaskProcess> paginateByColumns(int page, int pageSize, Columns columns, String orderBy);
 
+    /**
+     *
+     * @param taskId
+     */
+    void deleteByTaskId(String taskId);
 
+    void clearAllCache();
 }

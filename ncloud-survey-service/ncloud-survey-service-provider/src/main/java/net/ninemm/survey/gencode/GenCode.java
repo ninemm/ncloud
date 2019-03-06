@@ -17,6 +17,8 @@
 
 package net.ninemm.survey.gencode;
 
+import net.ninemm.base.gencode.model.AppModelGenerator;
+import net.ninemm.base.gencode.service.AppServiceGenerator;
 import net.ninemm.base.gencode.serviceimpl.AppServiceImplGenerator;
 
 /**
@@ -27,6 +29,8 @@ import net.ninemm.base.gencode.serviceimpl.AppServiceImplGenerator;
 public class GenCode {
 
     public static void main(String[] args) {
+        AppModelGenerator.doGenerate();
+        AppServiceGenerator.doGenerate();
         AppServiceImplGenerator.doGenerate();
     }
 }
