@@ -50,102 +50,76 @@
             </plugin>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-remote-resources-plugin</artifactId>
-                <version>1.5</version>
-                <configuration>
-                    <resourceBundles>
-                        <!-- 使用ncloud-upms-service-provider下的resource文件-->
-                        <resourceBundle>net.ninemm:ncloud-upms-service-provider:${project.version}</resourceBundle>
-                    </resourceBundles>
-                </configuration>
+                <artifactId>maven-resources-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>copy-resources</id>
+                        <phase>validate</phase>
                         <goals>
-                            <goal>process</goal>
+                            <goal>copy-resources</goal>
                         </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/classes/webapp</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/../ncloud-base/src/main/webapp</directory>
+                                </resource>
+                                <resource>
+                                    <directory>${basedir}/../ncloud-upms-service/ncloud-upms-service-provider/src/main/webapp</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
 
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>appassembler-maven-plugin</artifactId>
-                <version>1.10</version>
-                <configuration>
-                    <!-- 根目录 -->
-                    <assembleDirectory>${project.build.directory}/ncloud-upms</assembleDirectory>
-                    <!-- 打包的jar，以及maven依赖的jar放到这个目录里面 -->
-                    <repositoryName>lib</repositoryName>
-                    <!-- 可执行脚本的目录 -->
-                    <binFolder>bin</binFolder>
-                    <!-- 配置文件的目标目录 -->
-                    <configurationDirectory>webRoot</configurationDirectory>
-                    <!-- 拷贝配置文件到上面的目录中 -->
-                    <copyConfigurationDirectory>true</copyConfigurationDirectory>
-                    <!-- 从哪里拷贝配置文件 (默认src/main/config) -->
-                    <configurationSourceDirectory>classpath*:sql,src/main/resources</configurationSourceDirectory>
-                    <!-- lib目录中jar的存放规则，默认是${groupId}/${artifactId}的目录格式，flat表示直接把jar放到lib目录 -->
-                    <repositoryLayout>flat</repositoryLayout>
-                    <encoding>UTF-8</encoding>
-                    <logsDirectory>logs</logsDirectory>
-                    <tempDirectory>tmp</tempDirectory>
-                    <programs>
-                        <!--程序打包 mvn package appassembler:assemble -->
-                        <program>
-                            <!-- 启动类 -->
-                            <mainClass>io.jboot.Jboot</mainClass>
-                            <id>jboot</id>
-                            <platforms>
-                                <platform>windows</platform>
-                                <platform>unix</platform>
-                            </platforms>
-                        </program>
-                    </programs>
-                    <daemons>
-                        <!-- 后台程序打包：mvn clean package appassembler:generate-daemons -->
-                        <daemon>
-                            <mainClass>io.jboot.Jboot</mainClass>
-                            <id>upms</id>
-                            <platforms>
-                                <platform>jsw</platform>
-                            </platforms>
-                            <generatorConfigurations>
-                                <generatorConfiguration>
-                                    <generator>jsw</generator>
-                                    <includes>
-                                        <include>linux-x86-32</include>
-                                        <include>linux-x86-64</include>
-                                        <include>macosx-universal-32</include>
-                                        <include>macosx-universal-64</include>
-                                        <include>windows-x86-32</include>
-                                        <include>windows-x86-64</include>
-                                    </includes>
-                                    <configuration>
-                                        <property>
-                                            <name>configuration.directory.in.classpath.first</name>
-                                            <value>webRoot</value>
-                                        </property>
-                                        <property>
-                                            <name>wrapper.ping.timeout</name>
-                                            <value>120</value>
-                                        </property>
-                                        <property>
-                                            <name>set.default.REPO_DIR</name>
-                                            <value>lib</value>
-                                        </property>
-                                        <property>
-                                            <name>wrapper.logfile</name>
-                                            <value>logs/wrapper.log</value>
-                                        </property>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
 
-                                    </configuration>
-                                </generatorConfiguration>
-                            </generatorConfigurations>
-                        </daemon>
-                    </daemons>
+                        <configuration>
+                            <!-- 打包生成的文件名 -->
+                            <!--<finalName>${project.artifactId}</finalName>-->
+                            <!-- jar 等压缩文件在被打包进入 zip、tar.gz 时是否压缩，设置为 false 可加快打包速度 -->
+                            <recompressZippedFiles>false</recompressZippedFiles>
+                            <!-- 打包生成的文件是否要追加 release.xml 中定义的 id 值 -->
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <!-- 指向打包描述文件 package.xml -->
+                            <descriptors>
+                                <descriptor>package.xml</descriptor>
+                            </descriptors>
+                            <!-- 打包结果输出的基础目录 -->
+                            <outputDirectory>${project.build.directory}/</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- 该插件仅为了避免将配置文件打入jar包 -->
+            <!--
+                jar 包中的配置文件优先级高于 config 目录下的 "同名文件"
+                因此，打包时需要排除掉 jar 包中来自 src/main/resources 目录的
+                配置文件，否则部署时 config 目录中的同名配置文件不会生效
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.1</version>
+                <configuration>
+                    <includes>
+                        <include>/net/**</include>
+                    </includes>
                 </configuration>
             </plugin>
+
         </plugins>
     </build>
 
