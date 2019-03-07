@@ -1,13 +1,13 @@
 package net.ninemm.survey.service.api;
 
-import com.alibaba.fastjson.JSONObject;
 import com.jfinal.plugin.activerecord.Page;
-import net.ninemm.survey.service.model.AnswerRestrict;
+import io.jboot.service.JbootServiceJoiner;
+import net.ninemm.survey.service.model.TimeCondition;
 import io.jboot.db.model.Columns;
 
 import java.util.List;
 
-public interface AnswerRestrictService  {
+public interface TimeConditionService extends JbootServiceJoiner {
 
     /**
      * find model by primary key
@@ -15,15 +15,15 @@ public interface AnswerRestrictService  {
      * @param id
      * @return
      */
-    public AnswerRestrict findById(Object id);
+    public TimeCondition findById(Object id);
 
 
     /**
      * find all model
      *
-     * @return all <AnswerRestrict
+     * @return all <TimeCondition
      */
-    public List<AnswerRestrict> findAll();
+    public List<TimeCondition> findAll();
 
 
     /**
@@ -41,7 +41,7 @@ public interface AnswerRestrictService  {
      * @param model
      * @return
      */
-    public boolean delete(AnswerRestrict model);
+    public boolean delete(TimeCondition model);
 
 
     /**
@@ -50,7 +50,7 @@ public interface AnswerRestrictService  {
      * @param model
      * @return id value if save success
      */
-    public Object save(AnswerRestrict model);
+    public Object save(TimeCondition model);
 
 
     /**
@@ -59,7 +59,7 @@ public interface AnswerRestrictService  {
      * @param model
      * @return id value if save or update success
      */
-    public Object saveOrUpdate(AnswerRestrict model);
+    public Object saveOrUpdate(TimeCondition model);
 
 
     /**
@@ -68,7 +68,7 @@ public interface AnswerRestrictService  {
      * @param model
      * @return
      */
-    public boolean update(AnswerRestrict model);
+    public boolean update(TimeCondition model);
 
 
     /**
@@ -78,7 +78,7 @@ public interface AnswerRestrictService  {
      * @param pageSize
      * @return page data
      */
-    public Page<AnswerRestrict> paginate(int page, int pageSize);
+    public Page<TimeCondition> paginate(int page, int pageSize);
 
 
     /**
@@ -89,7 +89,7 @@ public interface AnswerRestrictService  {
      * @param columns
      * @return page data
      */
-    public Page<AnswerRestrict> paginateByColumns(int page, int pageSize, Columns columns);
+    public Page<TimeCondition> paginateByColumns(int page, int pageSize, Columns columns);
 
 
     /**
@@ -101,30 +101,11 @@ public interface AnswerRestrictService  {
      * @param orderBy
      * @return page data
      */
-    public Page<AnswerRestrict> paginateByColumns(int page, int pageSize, Columns columns, String orderBy);
-
-    void clearAllCache();
+    public Page<TimeCondition> paginateByColumns(int page, int pageSize, Columns columns, String orderBy);
 
     /**
      *
-     * @param surveyId
+     * @param answerRestrictId
      */
-    boolean deleteBySurveyId(String surveyId);
-
-    /**
-     *
-     * @param answerRestrict
-     * @param rawObject
-     * @param user
-     * @param dataArea
-     * @return
-     */
-    Boolean saveAnswerLimit(AnswerRestrict answerRestrict, JSONObject rawObject, String deptId, String dataArea);
-
-    /**
-     *
-     * @param surveyId
-     * @return
-     */
-    AnswerRestrict findBySurveyId(String surveyId);
+    List<TimeCondition> findByRestrictId(String answerRestrictId);
 }

@@ -13,6 +13,7 @@ public class MessageAction {
 
     public class Survey{
         public static final String SURVEY_DEL = "survey:del";
+        public static final String SURVEY_ANSWER_RESTRICT_DEL = "survey:surveyAnswerRestrictDel";
     }
 
 }

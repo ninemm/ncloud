@@ -1,13 +1,12 @@
 package net.ninemm.survey.service.api;
 
-import com.alibaba.fastjson.JSONObject;
 import com.jfinal.plugin.activerecord.Page;
-import net.ninemm.survey.service.model.AnswerRestrict;
+import net.ninemm.survey.service.model.FrequencyCondition;
 import io.jboot.db.model.Columns;
 
 import java.util.List;
 
-public interface AnswerRestrictService  {
+public interface FrequencyConditionService  {
 
     /**
      * find model by primary key
@@ -15,15 +14,15 @@ public interface AnswerRestrictService  {
      * @param id
      * @return
      */
-    public AnswerRestrict findById(Object id);
+    public FrequencyCondition findById(Object id);
 
 
     /**
      * find all model
      *
-     * @return all <AnswerRestrict
+     * @return all <FrequencyCondition
      */
-    public List<AnswerRestrict> findAll();
+    public List<FrequencyCondition> findAll();
 
 
     /**
@@ -41,7 +40,7 @@ public interface AnswerRestrictService  {
      * @param model
      * @return
      */
-    public boolean delete(AnswerRestrict model);
+    public boolean delete(FrequencyCondition model);
 
 
     /**
@@ -50,7 +49,7 @@ public interface AnswerRestrictService  {
      * @param model
      * @return id value if save success
      */
-    public Object save(AnswerRestrict model);
+    public Object save(FrequencyCondition model);
 
 
     /**
@@ -59,7 +58,7 @@ public interface AnswerRestrictService  {
      * @param model
      * @return id value if save or update success
      */
-    public Object saveOrUpdate(AnswerRestrict model);
+    public Object saveOrUpdate(FrequencyCondition model);
 
 
     /**
@@ -68,7 +67,7 @@ public interface AnswerRestrictService  {
      * @param model
      * @return
      */
-    public boolean update(AnswerRestrict model);
+    public boolean update(FrequencyCondition model);
 
 
     /**
@@ -78,7 +77,7 @@ public interface AnswerRestrictService  {
      * @param pageSize
      * @return page data
      */
-    public Page<AnswerRestrict> paginate(int page, int pageSize);
+    public Page<FrequencyCondition> paginate(int page, int pageSize);
 
 
     /**
@@ -89,7 +88,7 @@ public interface AnswerRestrictService  {
      * @param columns
      * @return page data
      */
-    public Page<AnswerRestrict> paginateByColumns(int page, int pageSize, Columns columns);
+    public Page<FrequencyCondition> paginateByColumns(int page, int pageSize, Columns columns);
 
 
     /**
@@ -101,30 +100,12 @@ public interface AnswerRestrictService  {
      * @param orderBy
      * @return page data
      */
-    public Page<AnswerRestrict> paginateByColumns(int page, int pageSize, Columns columns, String orderBy);
-
-    void clearAllCache();
+    public Page<FrequencyCondition> paginateByColumns(int page, int pageSize, Columns columns, String orderBy);
 
     /**
      *
-     * @param surveyId
-     */
-    boolean deleteBySurveyId(String surveyId);
-
-    /**
-     *
-     * @param answerRestrict
-     * @param rawObject
-     * @param user
-     * @param dataArea
+     * @param answerRestrictId
      * @return
      */
-    Boolean saveAnswerLimit(AnswerRestrict answerRestrict, JSONObject rawObject, String deptId, String dataArea);
-
-    /**
-     *
-     * @param surveyId
-     * @return
-     */
-    AnswerRestrict findBySurveyId(String surveyId);
+    List<FrequencyCondition> findByRestrictId(String answerRestrictId);
 }
