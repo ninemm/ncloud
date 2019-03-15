@@ -1,11 +1,7 @@
 package net.ninemm.survey.controller.survey;
 
-import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.ImmutableBiMap;
 import com.jfinal.aop.Inject;
 import com.jfinal.kit.Ret;
-import com.jfinal.plugin.activerecord.Page;
-import io.jboot.db.model.Columns;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
 import io.swagger.annotations.Api;
@@ -14,7 +10,7 @@ import net.ninemm.survey.service.api.ConfigService;
 import net.ninemm.survey.service.model.Config;
 import net.ninemm.upms.service.api.UserService;
 
-import java.util.Map;
+import java.util.List;
 
 @RequestMapping(value = "/surveyConfig")
 @Api(description = "问卷配置", basePath = "/surveyConfig", tags = "", position = 2)
@@ -36,12 +32,14 @@ public class SurveyConfigController extends BaseAppController {
     }
     public void findBySurveyId() {
         String surveyId = getPara("surveyId");
-        Columns columns = Columns.create();
+        /*Columns columns = Columns.create();
         columns.eq("survey_id", surveyId);
 
         Page<Config> page = configService.paginateByColumns(getPageNumber(), getPageSize(), columns);
         Map<String, Object> map = ImmutableBiMap.of("total", page.getTotalRow(), "records", page.getList());
-        renderJson(map);
+        renderJson(map);*/
+        List<Config> configList = configService.findBySurveyId(surveyId);
+        renderJson(configList);
     }
 
     public void delete() {

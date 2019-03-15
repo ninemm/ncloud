@@ -109,4 +109,12 @@ public interface TagsService  {
     void deleteBySurveyId(String surveyId);
 
     void clearAllCache();
+    /**
+    * @Description:
+    * @Param: [surveyId]
+    * @return: java.util.List<net.ninemm.survey.service.model.Tags>
+    * @Author: lsy
+    * @Date: 2019/3/14
+    */
+    List<Tags> findBySurveyId(String surveyId);
 }

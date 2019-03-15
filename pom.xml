@@ -16,7 +16,7 @@
         <module>ncloud-oauth-service</module>
         <module>ncloud-survey</module>
         <module>ncloud-survey-service</module>
-        <module>gencode</module>
+        <module>ncloud-gencode</module>
     </modules>
 
     <properties>

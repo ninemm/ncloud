@@ -109,4 +109,12 @@ public interface ConfigService  {
     void deleteBySurveyId(String surveyId);
 
     void clearAllCache();
+    /**
+    * @Description:
+    * @Param: [surveyId]
+    * @return: java.util.List<net.ninemm.survey.service.model.Config>
+    * @Author: lsy
+    * @Date: 2019/3/14
+    */
+    List<Config> findBySurveyId(String surveyId);
 }

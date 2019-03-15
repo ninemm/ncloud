@@ -14,12 +14,13 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.ninemm.base.message.MessageAction;
 import net.ninemm.survey.controller.BaseAppController;
-import net.ninemm.survey.service.api.SurveyService;
+import net.ninemm.survey.service.api.*;
 import net.ninemm.survey.service.model.Survey;
 import net.ninemm.upms.service.api.UserService;
 import net.ninemm.upms.service.model.User;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +30,16 @@ import java.util.Map;
 public class SurveyController extends BaseAppController {
     @Inject
     SurveyService surveyService;
+    @Inject
+    AttrService attrService;
+    @Inject
+    ConfigService configService;
+    @Inject
+    QuestionService questionService;
+    @Inject
+    QuestionAttrService questionAttrService;
+    @Inject
+    StyleService styleService;
     @Inject
     UserService userService;
 
@@ -110,5 +121,23 @@ public class SurveyController extends BaseAppController {
             Jboot.sendEvent(MessageAction.Survey.SURVEY_DEL,surve);
         }
         renderJson(Ret.ok());
+    }
+    /**
+    * @Description:  根据问卷id获取问卷信息,题目,限制等信息
+    * @Param: []
+    * @return: void
+    * @Author: lsy
+    * @Date: 2019/3/14
+    */
+    public void findBySurveyId(){
+        String surveyId = getPara("surveyId");
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("surve",surveyService.findById(surveyId));
+        map.put("attrList",attrService.findBySurveyId(surveyId));
+        map.put("configList",configService.findBySurveyId(surveyId));
+        map.put("questionList",questionService.findBySurveyId(surveyId));
+        map.put("questionAttrList",questionAttrService.findBySurveyId(surveyId));
+        map.put("styleList",styleService.findBySurveyId(surveyId));
+        renderJson(map);
     }
 }

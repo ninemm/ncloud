@@ -109,4 +109,12 @@ public interface StyleService  {
     void deleteBySurveyId(String surveyId);
 
     void clearAllCache();
+    /**
+    * @Description:
+    * @Param: [surveyId]
+    * @return: java.util.List<net.ninemm.survey.service.model.Style>
+    * @Author: lsy
+    * @Date: 2019/3/14
+    */
+    List<Style> findBySurveyId(String surveyId);
 }

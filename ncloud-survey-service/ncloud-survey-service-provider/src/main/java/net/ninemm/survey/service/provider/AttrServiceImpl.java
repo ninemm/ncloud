@@ -8,6 +8,8 @@ import net.ninemm.survey.service.model.Attr;
 import io.jboot.service.JbootServiceBase;
 import net.ninemm.survey.service.model.TaskProcess;
 
+import java.util.List;
+
 
 @Bean
 public class AttrServiceImpl extends JbootServiceBase<Attr> implements AttrService {
@@ -21,5 +23,11 @@ public class AttrServiceImpl extends JbootServiceBase<Attr> implements AttrServi
     @Override
     public void clearAllCache() {
         Jboot.getCache().removeAll(Attr.CACHE_NAME);
+    }
+
+    @Override
+    public List<Attr> findBySurveyId(String surveyId) {
+        String sql ="select * from survey_attr where survey_id= ? ";
+        return DAO.find(sql,surveyId);
     }
 }

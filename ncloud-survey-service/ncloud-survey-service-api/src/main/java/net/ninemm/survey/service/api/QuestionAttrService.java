@@ -1,12 +1,12 @@
 package net.ninemm.survey.service.api;
 
 import com.jfinal.plugin.activerecord.Page;
-import net.ninemm.survey.service.model.Attr;
+import net.ninemm.survey.service.model.QuestionAttr;
 import io.jboot.db.model.Columns;
 
 import java.util.List;
 
-public interface AttrService  {
+public interface QuestionAttrService  {
 
     /**
      * find model by primary key
@@ -14,15 +14,15 @@ public interface AttrService  {
      * @param id
      * @return
      */
-    public Attr findById(Object id);
+    public QuestionAttr findById(Object id);
 
 
     /**
      * find all model
      *
-     * @return all <Attr
+     * @return all <QuestionAttr
      */
-    public List<Attr> findAll();
+    public List<QuestionAttr> findAll();
 
 
     /**
@@ -40,7 +40,7 @@ public interface AttrService  {
      * @param model
      * @return
      */
-    public boolean delete(Attr model);
+    public boolean delete(QuestionAttr model);
 
 
     /**
@@ -49,7 +49,7 @@ public interface AttrService  {
      * @param model
      * @return id value if save success
      */
-    public Object save(Attr model);
+    public Object save(QuestionAttr model);
 
 
     /**
@@ -58,7 +58,7 @@ public interface AttrService  {
      * @param model
      * @return id value if save or update success
      */
-    public Object saveOrUpdate(Attr model);
+    public Object saveOrUpdate(QuestionAttr model);
 
 
     /**
@@ -67,7 +67,7 @@ public interface AttrService  {
      * @param model
      * @return
      */
-    public boolean update(Attr model);
+    public boolean update(QuestionAttr model);
 
 
     /**
@@ -77,7 +77,7 @@ public interface AttrService  {
      * @param pageSize
      * @return page data
      */
-    public Page<Attr> paginate(int page, int pageSize);
+    public Page<QuestionAttr> paginate(int page, int pageSize);
 
 
     /**
@@ -88,7 +88,7 @@ public interface AttrService  {
      * @param columns
      * @return page data
      */
-    public Page<Attr> paginateByColumns(int page, int pageSize, Columns columns);
+    public Page<QuestionAttr> paginateByColumns(int page, int pageSize, Columns columns);
 
 
     /**
@@ -100,21 +100,38 @@ public interface AttrService  {
      * @param orderBy
      * @return page data
      */
-    public Page<Attr> paginateByColumns(int page, int pageSize, Columns columns, String orderBy);
+    public Page<QuestionAttr> paginateByColumns(int page, int pageSize, Columns columns, String orderBy);
 
     /**
-     *
-     * @param surveyId
-     */
-    void deleteBySurveyId(String surveyId);
-
-    void clearAllCache();
+    * @Description:  通过问卷题目id查找题目属性
+    * @Param: [questionId]
+    * @return:
+    * @Author: lsy
+    * @Date: 2019/3/11
+    */
+    List<QuestionAttr> findByQurstionId(String questionId);
     /**
     * @Description:
+    * @Param:  questionId
+    * @return:  
+    * @Author: lsy 
+    * @Date: 2019/3/11 
+    */ 
+    void deleteByQuestionId(String questionId);
+    /**
+    * @Description:  根据问卷id查找
     * @Param: [surveyId]
-    * @return: java.util.List<net.ninemm.survey.service.model.Attr>
+    * @return:
     * @Author: lsy
-    * @Date: 2019/3/14
+    * @Date: 2019/3/11
     */
-    List<Attr> findBySurveyId(String surveyId);
+    List<QuestionAttr> findBySurveyId(String surveyId);
+    /**
+    * @Description:
+    * @Param:  surveyId
+    * @return:
+    * @Author: lsy
+    * @Date: 2019/3/11
+    */
+    void deleteBySurveyId(String surveyId);
 }

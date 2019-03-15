@@ -77,7 +77,7 @@
                 <configuration>
                     <resourceBundles>
                         <!-- 使用ncloud-upms-service-provider下的resource文件-->
-                        <resourceBundle>net.ninemm:ncloud-upms-service-provider:${project.version}</resourceBundle>
+                        <resourceBundle>net.ninemm:ncloud-survey-service-provider:${project.version}</resourceBundle>
                     </resourceBundles>
                 </configuration>
                 <executions>

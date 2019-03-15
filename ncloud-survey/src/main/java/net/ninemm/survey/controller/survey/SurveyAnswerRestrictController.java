@@ -1,14 +1,10 @@
 package net.ninemm.survey.controller.survey;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableBiMap;
 import com.jfinal.aop.Inject;
 import com.jfinal.kit.Ret;
-import com.jfinal.plugin.activerecord.Page;
 import io.jboot.Jboot;
-import io.jboot.db.model.Columns;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
 import io.swagger.annotations.Api;
@@ -25,9 +21,7 @@ import net.ninemm.survey.service.model.TimeCondition;
 import net.ninemm.upms.service.api.UserService;
 import net.ninemm.upms.service.model.User;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -106,6 +100,69 @@ public class SurveyAnswerRestrictController extends BaseAppController {
             renderJson(Ret.ok());
             return ;
         }else{
+            renderJson(Ret.fail());
+        }
+    }
+
+    public void updateAnswerRestrict() {
+        AnswerRestrict answerRestrict = getRawObject(AnswerRestrict.class);
+        answerRestrict.setModifyDate(new Date());
+        if (answerRestrictService.update(answerRestrict)) {
+            renderJson(Ret.ok());
+        } else {
+            renderJson(Ret.fail());
+        }
+    }
+
+    public void updateTimeCondition() {
+        TimeCondition timeCondition = getRawObject(TimeCondition.class);
+        timeCondition.setModifyDate(new Date());
+        if (timeConditionService.update(timeCondition)) {
+            renderJson(Ret.ok());
+        } else {
+            renderJson(Ret.fail());
+        }
+    }
+
+    public void updateFrequencyCondition() {
+        FrequencyCondition frequencyCondition = getRawObject(FrequencyCondition.class);
+        frequencyCondition.setModifyDate(new Date());
+        if (frequencyConditionService.update(frequencyCondition)) {
+            renderJson(Ret.ok());
+        } else {
+            renderJson(Ret.fail());
+        }
+    }
+
+    public void updateConsumerAttrCondition() {
+        ConsumerAttrCondition consumerAttrCondition = getRawObject(ConsumerAttrCondition.class);
+        if (consumerAttrConditionService.update(consumerAttrCondition)) {
+            renderJson(Ret.ok());
+        } else {
+            renderJson(Ret.fail());
+        }
+    }
+
+    public void deleteTimeConditionById() {
+        if (timeConditionService.deleteById(getPara("id"))) {
+            renderJson(Ret.ok());
+        } else {
+            renderJson(Ret.fail());
+        }
+    }
+
+    public void deleteFrequencyConditionById() {
+        if (frequencyConditionService.deleteById(getPara("id"))) {
+            renderJson(Ret.ok());
+        } else {
+            renderJson(Ret.fail());
+        }
+    }
+
+    public void deleteConsumerAttrConditionById() {
+        if (consumerAttrConditionService.deleteById(getPara("id"))) {
+            renderJson(Ret.ok());
+        } else {
             renderJson(Ret.fail());
         }
     }

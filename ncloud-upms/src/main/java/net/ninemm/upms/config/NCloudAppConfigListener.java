@@ -50,7 +50,7 @@ public class NCloudAppConfigListener extends JbootAppListenerBase {
     }
 
     @Override
-    public void onEngineConfig(Engine engine) {
+    public void onEngineConfig(Engine engine) {[]
         engine.setDevMode(true);
         AppInfo app = Jboot.config(AppInfo.class);
         engine.addSharedObject("APP", app);
