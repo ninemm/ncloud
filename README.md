@@ -114,5 +114,4 @@ provider实现类生成配置文件示例：
     jboot.admin.serviceimpl.ge.serviceimplpackage=io.jboot.admin.service.provider
     jboot.admin.serviceimpl.ge.removedtablenameprefixes=sys_
     jboot.admin.serviceimpl.ge.excludedtable=
-    jboot.admin.serviceimpl.ge.excludedtableprefixes=temp_,v_    
-    
+    jboot.admin.serviceimpl.ge.excludedtableprefixes=temp_,v_

@@ -102,6 +102,30 @@ public class Consts {
      */
 	public static final String APP_UPGRADE_CONTENT = "app_upgrade_content";
 
+	/** 短信服务商：阿里云 */
+	public static final String SMS_TYPE_ALIYUN = "aliyun";
+	/** 短信服务商：腾讯云 */
+	public static final String SMS_TYPE_QCLOUD = "qcloud";
+
+	/** 是否启用CDN */
+	public static final String OPTION_CDN_ENABLE = "cdn_enable";
+	/** CDN域名 */
+	public static final String OPTION_CDN_DOMAIN = "cdn_domain";
+	/** 网站域名 */
+	public static final String OPTION_WEB_DOMAIN = "web_domain";
+
+	public static final String OPTION_CONNECTION_EMAIL_ENABLE = "connection_email_enable"; // 是否启用邮件发送功能
+	public static final String OPTION_CONNECTION_EMAIL_SMTP = "connection_email_smtp"; // 邮件服务器smtp
+	public static final String OPTION_CONNECTION_EMAIL_ACCOUNT = "connection_email_account"; //邮箱账号
+	public static final String OPTION_CONNECTION_EMAIL_PASSWORD = "connection_email_password"; //邮箱密码
+	public static final String OPTION_CONNECTION_EMAIL_SSL_ENABLE = "connection_email_ssl_enable"; //是否启用ssl
+
+
+	public static final String OPTION_CONNECTION_SMS_ENABLE = "connection_sms_enable"; //是否启用短信
+	public static final String OPTION_CONNECTION_SMS_TYPE = "connection_sms_type"; //短信服务商
+	public static final String OPTION_CONNECTION_SMS_APPID = "connection_sms_appid"; // 服务商 的appid（或者appKey）
+	public static final String OPTION_CONNECTION_SMS_APPSECRET = "connection_sms_appsecret"; //app密钥
+
 	/**
 	 * 公共返回参数Key
 	 *
