@@ -107,4 +107,12 @@ public interface PublishService  {
      * @param surveyId
      */
     void deleteBySurveyId(String surveyId);
+    /**
+    * @Description:
+    * @Param: [surveyId]
+    * @return: net.ninemm.survey.service.model.Publish
+    * @Author: lsy
+    * @Date: 2019/3/19
+    */
+    Publish findBySurveyId(String surveyId);
 }

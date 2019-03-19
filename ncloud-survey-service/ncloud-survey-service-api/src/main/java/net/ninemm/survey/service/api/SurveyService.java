@@ -103,4 +103,12 @@ public interface SurveyService  {
     public Page<Survey> paginateByColumns(int page, int pageSize, Columns columns, String orderBy);
 
     void clearAllCache();
+    /**
+    * @Description:
+    * @Param: [ids]
+    * @return:
+    * @Author: lsy
+    * @Date: 2019/3/18
+    */
+    void deleteByIds(String ids);
 }

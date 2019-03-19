@@ -102,5 +102,12 @@ public interface SendRecordService  {
      */
     public Page<SendRecord> paginateByColumns(int page, int pageSize, Columns columns, String orderBy);
 
-
+    /**
+    * @Description:  查询已经发送过的联系人
+    * @Param: [surveyId, sendWay, contactList]
+    * @return: java.util.List<java.lang.String>
+    * @Author: lsy
+    * @Date: 2019/3/19
+    */
+    List<String> findByColums(String surveyId, int sendWay, List<String> contactList);
 }

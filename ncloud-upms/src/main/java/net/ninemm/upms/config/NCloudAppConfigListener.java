@@ -90,6 +90,7 @@ public class NCloudAppConfigListener extends JbootAppListenerBase {
 
     @Override
     public void onStartBefore() {
+
     }
 
 }

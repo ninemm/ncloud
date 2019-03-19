@@ -16,4 +16,11 @@ public class MessageAction {
         public static final String SURVEY_ANSWER_RESTRICT_DEL = "survey_answer_restrict:del";
     }
 
+    public class SendSurvey{
+        public static final String SURVEY_SEND = "survey:send";
+        public static final String MOBILE="3";
+        public static final String WEIXIN="2";
+        public static final String EMAIL="1";
+    }
+
 }
