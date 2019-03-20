@@ -14,7 +14,7 @@ import net.ninemm.upms.service.model.User;
 
 import java.util.Date;
 import java.util.List;
-
+@Deprecated
 @RequestMapping(value = "/surveyTags")
 @Api(description = "问卷标签", basePath = "/surveyTags", tags = "", position = 2)
 @EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
@@ -39,6 +39,10 @@ public class SurveyTagsController extends BaseAppController {
             renderJson(Ret.fail());
         }
     }
+    public void findAll(){
+        Ret.ok("result",tagsService.findAll());
+    }
+
     public void findBySurveyId() {
         List<Tags> tagsList = tagsService.findBySurveyId(getPara("surveyId"));
         renderJson(tagsList);

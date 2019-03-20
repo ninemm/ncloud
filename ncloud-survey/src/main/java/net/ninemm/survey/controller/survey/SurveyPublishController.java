@@ -9,7 +9,6 @@ import com.jfinal.kit.PathKit;
 import com.jfinal.kit.Ret;
 import com.jfinal.plugin.activerecord.Page;
 import io.jboot.Jboot;
-import io.jboot.components.mq.Jbootmq;
 import io.jboot.db.model.Columns;
 import io.jboot.utils.StrUtil;
 import io.jboot.web.controller.annotation.RequestMapping;
@@ -17,11 +16,14 @@ import io.jboot.web.cors.EnableCORS;
 import io.swagger.annotations.Api;
 import net.ninemm.base.interceptor.GlobalCacheInterceptor;
 import net.ninemm.base.message.MessageAction;
+import net.ninemm.base.web.base.BaseController;
 import net.ninemm.survey.controller.BaseAppController;
 import net.ninemm.survey.service.api.PublishService;
 import net.ninemm.survey.service.api.SendRecordService;
+import net.ninemm.survey.service.api.SurveyService;
 import net.ninemm.survey.service.model.Publish;
 import net.ninemm.survey.service.model.SendRecord;
+import net.ninemm.survey.service.model.Survey;
 import net.ninemm.upms.interceptor.LogInterceptor;
 import net.ninemm.upms.service.api.OptionService;
 import net.ninemm.upms.service.api.UserService;
@@ -43,11 +45,13 @@ public class SurveyPublishController extends BaseAppController {
     @Inject
     OptionService optionService;
     @Inject
+    SurveyService surveyService;
+    @Inject
     SendRecordService sendRecordService;
     @Inject
     UserService userService;
 
-    public void saveOrUpdate() {
+    /*public void saveOrUpdate() {
         Publish publish = getRawObject(Publish.class);
         if(StrUtil.isBlank(publish.getId())){
             User user = userService.findById(getUserId());
@@ -86,29 +90,39 @@ public class SurveyPublishController extends BaseAppController {
         String surveyId = getPara("surveyId");
         publishService.deleteBySurveyId(surveyId);
         renderJson(Ret.ok());
-    }
+    }*/
 
     public void publish(){
         String surveyId = getPara("surveyId");
         String surveyUrl = getPara("surveyUrl");
-        /*if(){//先判断是否有答卷,有答卷的话需要先删除答卷 再删除已发布的问卷
+        Survey survey = new Survey();
+        survey.setId(surveyId);
+
+        /*if(){//先判断是否有答卷,有答卷的话需要先修改问卷状态再删除答卷 再删除已静态化的问卷
 
         }*/
         try {
             String url = writeHtml(surveyId,getHtmlCode(surveyUrl));
-
+            Publish publish = publishService.findBySurveyId(surveyId);
+            if(publish==null){
+                publish = new Publish();
+            }
             User user = userService.findById(getUserId());
-            Publish publish = new Publish();
             publish.setOriginalLink(url);
             publish.setSurveyId(surveyId);
             publish.setIsValid(1);
             publish.setType(0);
             publish.setDeptId(user.getDepartmentId());
             publish.setDataArea(user.getDataArea());
-            publishService.save(publish);
+            publishService.saveOrUpdate(publish);
 
-            renderJson(url);
-            return ;
+            survey.setStatus(Survey.SurveyStatus.PUBLISH.getStatu());
+            if(!surveyService.update(survey)){
+                renderJson(Ret.fail("message","问卷发布失败!"));
+                return ;
+            }
+            renderJson(Ret.ok("message",getBaseUrl()+url));
+            return;
         } catch (Exception e) {
             e.printStackTrace();
             renderJson(Ret.fail());
@@ -162,14 +176,26 @@ public class SurveyPublishController extends BaseAppController {
     }
 
     @Clear({GlobalCacheInterceptor.class, LogInterceptor.class})
-    public void getSurveyByUrl(){
-        JSONObject jo = getRawObject();
-        String surveyId = jo.get("surveyId").toString();
-        String sendWay = jo.get("sendWay").toString();
-        List<String> contact = (List<String>) jo.get("contact");
-        sendRecordService.findByColums(surveyId, 3, contact)
-        String baseUrl = getBaseUrl();
-        redirect(baseUrl+"/Html/123.html");
+    public void getSurveyByShortUrl(){
+        String shortUrl = getPara("shortUrl");
+        SendRecord sendRecord = sendRecordService.findByShortUrl(shortUrl);
+        if(sendRecord!=null){
+            if(sendRecord.getIsAnswered()==1){
+                renderJson(Ret.fail("message", "问卷已回答!"));
+                return;
+            }
+
+            Survey survey = surveyService.findById(sendRecord.getSurveyId());
+            if(survey==null || survey.getStatus()!=Survey.SurveyStatus.PUBLISH.getStatu()){
+                renderJson(Ret.fail("message","问卷未处于收集中!"));
+                return;
+            }
+        }else {
+            renderJson(Ret.fail("message","对不起找不到该问卷!"));
+            return;
+        }
+
+        redirect(sendRecord.getOriginalLink());
     }
 
     /**
@@ -181,8 +207,8 @@ public class SurveyPublishController extends BaseAppController {
      */
     public void sendSurvey(){
         JSONObject jo = getRawObject();
-        String surveyId = jo.get("surveyId").toString();
-        String sendWay = jo.get("sendWay").toString();
+        String surveyId = jo.getString("surveyId");
+        int sendWay = jo.getInteger("sendWay");
         List<String> contact = (List<String>) jo.get("contact");
         if(contact.size()==0){
             renderJson(Ret.fail());

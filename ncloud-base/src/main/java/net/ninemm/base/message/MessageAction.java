@@ -18,9 +18,9 @@ public class MessageAction {
 
     public class SendSurvey{
         public static final String SURVEY_SEND = "survey:send";
-        public static final String MOBILE="3";
-        public static final String WEIXIN="2";
-        public static final String EMAIL="1";
+        public static final int MOBILE=3;
+        public static final int WEIXIN=2;
+        public static final int EMAIL=1;
     }
 
 }

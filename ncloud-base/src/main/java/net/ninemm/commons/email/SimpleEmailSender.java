@@ -84,8 +84,9 @@ public class SimpleEmailSender extends Authenticator implements IEmailSender {
     }
 
     private static Address[] toAddress(String... emails) {
-        if (emails == null || emails.length == 0)
+        if (emails == null || emails.length == 0){
             return null;
+        }
 
         Set<Address> addSet = new HashSet<Address>();
         for (String email : emails) {

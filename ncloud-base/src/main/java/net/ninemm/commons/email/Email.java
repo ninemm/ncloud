@@ -86,7 +86,7 @@ public class Email {
     }
 
     public static void main(String[] args) {
-        Email.create().subject("这是邮件标题").content("这是邮件内容~~~~~~").to("1506615067@qq.com").send();
+        Email.create().subject("这是邮件标题").content("这是邮件内容~~~~~~").to("1303435095@qq.com").send();
     }
 }
 

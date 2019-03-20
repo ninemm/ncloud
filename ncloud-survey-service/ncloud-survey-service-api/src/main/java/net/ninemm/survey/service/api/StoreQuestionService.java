@@ -1,12 +1,12 @@
 package net.ninemm.survey.service.api;
 
 import com.jfinal.plugin.activerecord.Page;
-import net.ninemm.survey.service.model.SendRecord;
+import net.ninemm.survey.service.model.StoreQuestion;
 import io.jboot.db.model.Columns;
 
 import java.util.List;
 
-public interface SendRecordService  {
+public interface StoreQuestionService  {
 
     /**
      * find model by primary key
@@ -14,15 +14,15 @@ public interface SendRecordService  {
      * @param id
      * @return
      */
-    public SendRecord findById(Object id);
+    public StoreQuestion findById(Object id);
 
 
     /**
      * find all model
      *
-     * @return all <SendRecord
+     * @return all <StoreQuestion
      */
-    public List<SendRecord> findAll();
+    public List<StoreQuestion> findAll();
 
 
     /**
@@ -40,7 +40,7 @@ public interface SendRecordService  {
      * @param model
      * @return
      */
-    public boolean delete(SendRecord model);
+    public boolean delete(StoreQuestion model);
 
 
     /**
@@ -49,7 +49,7 @@ public interface SendRecordService  {
      * @param model
      * @return id value if save success
      */
-    public Object save(SendRecord model);
+    public Object save(StoreQuestion model);
 
 
     /**
@@ -58,7 +58,7 @@ public interface SendRecordService  {
      * @param model
      * @return id value if save or update success
      */
-    public Object saveOrUpdate(SendRecord model);
+    public Object saveOrUpdate(StoreQuestion model);
 
 
     /**
@@ -67,7 +67,7 @@ public interface SendRecordService  {
      * @param model
      * @return
      */
-    public boolean update(SendRecord model);
+    public boolean update(StoreQuestion model);
 
 
     /**
@@ -77,7 +77,7 @@ public interface SendRecordService  {
      * @param pageSize
      * @return page data
      */
-    public Page<SendRecord> paginate(int page, int pageSize);
+    public Page<StoreQuestion> paginate(int page, int pageSize);
 
 
     /**
@@ -88,7 +88,7 @@ public interface SendRecordService  {
      * @param columns
      * @return page data
      */
-    public Page<SendRecord> paginateByColumns(int page, int pageSize, Columns columns);
+    public Page<StoreQuestion> paginateByColumns(int page, int pageSize, Columns columns);
 
 
     /**
@@ -100,22 +100,7 @@ public interface SendRecordService  {
      * @param orderBy
      * @return page data
      */
-    public Page<SendRecord> paginateByColumns(int page, int pageSize, Columns columns, String orderBy);
+    public Page<StoreQuestion> paginateByColumns(int page, int pageSize, Columns columns, String orderBy);
 
-    /**
-    * @Description:  查询已经发送过的联系人
-    * @Param: [surveyId, sendWay, contactList]
-    * @return: java.util.List<java.lang.String>
-    * @Author: lsy
-    * @Date: 2019/3/19
-    */
-    List<String> findByColums(String surveyId, int sendWay, List<String> contactList);
-    /**
-    * @Description:  根据短链接查询问卷
-    * @Param: [shortUrl]
-    * @return: net.ninemm.survey.service.model.SendRecord
-    * @Author: lsy
-    * @Date: 2019/3/20
-    */
-    SendRecord findByShortUrl(String shortUrl);
+
 }

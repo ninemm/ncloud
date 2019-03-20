@@ -81,6 +81,22 @@ public abstract class BaseSendRecord<M extends BaseSendRecord<M>> extends JbootM
 		return getStr("send_address");
 	}
 
+	public void setIsAnswered(java.lang.Integer isAnswered) {
+		set("is_answered", isAnswered);
+	}
+	
+	public java.lang.Integer getIsAnswered() {
+		return getInt("is_answered");
+	}
+
+	public void setAnsweredTime(java.util.Date answeredTime) {
+		set("answered_time", answeredTime);
+	}
+	
+	public java.util.Date getAnsweredTime() {
+		return get("answered_time");
+	}
+
 	public void setConsumerId(java.lang.String consumerId) {
 		set("consumer_id", consumerId);
 	}
