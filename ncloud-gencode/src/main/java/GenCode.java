@@ -1,4 +1,5 @@
 
+import net.ninemm.base.gencode.controller.AppControllerGenerator;
 import net.ninemm.base.gencode.model.AppModelGenerator;
 import net.ninemm.base.gencode.service.AppServiceGenerator;
 import net.ninemm.base.gencode.serviceimpl.AppServiceImplGenerator;
@@ -13,5 +14,6 @@ public class GenCode {
         AppModelGenerator.doGenerate();
         AppServiceGenerator.doGenerate();
         AppServiceImplGenerator.doGenerate();
+        AppControllerGenerator.doGenerate();
     }
 }

@@ -6,16 +6,12 @@ import io.jboot.components.event.JbootEvent;
 import io.jboot.components.event.JbootEventListener;
 import io.jboot.components.event.annotation.EventConfig;
 import io.jboot.utils.StrUtil;
-import net.ninemm.base.common.RegexKey;
 import net.ninemm.base.message.MessageAction;
-import net.ninemm.base.sms.AlidayuSmsSender;
-import net.ninemm.base.utils.ShortUrl;
 import net.ninemm.survey.service.api.PublishService;
 import net.ninemm.survey.service.api.SendRecordService;
 import net.ninemm.survey.service.model.Publish;
-import net.ninemm.survey.service.model.SendRecord;
 import net.ninemm.survey.surveysend.EmailSurveySend;
-import net.ninemm.survey.surveysend.SMSsurveySend;
+import net.ninemm.survey.surveysend.SmsSurveySend;
 import net.ninemm.survey.surveysend.SurveySend;
 import net.ninemm.survey.surveysend.WeiXinSurveySend;
 
@@ -45,7 +41,7 @@ public class SurveySendListener implements JbootEventListener {
         }
         SurveySend surveySend = null;
         if(MessageAction.SendSurvey.MOBILE==sendWay){
-            surveySend= new SMSsurveySend();
+            surveySend= new SmsSurveySend();
         }else if(MessageAction.SendSurvey.EMAIL==sendWay){
             surveySend= new EmailSurveySend();
         }else if(MessageAction.SendSurvey.WEIXIN==sendWay){

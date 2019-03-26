@@ -20,6 +20,7 @@ import com.jfinal.captcha.CaptchaManager;
 import com.jfinal.config.Constants;
 import com.jfinal.config.Interceptors;
 import com.jfinal.config.Routes;
+import com.jfinal.kit.PropKit;
 import com.jfinal.template.Engine;
 import io.jboot.Jboot;
 import io.jboot.aop.jfinal.JfinalHandlers;
@@ -70,6 +71,7 @@ public class NCloudAppConfigListener extends JbootAppListenerBase {
 
     @Override
     public void onPluginConfig(JfinalPlugins plugins) {
+
     }
 
     @Override

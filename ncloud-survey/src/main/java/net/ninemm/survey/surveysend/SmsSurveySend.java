@@ -1,5 +1,6 @@
 package net.ninemm.survey.surveysend;
 
+import io.jboot.Jboot;
 import net.ninemm.base.common.RegexKey;
 import net.ninemm.base.sms.AlidayuSmsSender;
 import net.ninemm.base.utils.ShortUrl;
@@ -14,7 +15,7 @@ import java.util.List;
  * @author: lsy
  * @create: 2019-03-19 19:18
  **/
-public class SMSsurveySend implements SurveySend {
+public class SmsSurveySend implements SurveySend {
 
     @Override
     public void sendSurvey(String surveyId, Integer sendWay,Publish publish, List<String> contactList,SendRecordService sendRecordService) {

@@ -89,8 +89,7 @@ public class SurveyController extends BaseAppController {
         columns.like("data_area",rawObject.get("dataArea"));
         columns.ge("create_date",rawObject.get("startDate"));
         columns.le("create_date",rawObject.get("endDate"));
-
-        String orderBy = rawObject.get("orderBy")==null?null:rawObject.get("orderBy").toString();
+        String orderBy = rawObject.getString("orderBy");
         if(StrUtil.isBlank(orderBy)){
             orderBy=" create_date desc ";
         }

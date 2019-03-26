@@ -1,0 +1,82 @@
+package #(controllerPackage);
+
+import com.google.common.collect.ImmutableBiMap;
+import com.jfinal.aop.Inject;
+import com.jfinal.kit.Ret;
+import com.jfinal.plugin.activerecord.Page;
+import io.jboot.db.model.Columns;
+import io.jboot.utils.StrUtil;
+import io.jboot.web.controller.annotation.RequestMapping;
+import io.jboot.web.cors.EnableCORS;
+import io.swagger.annotations.Api;
+import #(modelPackage).#(tableMeta.modelName);
+import #(modulePackage).api.#(tableMeta.modelName)Service;
+import net.ninemm.upms.service.api.UserService;
+import java.util.List;
+import java.util.Map;
+/**
+ * @author lsy
+ * @version V1.0
+ * @Date #(date)
+ */
+@RequestMapping(value = "/#(lowerCaseModelName)")
+@Api(description = "", basePath = "/#(lowerCaseModelName)", tags = "", position = 0)
+@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+public class #(tableMeta.modelName)Controller extends BaseAppController {
+    @Inject
+    private #(tableMeta.modelName)Service #(lowerCaseModelName)Service;
+    @Inject
+    UserService userService;
+
+    public void index() {
+        String userId = getUserId();
+        Columns columns = Columns.create("user_id", userId);
+        Page<#(tableMeta.modelName)> page= #(lowerCaseModelName)Service.paginateByColumns(getPageNumber(), getPageSize(), columns);
+        Map<String, Object> map = ImmutableBiMap.of("total", page.getTotalRow(), "records", page.getList());
+        renderJson(map);
+    }
+
+    public void findById() {
+        #(tableMeta.modelName) #(lowerCaseModelName)  = #(lowerCaseModelName)Service.findById(getPara("id"));
+        renderJson(#(lowerCaseModelName));
+    }
+
+    public void findAll() {
+        List<#(tableMeta.modelName)> #(lowerCaseModelName)List = #(lowerCaseModelName)Service.findAll();
+        renderJson(#(lowerCaseModelName)List);
+    }
+
+    public void findByColum() {
+        JSONObject rawObject = getRawObject();
+
+        Columns columns = Columns.create();
+        columns.eq("", rawObject.get(""));
+        columns.likeAppendPercent("", rawObject.get(""));
+        columns.like("data_area",rawObject.get("dataArea"));
+        columns.ge("create_date",rawObject.get("startDate"));
+        columns.le("create_date",rawObject.get("endDate"));
+
+        String orderBy = rawObject.getString("orderBy");
+        if(StrUtil.isBlank(orderBy)){
+            orderBy=" create_date desc ";
+        }
+        Page<#(tableMeta.modelName)> page = #(lowerCaseModelName)Service.paginateByColumns(getPageNumber(), getPageSize(), columns, orderBy);
+        Map<String, Object> map = ImmutableBiMap.of("total", page.getTotalRow(), "records", page.getList());
+        renderJson(map);
+    }
+
+    public void saveOrUpdate() {
+        #(tableMeta.modelName) #(lowerCaseModelName) = getRawObject(#(tableMeta.modelName).class);
+        #(lowerCaseModelName)Service.saveOrUpdate(#(lowerCaseModelName));
+        renderJson(Ret.ok().set("id", #(lowerCaseModelName).getId()));
+    }
+
+    public void delete() {
+        if(#(lowerCaseModelName)Service.deleteById(getPara("id"))){
+            renderJson(Ret.ok());
+            return ;
+        }else{
+            renderJson(Ret.fail());
+        }
+    }
+}

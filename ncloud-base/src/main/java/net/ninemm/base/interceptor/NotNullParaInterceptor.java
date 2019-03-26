@@ -59,12 +59,22 @@ public class NotNullParaInterceptor implements Interceptor {
         for (String param : paraKeys) {
             String value = inv.getController().getPara(param);
             if (value == null || value.trim().length() == 0) {
-                renderError(inv, param, notNullPara.errorRedirect());
+                //renderError(inv, param, notNullPara.errorRedirect());
+                renderJsonError(inv, param, notNullPara.errorRedirect());
                 return;
             }
         }
 
         inv.invoke();
+    }
+
+    private void renderJsonError(Invocation inv, String param, String errorRedirect) {
+        Controller controller = inv.getController();
+        if (controller instanceof JbootController) {
+            JbootController c = (JbootController) controller;
+            c.renderJson(RestResult.buildError("参数["+param+"]不可为空"));
+            return;
+        }
     }
 
 
