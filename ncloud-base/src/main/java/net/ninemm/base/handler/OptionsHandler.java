@@ -41,7 +41,7 @@ public class OptionsHandler extends Handler {
             return ;
         }
 
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+        response.setHeader("Access-Control-Allow-Origin", "*");
         response.addHeader("Access-Control-Allow-Methods", "GET,HEAD,POST,PUT,DELETE,TRACE,OPTIONS,PATCH");
         response.addHeader("Access-Control-Allow-Headers", "Content-Type, Accept, Jwt");
         response.setHeader("Access-Control-Allow-Credentials", "true");

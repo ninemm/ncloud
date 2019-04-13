@@ -38,7 +38,7 @@ import java.util.Map;
 
 @RequestMapping(value = "/taskAttachmentProcess")
 @Api(description = "任务附件", basePath = "/taskAttachmentProcess", tags = "", position = 3)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS
 public class TaskAttachmentController extends BaseAppController {
 	@Inject
 	TaskAttachmentService taskAttachmentService;
@@ -47,7 +47,7 @@ public class TaskAttachmentController extends BaseAppController {
 
 	public void findById(String id) {
 		TaskAttachment taskAttachment = taskAttachmentService.findById(getPara("id"));
-		renderJson(taskAttachment);
+		renderJson(Ret.ok("result",taskAttachment));
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class TaskAttachmentController extends BaseAppController {
 
 		Page<TaskAttachment> page = taskAttachmentService.paginateByColumns(getPageNumber(), getPageSize(), columns, orderBy);
 		Map<String, Object> map = ImmutableBiMap.of("total", page.getTotalRow(), "records", page.getList());
-		renderJson(map);
+		renderJson(Ret.ok("result",map));
 	}
 
 	public void saveOrUpdate() {

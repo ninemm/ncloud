@@ -32,4 +32,7 @@ public class RegexKey {
     public static boolean isMobile(String mobile) {
         return Pattern.matches(RegexKey.MOBILE, mobile);
     }
+    public static boolean isEmail(String email) {
+        return Pattern.matches(RegexKey.EMAIL, email);
+    }
 }

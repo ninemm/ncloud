@@ -24,7 +24,7 @@ import java.util.Map;
 
 @RequestMapping(value = "/project")
 @Api(description = "项目管理", basePath = "/project", tags = "project", position = 2)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS
 public class ProjectController extends BaseAppController {
     @Inject
     ProjectService projectService;
@@ -36,19 +36,19 @@ public class ProjectController extends BaseAppController {
         Columns columns = Columns.create("creater_id", userId);
         Page<Project> page = projectService.paginateByColumns(getPageNumber(), getPageSize(), columns," create_date desc ");
         Map<String, Object> map = ImmutableBiMap.of("total", page.getTotalRow(), "records", page.getList());
-        renderJson(map);
+        renderJson(Ret.ok("result",map));
     }
 
     @ApiOperation(value = "数据字典列表", httpMethod = "GET", notes = "getall")
     public void findAll() {
         List<Project> allProject = projectService.findAll();
-        renderJson(allProject);
+        renderJson(Ret.ok("result",allProject));
     }
 
     public void findById() {
         String id = getPara("id");
         Project project = projectService.findById(id);
-        renderJson(project);
+        renderJson(Ret.ok("result",project));
     }
 
 
@@ -74,7 +74,7 @@ public class ProjectController extends BaseAppController {
 
         Page<Project> page = projectService.paginateByColumns(getPageNumber(), getPageSize(), columns,orderBy);
         Map<String, Object> map = ImmutableBiMap.of("total", page.getTotalRow(), "records", page.getList());
-        renderJson(map);
+        renderJson(Ret.ok("result",map));
     }
 
     public void saveOrUpdate() {

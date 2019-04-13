@@ -1,23 +1,23 @@
 package net.ninemm.survey.controller.survey;
 
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.ImmutableBiMap;
+import com.jfinal.aop.Before;
 import com.jfinal.aop.Clear;
 import com.jfinal.aop.Inject;
 import com.jfinal.kit.Kv;
 import com.jfinal.kit.PathKit;
 import com.jfinal.kit.Ret;
-import com.jfinal.plugin.activerecord.Page;
 import io.jboot.Jboot;
-import io.jboot.db.model.Columns;
 import io.jboot.utils.StrUtil;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
 import io.swagger.annotations.Api;
 import net.ninemm.base.interceptor.GlobalCacheInterceptor;
 import net.ninemm.base.message.MessageAction;
-import net.ninemm.base.web.base.BaseController;
+import net.ninemm.base.utils.ShortUrl;
 import net.ninemm.survey.controller.BaseAppController;
+import net.ninemm.survey.interceptor.WxJsSdkInterceptor;
+import net.ninemm.survey.interceptor.WxUserInterceptor;
 import net.ninemm.survey.service.api.PublishService;
 import net.ninemm.survey.service.api.SendRecordService;
 import net.ninemm.survey.service.api.SurveyService;
@@ -32,13 +32,11 @@ import net.ninemm.upms.service.model.User;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @RequestMapping(value = "/surveyPublish")
 @Api(description = "问卷发布", basePath = "/surveyPublish", tags = "", position = 2)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS
 public class SurveyPublishController extends BaseAppController {
     @Inject
     PublishService publishService;
@@ -103,6 +101,7 @@ public class SurveyPublishController extends BaseAppController {
         }*/
         try {
             String url = writeHtml(surveyId,getHtmlCode(surveyUrl));
+            String shortUrl = ShortUrl.shortUrl(url);
             Publish publish = publishService.findBySurveyId(surveyId);
             if(publish==null){
                 publish = new Publish();
@@ -114,14 +113,30 @@ public class SurveyPublishController extends BaseAppController {
             publish.setType(0);
             publish.setDeptId(user.getDepartmentId());
             publish.setDataArea(user.getDataArea());
+            publish.setShortLink(shortUrl);
             publishService.saveOrUpdate(publish);
+
+            /*//往发送记录里面插入一条数据
+            SendRecord sr =new SendRecord();
+            sr.setSurveyId(surveyId);
+            sr.setSurveyPublishId(publish.getId());
+            sr.setOriginalLink(url);
+            sr.setType(0);
+            sr.setSendTitle("");
+            sr.setSendAddress("");
+            sr.setResendNum(0);
+            sr.setIsAnswered(0);
+            sr.setDeptId(publish.getDeptId());
+            sr.setDataArea(publish.getDataArea());
+            sr.setIsSuccess(1);
+            sendRecordService.save(sr);*/
 
             survey.setStatus(Survey.SurveyStatus.PUBLISH.getStatu());
             if(!surveyService.update(survey)){
-                renderJson(Ret.fail("message","问卷发布失败!"));
+                renderJson(Ret.fail("result","问卷发布失败!"));
                 return ;
             }
-            renderJson(Ret.ok("message",getBaseUrl()+url));
+            renderJson(Ret.ok("result",getBaseUrl()+"/surveyPublish/getSurveyByShortUrl?shortUrl="+shortUrl));
             return;
         } catch (Exception e) {
             e.printStackTrace();
@@ -175,29 +190,6 @@ public class SurveyPublishController extends BaseAppController {
         return url;
     }
 
-    @Clear({GlobalCacheInterceptor.class, LogInterceptor.class})
-    public void getSurveyByShortUrl(){
-        String shortUrl = getPara("shortUrl");
-        SendRecord sendRecord = sendRecordService.findByShortUrl(shortUrl);
-        if(sendRecord!=null){
-            if(sendRecord.getIsAnswered()==1){
-                renderJson(Ret.fail("message", "问卷已回答!"));
-                return;
-            }
-
-            Survey survey = surveyService.findById(sendRecord.getSurveyId());
-            if(survey==null || survey.getStatus()!=Survey.SurveyStatus.PUBLISH.getStatu()){
-                renderJson(Ret.fail("message","问卷未处于收集中!"));
-                return;
-            }
-        }else {
-            renderJson(Ret.fail("message","对不起找不到该问卷!"));
-            return;
-        }
-
-        redirect(sendRecord.getOriginalLink());
-    }
-
     /**
      * @Description: 问卷发送
      * @Param:
@@ -208,15 +200,15 @@ public class SurveyPublishController extends BaseAppController {
     public void sendSurvey(){
         JSONObject jo = getRawObject();
         String surveyId = jo.getString("surveyId");
-        int sendWay = jo.getInteger("sendWay");
         List<String> contact = (List<String>) jo.get("contact");
         if(contact.size()==0){
             renderJson(Ret.fail());
         }
         Kv kv = new Kv();
         kv.set("surveyId",surveyId);
-        kv.set("sendWay",sendWay);
         kv.set("contactList",contact);
+        kv.set("sendWay",jo.getInteger("sendWay"));
+        kv.set("ignoreSended",jo.getInteger("ignoreSended"));
         /*判断余额的代码
         *
         *
@@ -225,4 +217,62 @@ public class SurveyPublishController extends BaseAppController {
         Jboot.sendEvent(MessageAction.SendSurvey.SURVEY_SEND,kv);
         renderJson(Ret.ok());
     }
+    /**
+    * @Description:  根据问卷短链接答题
+    * @Param:
+    * @return:
+    * @Author: lsy
+    * @Date: 2019/3/26
+    */
+    @Clear({GlobalCacheInterceptor.class, LogInterceptor.class})
+    @Before({WxUserInterceptor.class})
+    public void getSurveyByShortUrl(){
+        String shortUrl = getPara("shortUrl");
+        String openid = getPara("openid");
+        System.out.println(shortUrl+"  "+openid);
+
+        String surveyId = null;
+        String originaLink = null;
+        Publish publish = publishService.findByShortUrl(shortUrl);
+        //如果不为null则说明不是针对特殊人群答题
+        if(publish!=null){
+            surveyId=publish.getSurveyId();
+            originaLink=publish.getOriginalLink();
+            // 需要考虑是否有限制同一IP只能答题一次规则
+            // 考虑是否已到答卷数限制
+            // 检测是否设置了密码
+
+        }else{ //(通过短信 邮件 发送的链接答题)
+            SendRecord sendRecord = sendRecordService.findByShortUrl(shortUrl);
+            if(sendRecord!=null){
+                surveyId=sendRecord.getSurveyId();
+                originaLink=sendRecord.getOriginalLink();
+                if(sendRecord.getIsAnswered()==1){
+                    renderJson(Ret.fail("message", "问卷已回答!"));
+                    return;
+                }
+            }else {
+                renderJson(Ret.fail("message","对不起找不到该问卷!"));
+                return;
+            }
+        }
+
+        //取出该问卷判断问卷的状态
+        Survey survey = surveyService.findById(surveyId);
+        if(survey==null || survey.getStatus()!=Survey.SurveyStatus.PUBLISH.getStatu()){
+            renderJson(Ret.fail("message","问卷未处于收集中!"));
+            return;
+        }
+        // 检测是否已经到回答时间了 未到回答时间还不能作答 已过回答时间就不能作答
+        /*if(){
+            待完善
+        }*/
+        String redirectUrl = originaLink+"?shortUrl="+shortUrl;
+        if(StrUtil.isNotBlank(openid)){
+            redirectUrl+="&openid="+openid;
+        }
+        System.out.println(redirectUrl);
+        redirect(redirectUrl);
+    }
+
 }

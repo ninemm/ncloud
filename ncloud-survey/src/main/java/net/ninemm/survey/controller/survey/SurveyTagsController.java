@@ -14,10 +14,13 @@ import net.ninemm.upms.service.model.User;
 
 import java.util.Date;
 import java.util.List;
+/**
+* @Description:废弃的类
+*/
 @Deprecated
 @RequestMapping(value = "/surveyTags")
 @Api(description = "问卷标签", basePath = "/surveyTags", tags = "", position = 2)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS
 public class SurveyTagsController extends BaseAppController {
     @Inject
     TagsService tagsService;
@@ -45,7 +48,7 @@ public class SurveyTagsController extends BaseAppController {
 
     public void findBySurveyId() {
         List<Tags> tagsList = tagsService.findBySurveyId(getPara("surveyId"));
-        renderJson(tagsList);
+        renderJson(Ret.ok("result",tagsList));
     }
 
     public void delete() {

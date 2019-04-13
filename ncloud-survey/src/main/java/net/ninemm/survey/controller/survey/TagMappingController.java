@@ -21,7 +21,7 @@ import java.util.Map;
 
 @RequestMapping(value = "/tagMapping")
 @Api(description = "问卷量表中间表", basePath = "/tagMapping", tags = "", position = 2)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS
 public class TagMappingController extends BaseAppController {
     @Inject
     TagMappingService tagMappingService;
@@ -49,7 +49,7 @@ public class TagMappingController extends BaseAppController {
         columns.likeAppendPercent("tag_name", rawObject.get("tagName"));
         Page<TagMapping> page = tagMappingService.paginateByColumns(getPageNumber(), getPageSize(), columns);
         Map<String, Object> map = ImmutableBiMap.of("total", page.getTotalRow(), "records", page.getList());
-        renderJson(map);
+        renderJson(Ret.ok("result",map));
     }
 
     public void delete() {

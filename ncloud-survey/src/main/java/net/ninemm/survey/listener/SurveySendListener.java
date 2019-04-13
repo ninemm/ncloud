@@ -29,10 +29,10 @@ public class SurveySendListener implements JbootEventListener {
     PublishService publishService;
     @Override
     public void onEvent(JbootEvent event) {
-
         Kv data = event.getData();
         String surveyId = data.getStr("surveyId");
         Integer sendWay = data.getInt("sendWay");
+        Integer ignoreSended = data.getInt("ignoreSended");
         List<String> contactList = (List<String>) data.get("contactList");
 
         Publish publish = publishService.findBySurveyId(surveyId);
@@ -47,6 +47,6 @@ public class SurveySendListener implements JbootEventListener {
         }else if(MessageAction.SendSurvey.WEIXIN==sendWay){
             surveySend= new WeiXinSurveySend();
         }
-        surveySend.sendSurvey(surveyId,sendWay,publish,contactList,sendRecordService);
+        surveySend.sendSurvey(surveyId,sendWay,publish,ignoreSended,contactList,sendRecordService);
     }
 }

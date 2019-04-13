@@ -17,7 +17,7 @@ import java.util.List;
 
 @RequestMapping(value = "/template")
 @Api(description = "问卷模板", basePath = "/template", tags = "", position = 2)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS
 public class TemplateController extends BaseAppController {
     @Inject
     TemplateService templateService;
@@ -44,11 +44,10 @@ public class TemplateController extends BaseAppController {
     public void findByDataArea(){
         String dataArea = getPara("dataArea");
         List<Template> templateList = templateService.findByDataArea(dataArea);
-        renderJson(templateList);
+        renderJson(Ret.ok("result",templateList));
     }
     public void findAll() {
-
-        renderJson(templateService.findAll());
+        renderJson(Ret.ok("result",templateService.findAll()));
     }
 
     public void delete() {

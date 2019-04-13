@@ -19,6 +19,7 @@ package net.ninemm.base.interceptor;
 import com.jfinal.aop.Interceptor;
 import com.jfinal.aop.Invocation;
 import com.jfinal.core.Controller;
+import com.jfinal.kit.Ret;
 import io.jboot.utils.ArrayUtil;
 import io.jboot.utils.StrUtil;
 import io.jboot.web.controller.JbootController;
@@ -72,7 +73,7 @@ public class NotNullParaInterceptor implements Interceptor {
         Controller controller = inv.getController();
         if (controller instanceof JbootController) {
             JbootController c = (JbootController) controller;
-            c.renderJson(RestResult.buildError("参数["+param+"]不可为空"));
+            c.renderJson(Ret.fail("result","参数["+param+"]不可为空"));
             return;
         }
     }
@@ -88,7 +89,7 @@ public class NotNullParaInterceptor implements Interceptor {
         if (controller instanceof JbootController) {
             JbootController c = (JbootController) controller;
             if (c.isAjaxRequest()) {
-                c.renderJson(RestResult.buildError("参数["+param+"]不可为空"));
+                c.renderJson(Ret.fail("result","参数["+param+"]不可为空"));
                 return;
             }
         }

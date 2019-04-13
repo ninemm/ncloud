@@ -18,9 +18,11 @@ import java.util.List;
 public class SmsSurveySend implements SurveySend {
 
     @Override
-    public void sendSurvey(String surveyId, Integer sendWay,Publish publish, List<String> contactList,SendRecordService sendRecordService) {
-        List<String> alerdySendList = sendRecordService.findByColums(surveyId,sendWay,contactList);
-        contactList.removeAll(alerdySendList);
+    public void sendSurvey(String surveyId, Integer sendWay,Publish publish,Integer ignoreSended, List<String> contactList,SendRecordService sendRecordService) {
+        if(ignoreSended==SurveySend.IGNORESENDED){
+            List<String> alerdySendList = sendRecordService.findByColums(surveyId,sendWay,contactList);
+            contactList.removeAll(alerdySendList);
+        }
         for (String contact : contactList) {
             if(RegexKey.isMobile(contact)){
                 SendRecord sr =new SendRecord();

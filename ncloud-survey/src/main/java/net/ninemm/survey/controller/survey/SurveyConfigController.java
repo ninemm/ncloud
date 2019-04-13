@@ -14,7 +14,7 @@ import java.util.List;
 
 @RequestMapping(value = "/surveyConfig")
 @Api(description = "问卷配置", basePath = "/surveyConfig", tags = "", position = 2)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS
 public class SurveyConfigController extends BaseAppController {
     @Inject
     ConfigService configService;
@@ -39,7 +39,7 @@ public class SurveyConfigController extends BaseAppController {
         Map<String, Object> map = ImmutableBiMap.of("total", page.getTotalRow(), "records", page.getList());
         renderJson(map);*/
         List<Config> configList = configService.findBySurveyId(surveyId);
-        renderJson(configList);
+        renderJson(Ret.ok("result",configList));
     }
 
     public void delete() {

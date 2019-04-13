@@ -27,7 +27,7 @@ import java.util.Map;
 
 @RequestMapping(value = "/answerRestrict")
 @Api(description = "答题限制", basePath = "/answerRestrict", tags = "", position = 2)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS
 public class SurveyAnswerRestrictController extends BaseAppController {
     @Inject
     AnswerRestrictService answerRestrictService;
@@ -80,7 +80,7 @@ public class SurveyAnswerRestrictController extends BaseAppController {
         List<ConsumerAttrCondition> consumerAttrConditionS = consumerAttrConditionService.findByRestrictId(answerRestrictId);
 
         Map<String, Object> map = ImmutableBiMap.of("answerRestrict", answerRestrict,"timeConditions",timeConditions,"frequencyConditions",frequencyConditions,"consumerAttrConditionS",consumerAttrConditionS);
-        renderJson(map);
+        renderJson(Ret.ok("result",map));
     }
 
     public void delete() {

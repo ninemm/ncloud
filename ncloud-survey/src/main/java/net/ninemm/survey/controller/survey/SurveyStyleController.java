@@ -17,7 +17,7 @@ import java.util.List;
 
 @RequestMapping(value = "/surveyStyle")
 @Api(description = "问卷样式", basePath = "/surveyStyle", tags = "", position = 2)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS
 public class SurveyStyleController extends BaseAppController {
     @Inject
     StyleService styleService;
@@ -48,7 +48,7 @@ public class SurveyStyleController extends BaseAppController {
         Map<String, Object> map = ImmutableBiMap.of("total", page.getTotalRow(), "records", page.getList());
         renderJson(map);*/
         List<Style> styleList =styleService.findBySurveyId(surveyId);
-        renderJson(styleList);
+        renderJson(Ret.ok("result",styleList));
     }
 
     public void delete() {

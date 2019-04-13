@@ -49,7 +49,7 @@ import net.ninemm.upms.service.model.User;
  **/
 @RequestMapping(value = "/auth")
 @Api(description = "用户登录，注销", basePath = "/auth", tags = "auth", position = 99)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS
 public class AuthController extends BaseAppController {
 
     @Inject
@@ -78,11 +78,15 @@ public class AuthController extends BaseAppController {
         User user = userService.findByMobileAndDeptId(mobile, deptId);
 //        User user = userService.findByUsername(mobile);
 //        User user = userService.findByMobileAndPassword(mobile, password);
-        /*boolean checkPwd = ShiroUtils.checkPwd(password, user.getPassword(), user.getSalt());
+        if (user==null) {
+            renderJson(Ret.fail("result","用户名或密码错误!"));
+            return ;
+        }
+        boolean checkPwd = ShiroUtils.checkPwd(password, user.getPassword(), user.getSalt());
         if (!checkPwd) {
             renderJson(Ret.fail());
             return ;
-        }*/
+        }
 
         // 查询用户的角色，主管，经理，业务员
         Department department = departmentService.findDeptDataAreaByDeptId(user.getDepartmentId());
@@ -105,7 +109,7 @@ public class AuthController extends BaseAppController {
         ret.set("userId", user.getId());
         ret.set("access_token", token);
         ret.set("refresh_token", token);
-        renderJson(ret);
+        renderJson(Ret.ok("result",ret));
     }
 
     @ApiOperation(value = "用户登出", httpMethod = "GET", notes = "用户登出")

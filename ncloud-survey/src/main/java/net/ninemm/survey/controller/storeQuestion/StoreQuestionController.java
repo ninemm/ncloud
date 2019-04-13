@@ -21,7 +21,7 @@ import java.util.Map;
 
 @RequestMapping(value = "/storeQuestion")
 @Api(description = "问卷题库", basePath = "/storeQuestion", tags = "", position = 2)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS
 public class StoreQuestionController extends BaseAppController {
     @Inject
     StoreQuestionService storeQuestionService;
@@ -59,7 +59,7 @@ public class StoreQuestionController extends BaseAppController {
         }
         Page<StoreQuestion> page = storeQuestionService.paginateByColumns(getPageNumber(), getPageSize(), columns,orderBy);
         Map<String, Object> map = ImmutableBiMap.of("total", page.getTotalRow(), "records", page.getList());
-        renderJson(map);
+        renderJson(Ret.ok("result",map));
     }
 
     public void delete() {

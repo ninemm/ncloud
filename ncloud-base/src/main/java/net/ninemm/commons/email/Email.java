@@ -17,6 +17,8 @@
 package net.ninemm.commons.email;
 
 import com.jfinal.log.Log;
+import net.ninemm.base.common.Consts;
+import net.ninemm.commons.SystemOptions;
 
 /**
  * @author Michael Yang 杨福海 （fuhai999@gmail.com）
@@ -27,6 +29,7 @@ import com.jfinal.log.Log;
 public class Email {
 
     private static final Log LOG = Log.getLog(Email.class);
+    public static final String SUBJECT ="问卷调查";
 
     private String[] to = null;
     private String[] cc = null;
@@ -86,7 +89,12 @@ public class Email {
     }
 
     public static void main(String[] args) {
-        Email.create().subject("这是邮件标题").content("这是邮件内容~~~~~~").to("1303435095@qq.com").send();
+        SystemOptions.set(Consts.OPTION_CONNECTION_EMAIL_SMTP,"smtp.163.com");
+        SystemOptions.set(Consts.OPTION_CONNECTION_EMAIL_ACCOUNT,"15527128008@163.com");
+        SystemOptions.set(Consts.OPTION_CONNECTION_EMAIL_PASSWORD,"a4882633");
+        SystemOptions.set(Consts.OPTION_CONNECTION_EMAIL_SSL_ENABLE,"true");
+        SystemOptions.set(Consts.OPTION_CONNECTION_EMAIL_ENABLE,"true");
+        Email.create().subject("这是邮件标题").content("这是邮件内容~~~~~~").to("1303435095abcddaaxxdf@qq.com").send();
     }
 }
 

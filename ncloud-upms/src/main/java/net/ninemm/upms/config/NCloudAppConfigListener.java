@@ -20,7 +20,8 @@ import com.jfinal.captcha.CaptchaManager;
 import com.jfinal.config.Constants;
 import com.jfinal.config.Interceptors;
 import com.jfinal.config.Routes;
-import com.jfinal.kit.PropKit;
+import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.template.Engine;
 import io.jboot.Jboot;
 import io.jboot.aop.jfinal.JfinalHandlers;
@@ -29,12 +30,16 @@ import io.jboot.core.listener.JbootAppListenerBase;
 import io.jboot.web.fixedinterceptor.FixedInterceptors;
 import net.ninemm.base.captcha.CaptchaCache;
 import net.ninemm.base.common.AppInfo;
+import net.ninemm.base.common.Consts;
 import net.ninemm.base.handler.OptionsHandler;
 import net.ninemm.base.interceptor.BusinessExceptionInterceptor;
 import net.ninemm.base.interceptor.GlobalCacheInterceptor;
 import net.ninemm.base.interceptor.NotNullParaInterceptor;
 import net.ninemm.base.plugin.shiro.ShiroCacheUtils;
+import net.ninemm.commons.SystemOptions;
 import net.ninemm.upms.interceptor.LogInterceptor;
+
+import java.util.List;
 
 /**
  * 应用程序初始化入口
@@ -81,6 +86,11 @@ public class NCloudAppConfigListener extends JbootAppListenerBase {
 
     @Override
     public void onStart() {
+	    //从数据库加载系统常量到内存中
+        loadEmailConstants();
+
+        //ApiConfigKit.putApiConfig(WechatApi.getApiConfig());
+
         /** 集群模式下验证码使用 redis 缓存 */
         CaptchaManager.me().setCaptchaCache(new CaptchaCache());
         ShiroCacheUtils.clearAuthorizationInfoAll();
@@ -93,6 +103,24 @@ public class NCloudAppConfigListener extends JbootAppListenerBase {
     @Override
     public void onStartBefore() {
 
+    }
+
+    private void loadEmailConstants() {
+	    String sql ="SELECT option_key,option_value from upms_option where is_system=1 and option_key like 'connection_email%'";
+        List<Record> records = Db.find(sql);
+        for (Record record : records) {
+            if(Consts.OPTION_CONNECTION_EMAIL_SMTP.equals(record.get("option_key"))){
+                SystemOptions.set(Consts.OPTION_CONNECTION_EMAIL_SMTP,record.getStr("option_value"));
+            }else if(Consts.OPTION_CONNECTION_EMAIL_ACCOUNT.equals(record.get("option_key"))){
+                SystemOptions.set(Consts.OPTION_CONNECTION_EMAIL_ACCOUNT,record.getStr("option_value"));
+            }else if(Consts.OPTION_CONNECTION_EMAIL_PASSWORD.equals(record.get("option_key"))){
+                SystemOptions.set(Consts.OPTION_CONNECTION_EMAIL_PASSWORD,record.getStr("option_value"));
+            }else if(Consts.OPTION_CONNECTION_EMAIL_SSL_ENABLE.equals(record.get("option_key"))){
+                SystemOptions.set(Consts.OPTION_CONNECTION_EMAIL_SSL_ENABLE,record.getStr("option_value"));
+            }else{
+                SystemOptions.set(Consts.OPTION_CONNECTION_EMAIL_ENABLE,record.getStr("option_value"));
+            }
+        }
     }
 
 }

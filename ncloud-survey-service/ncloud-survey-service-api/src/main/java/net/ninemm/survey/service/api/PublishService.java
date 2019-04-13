@@ -115,4 +115,13 @@ public interface PublishService  {
     * @Date: 2019/3/19
     */
     Publish findBySurveyId(String surveyId);
+
+    /**
+    * @Description:
+    * @Param: [shortUrl]
+    * @return: net.ninemm.survey.service.model.Publish
+    * @Author: lsy
+    * @Date: 2019/3/26
+    */
+    Publish findByShortUrl(String shortUrl);
 }

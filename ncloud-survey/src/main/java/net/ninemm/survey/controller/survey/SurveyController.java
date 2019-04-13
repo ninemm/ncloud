@@ -36,7 +36,7 @@ import java.util.Map;
 
 @RequestMapping(value = "/survey")
 @Api(description = "问卷", basePath = "/survey", tags = "", position = 2)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS
 public class SurveyController extends BaseAppController {
     @Inject
     SurveyService surveyService;
@@ -59,19 +59,19 @@ public class SurveyController extends BaseAppController {
         columns.le("status",Survey.SurveyStatus.DELETE);
         Page<Survey> page = surveyService.paginateByColumns(getPageNumber(), getPageSize(), columns," create_date,status desc ");
         Map<String, Object> map = ImmutableBiMap.of("total", page.getTotalRow(), "records", page.getList());
-        renderJson(map);
+        renderJson(Ret.ok("result",map));
     }
 
     @ApiOperation(value = "数据字典列表", httpMethod = "GET", notes = "getall")
     public void findAll() {
         List<Survey> allSurvey = surveyService.findAll();
-        renderJson(allSurvey);
+        renderJson(Ret.ok("result",allSurvey));
     }
 
     public void findById() {
     	JSONObject rawObject = getRawObject();
-        Survey surve = surveyService.findById(rawObject.get("id"));
-        renderJson(surve);
+        Survey survey = surveyService.findById(rawObject.get("id"));
+        renderJson(Ret.ok("result",survey));
     }
 
     /**
@@ -79,24 +79,35 @@ public class SurveyController extends BaseAppController {
      */
     public void findByColum() {
         JSONObject rawObject = getRawObject();
-
+        User user = userService.findById(getUserId());
         Columns columns = Columns.create();
-        columns.eq("category_id", rawObject.get("categoryId"));
-        columns.eq("type", rawObject.get("type"));
-        columns.eq("status", rawObject.get("status"));
-        columns.likeAppendPercent("title", rawObject.get("title"));
-        columns.likeAppendPercent("realname", rawObject.get("realname"));
-        columns.like("data_area",rawObject.get("dataArea"));
-        columns.ge("create_date",rawObject.get("startDate"));
-        columns.le("create_date",rawObject.get("endDate"));
-        String orderBy = rawObject.getString("orderBy");
-        if(StrUtil.isBlank(orderBy)){
-            orderBy=" create_date desc ";
+        String orderBy=" create_date desc ";
+        if (rawObject==null) {
+            columns.le("status",Survey.SurveyStatus.DELETE);
+            columns.like("data_area",user.getDataArea());
+        }else{
+            if (rawObject.get("status")!=null){
+                columns.eq("status", rawObject.get("status"));
+            }else {
+                columns.le("status",Survey.SurveyStatus.DELETE);
+            }
+            if(rawObject.get("dataArea")!=null){
+                columns.like("data_area",rawObject.get("dataArea"));
+            }else{
+                columns.like("data_area",user.getDataArea());
+            }
+            columns.eq("category_id", rawObject.get("categoryId"));
+            columns.eq("type", rawObject.get("type"));
+            columns.likeAppendPercent("title", rawObject.get("title"));
+            columns.likeAppendPercent("realname", rawObject.get("realname"));
+            columns.ge("create_date",rawObject.get("startDate"));
+            columns.le("create_date",rawObject.get("endDate"));
+            orderBy = rawObject.getString("orderBy")==null?orderBy:rawObject.getString("orderBy");
         }
 
         Page<Survey> page = surveyService.paginateByColumns(getPageNumber(), getPageSize(), columns,orderBy);
         Map<String, Object> map = ImmutableBiMap.of("total", page.getTotalRow(), "records", page.getList());
-        renderJson(map);
+        renderJson(Ret.ok("result",map));
     }
 
     public void saveOrUpdate() {
@@ -186,7 +197,7 @@ public class SurveyController extends BaseAppController {
         columns.eq("status",Survey.SurveyStatus.DELETE.getStatu());
         Page<Survey> page = surveyService.paginateByColumns(getPageNumber(), getPageSize(), columns," create_date desc ");
         Map<String, Object> map = ImmutableBiMap.of("total", page.getTotalRow(), "records", page.getList());
-        renderJson(map);
+        renderJson(Ret.ok("result",map));
     }
     /** 
     * @Description: 问卷找回 
@@ -220,6 +231,6 @@ public class SurveyController extends BaseAppController {
         map.put("questionList",questionService.findBySurveyId(surveyId));
         map.put("questionAttrList",questionAttrService.findBySurveyId(surveyId));
         map.put("styleList",styleService.findBySurveyId(surveyId));
-        renderJson(map);
+        renderJson(Ret.ok("result",map));
     }
 }

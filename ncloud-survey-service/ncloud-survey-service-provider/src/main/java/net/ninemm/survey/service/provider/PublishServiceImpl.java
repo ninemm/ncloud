@@ -21,4 +21,10 @@ public class PublishServiceImpl extends JbootServiceBase<Publish> implements Pub
         String sql ="select * from survey_publish where survey_id= ? ";
         return DAO.findFirst(sql,surveyId);
     }
+
+    @Override
+    public Publish findByShortUrl(String shortUrl) {
+        String sql="select * from survey_publish where short_link=?";
+        return DAO.findFirst(sql,shortUrl);
+    }
 }

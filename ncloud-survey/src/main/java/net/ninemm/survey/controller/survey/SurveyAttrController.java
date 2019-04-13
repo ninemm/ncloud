@@ -15,7 +15,7 @@ import java.util.List;
 
 @RequestMapping(value = "/surveyAttr")
 @Api(description = "问卷属性", basePath = "/surveyAttr", tags = "", position = 2)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS
 public class SurveyAttrController extends BaseAppController {
     @Inject
     AttrService attrService;
@@ -40,7 +40,7 @@ public class SurveyAttrController extends BaseAppController {
         Map<String, Object> map = ImmutableBiMap.of("total", page.getTotalRow(), "records", page.getList());
         renderJson(map);*/
         List<Attr> attrList = attrService.findBySurveyId(surveyId);
-        renderJson(attrList);
+        renderJson(Ret.ok("result",attrList));
     }
 
     public void delete() {

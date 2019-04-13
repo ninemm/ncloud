@@ -38,7 +38,7 @@ import java.util.Map;
 
 @RequestMapping(value = "/taskProcess")
 @Api(description = "任务管理", basePath = "/taskProcess", tags = "", position = 3)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS
 public class TaskProcessController extends BaseAppController {
 	@Inject
 	TaskProcessService taskProcessService;
@@ -51,12 +51,12 @@ public class TaskProcessController extends BaseAppController {
 		Page<TaskProcess> page = taskProcessService.paginateByColumns(getPageNumber(), getPageSize(), columns,
 				" create_date desc ");
 		Map<String, Object> map = ImmutableBiMap.of("total", page.getTotalRow(), "records", page.getList());
-		renderJson(map);
+		renderJson(Ret.ok("result",map));
 	}
 
 	public void findById(String id) {
 		TaskProcess taskProcess = taskProcessService.findById(getPara("id"));
-		renderJson(taskProcess);
+		renderJson(Ret.ok("result",taskProcess));
 	}
 
 
@@ -82,7 +82,7 @@ public class TaskProcessController extends BaseAppController {
 
 		Page<TaskProcess> page = taskProcessService.paginateByColumns(getPageNumber(), getPageSize(), columns, orderBy);
 		Map<String, Object> map = ImmutableBiMap.of("total", page.getTotalRow(), "records", page.getList());
-		renderJson(map);
+		renderJson(Ret.ok("result",map));
 	}
 
 	public void saveOrUpdate() {

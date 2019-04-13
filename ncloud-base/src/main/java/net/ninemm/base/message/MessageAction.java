@@ -23,4 +23,8 @@ public class MessageAction {
         public static final int EMAIL=1;
     }
 
+    public class saveSurveyResult{
+        public static final String SURVEY_RESULT_SAVE = "surveyResult:save";
+    }
+
 }

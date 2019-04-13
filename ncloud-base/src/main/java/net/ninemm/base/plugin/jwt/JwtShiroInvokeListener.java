@@ -43,7 +43,7 @@ public class JwtShiroInvokeListener implements JbootShiroInvokeListener {
 
    @Override
    public void onInvokeBefore(FixedInvocation inv) {
-       JbootController controller = (JbootController) inv.getController();
+       Controller controller = (Controller) inv.getController();
        String jwtToken = controller.getHeader(JwtManager.me().getHttpHeaderName());
 
        if (StrUtil.isBlank(jwtToken)) {

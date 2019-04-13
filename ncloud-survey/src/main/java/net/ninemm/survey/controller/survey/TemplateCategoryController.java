@@ -17,7 +17,7 @@ import java.util.List;
 
 @RequestMapping(value = "/templateCategory")
 @Api(description = "问卷模板分类", basePath = "/templateCategory", tags = "", position = 2)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS
 public class TemplateCategoryController extends BaseAppController {
     @Inject
     TemplateCategoryService templateCategoryService;

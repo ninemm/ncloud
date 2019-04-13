@@ -18,7 +18,9 @@ package net.ninemm.base.interceptor;
 
 import com.jfinal.aop.Interceptor;
 import com.jfinal.aop.Invocation;
+import com.jfinal.core.Controller;
 import com.jfinal.kit.LogKit;
+import com.jfinal.kit.Ret;
 import com.jfinal.kit.StrKit;
 import io.jboot.support.jwt.JwtManager;
 import io.jboot.web.controller.JbootController;
@@ -45,14 +47,14 @@ public class GlobalCacheInterceptor implements Interceptor {
             return;
         }
 
-        JbootController controller = (JbootController) inv.getController();
+        Controller controller = (Controller) inv.getController();
         String userId = JwtManager.me().getPara(Consts.JWT_USER_ID);;
         //Object obj = Jboot.me().getCache().get(CacheKey.CACHE_SELLER, controller.getJwtPara(Consts.JWT_USER_ID));
         //String dataArea = Jboot.me().getCache().get(CacheKey.CACHE_DEALER_DATA_AREA, controller.getJwtPara(Consts.JWT_USER_ID));
         //String role = Jboot.me().getCache().get(CacheKey.CACHE_LOGINED_USER,controller.getJwtPara(Consts.JWT_USER_ID) + ":" + CacheKey.CACHE_KEY_ROLE);
         if (StrKit.isBlank(userId)) {
             LogKit.error("用户Id和数据域不能同时为空");
-            controller.renderJson(RestResult.buildError("用户Id和数据域不能同时为空"));
+            controller.renderJson(Ret.fail("result","用户Id和数据域不能同时为空"));
             return;
         }
 

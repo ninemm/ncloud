@@ -38,7 +38,7 @@ import java.util.Map;
 
 @RequestMapping(value = "/task")
 @Api(description = "任务管理", basePath = "/task", tags = "task", position = 3)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS
 public class TaskController extends BaseAppController {
 	@Inject
 	TaskService taskService;
@@ -50,7 +50,7 @@ public class TaskController extends BaseAppController {
 		Columns columns = Columns.create("publisher_id", userId);
 		Page<Task> page = taskService.paginateByColumns(getPageNumber(), getPageSize(), columns, " create_date desc ");
 		Map<String, Object> map = ImmutableBiMap.of("total", page.getTotalRow(), "records", page.getList());
-		renderJson(map);
+		renderJson(Ret.ok("result",map));
 	}
 	
 	public void findByProject() {
@@ -58,12 +58,12 @@ public class TaskController extends BaseAppController {
 		Columns columns = Columns.create("project_id", projectId);
 		Page<Task> page = taskService.paginateByColumns(getPageNumber(), getPageSize(), columns, " create_date desc ");
 		Map<String, Object> map = ImmutableBiMap.of("total", page.getTotalRow(), "records", page.getList());
-		renderJson(map);
+		renderJson(Ret.ok("result",map));
 	}
 
 	public void findById(String id) {
 		Task task = taskService.findById(getPara("id"));
-		renderJson(task);
+		renderJson(Ret.ok("result",task));
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class TaskController extends BaseAppController {
 
 		Page<Task> page = taskService.paginateByColumns(getPageNumber(), getPageSize(), columns, orderBy);
 		Map<String, Object> map = ImmutableBiMap.of("total", page.getTotalRow(), "records", page.getList());
-		renderJson(map);
+		renderJson(Ret.ok("result",map));
 	}
 
 	public void saveOrUpdate() {

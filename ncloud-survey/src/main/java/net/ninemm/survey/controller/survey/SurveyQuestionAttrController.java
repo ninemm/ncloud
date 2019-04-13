@@ -16,7 +16,7 @@ import java.util.List;
 
 @RequestMapping(value = "/surveyQuestionAttr")
 @Api(description = "问卷题目", basePath = "/surveyQuestionAttr", tags = "", position = 2)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS
 public class SurveyQuestionAttrController extends BaseAppController {
     @Inject
     QuestionAttrService questionAttrService;
@@ -39,13 +39,13 @@ public class SurveyQuestionAttrController extends BaseAppController {
     public void findBySurveyId() {
         String surveyId = getPara("surveyId");
         List<QuestionAttr>  questionAttrList= questionAttrService.findBySurveyId(surveyId);
-        renderJson(questionAttrList);
+        renderJson(Ret.ok("result",questionAttrList));
     }
 
     public void findByQurstionId() {
         String questionId = getPara("questionId");
         List<QuestionAttr>  questionAttrList= questionAttrService.findByQurstionId(questionId);
-        renderJson(questionAttrList);
+        renderJson(Ret.ok("result",questionAttrList));
     }
 
     public void delete() {
