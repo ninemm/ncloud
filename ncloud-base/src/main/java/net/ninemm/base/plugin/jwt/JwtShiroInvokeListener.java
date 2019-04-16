@@ -16,6 +16,7 @@
 
 package net.ninemm.base.plugin.jwt;
 
+import com.jfinal.aop.Invocation;
 import com.jfinal.core.Controller;
 import com.jfinal.log.Log;
 import io.jboot.support.jwt.JwtManager;
@@ -41,7 +42,6 @@ public class JwtShiroInvokeListener implements JbootShiroInvokeListener {
 
    private final static Log LOG = Log.getLog(JwtShiroInvokeListener.class);
 
-   @Override
    public void onInvokeBefore(FixedInvocation inv) {
        JbootController controller = (JbootController) inv.getController();
        String jwtToken = controller.getHeader(JwtManager.me().getHttpHeaderName());
@@ -62,7 +62,6 @@ public class JwtShiroInvokeListener implements JbootShiroInvokeListener {
        }
    }
 
-   @Override
    public void onInvokeAfter(FixedInvocation inv, AuthorizeResult result) {
        if (result == null || result.isOk()) {
            inv.invoke();
@@ -111,4 +110,45 @@ public class JwtShiroInvokeListener implements JbootShiroInvokeListener {
        restResult.setMsg("没有权限，请联系管理员!");
        controller.renderJson(restResult);
    }
+
+    @Override
+    public void onInvokeBefore(Invocation inv) {
+        JbootController controller = (JbootController) inv.getController();
+        String jwtToken = controller.getHeader(JwtManager.me().getHttpHeaderName());
+
+        if (StrUtil.isBlank(jwtToken)) {
+            inv.invoke();
+            return;
+        }
+
+        String userId = JwtManager.me().getPara(Consts.JWT_USER_ID);
+        AuthenticationToken token = new JwtAuthenticationToken(userId, jwtToken);
+
+        try {
+            Subject subject = SecurityUtils.getSubject();
+            subject.login(token);
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
+        }
+    }
+
+    @Override
+    public void onInvokeAfter(Invocation inv, AuthorizeResult result) {
+        if (result == null || result.isOk()) {
+            inv.invoke();
+            return;
+        }
+
+        int errorCode = result.getErrorCode();
+        switch (errorCode) {
+            case AuthorizeResult.ERROR_CODE_UNAUTHENTICATED:
+                doProcessUnauthenticated(inv.getController());
+                break;
+            case AuthorizeResult.ERROR_CODE_UNAUTHORIZATION:
+                doProcessuUnauthorization(inv.getController());
+                break;
+            default:
+                doProcessuDefault(inv.getController());
+        }
+    }
 }

@@ -124,4 +124,8 @@ public class AuthController extends BaseAppController {
         renderJson(RestResult.buildSuccess("退出成功！"));
     }
 
+    public void twoStepCode() {
+        renderJson(RestResult.buildSuccess());
+    }
+
 }
