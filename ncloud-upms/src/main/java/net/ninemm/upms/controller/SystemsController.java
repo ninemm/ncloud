@@ -40,7 +40,7 @@ import java.util.Map;
  **/
 
 @RequestMapping(value = "/api/v1/admin/systems")
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
 public class SystemsController extends BaseAppController {
 
     @Inject

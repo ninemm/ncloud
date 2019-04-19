@@ -23,7 +23,7 @@ import java.util.Map;
  */
 @RequestMapping(value = "/share")
 @Api(description = "", basePath = "/share", tags = "", position = 0)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
 public class ShareController extends BaseAppController {
     @Inject
     private ShareService shareService;

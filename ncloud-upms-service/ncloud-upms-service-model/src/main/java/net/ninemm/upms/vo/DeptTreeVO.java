@@ -31,12 +31,13 @@ import java.util.List;
 public class DeptTreeVO<T extends DeptTreeVO> implements TreeEntity {
 
     public String id;
-    public String name;
+    public String label;
     public String parentId;
     public List<T> children;
 
     public boolean disabled = false;
     public boolean isLeaf = true;
+    public boolean isUser = false ;
 
     @Override
     public String getId() {
@@ -55,14 +56,6 @@ public class DeptTreeVO<T extends DeptTreeVO> implements TreeEntity {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public void setParentId(String parentId) {
@@ -89,5 +82,19 @@ public class DeptTreeVO<T extends DeptTreeVO> implements TreeEntity {
         isLeaf = leaf;
     }
 
+    public String getLabel() {
+        return label;
+    }
 
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public boolean isUser() {
+        return isUser;
+    }
+
+    public void setUser(boolean user) {
+        isUser = user;
+    }
 }

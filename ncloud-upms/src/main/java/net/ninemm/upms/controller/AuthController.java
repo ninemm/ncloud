@@ -49,7 +49,7 @@ import net.ninemm.upms.service.model.User;
  **/
 @RequestMapping(value = "/auth")
 @Api(description = "用户登录，注销", basePath = "/auth", tags = "auth", position = 99)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
 public class AuthController extends BaseAppController {
 
     @Inject

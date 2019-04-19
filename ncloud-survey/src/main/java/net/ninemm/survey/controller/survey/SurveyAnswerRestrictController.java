@@ -27,7 +27,7 @@ import java.util.Map;
 
 @RequestMapping(value = "/answerRestrict")
 @Api(description = "答题限制", basePath = "/answerRestrict", tags = "", position = 2)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
 public class SurveyAnswerRestrictController extends BaseAppController {
     @Inject
     AnswerRestrictService answerRestrictService;

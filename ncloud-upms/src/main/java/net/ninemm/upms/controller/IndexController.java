@@ -32,7 +32,7 @@ import net.ninemm.base.interceptor.GlobalCacheInterceptor;
 
 @RequestMapping(value = "/")
 @Api(description = "用户登录，注销", basePath = "/", tags = "index", position = 98)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
 public class IndexController extends BaseAppController {
 
     public void index() {

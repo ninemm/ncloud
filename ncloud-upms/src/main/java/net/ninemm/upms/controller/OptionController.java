@@ -3,6 +3,7 @@ package net.ninemm.upms.controller;
 import com.google.common.base.Predicate;
 import com.jfinal.aop.Inject;
 import com.jfinal.kit.Ret;
+import com.jfinal.plugin.activerecord.Page;
 import io.jboot.utils.StrUtil;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
  **/
 
 @RequestMapping(value = "/api/v1/admin/option")
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
 public class OptionController extends BaseAppController {
 
     @Inject

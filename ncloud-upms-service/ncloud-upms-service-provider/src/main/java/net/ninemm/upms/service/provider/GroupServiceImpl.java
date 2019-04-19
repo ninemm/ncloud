@@ -28,6 +28,10 @@ public class GroupServiceImpl extends BaseService<Group> implements GroupService
     public Page<Group> paginate(int page, int pageSize, Map<String, Object> params) {
         Columns columns = Columns.create();
         Object groupName = params.get("groupName");
+        Object deptId = params.get("deptId");
+        if (deptId!=null){
+            columns.eq("dept_id",deptId);
+        }
         if (groupName != null) {
             columns.likeAppendPercent("group_name", groupName);
         }
@@ -42,6 +46,12 @@ public class GroupServiceImpl extends BaseService<Group> implements GroupService
         String orderBy = orderBy(orderByField, isAsc);
 
         return DAO.paginateByColumns(page, pageSize, columns, orderBy);
+    }
+
+    @Override
+    public void deleteByIds(String ids) {
+        String sql = "DELETE FROM upms_group WHERE id in ("+ids+")";
+        Db.delete(sql);
     }
 
     @Override

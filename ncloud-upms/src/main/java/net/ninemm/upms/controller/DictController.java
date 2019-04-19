@@ -46,7 +46,7 @@ import java.util.Map;
 
 @RequestMapping(value = "/api/v1/admin/dict")
 @Api(description = "字典接口文档", basePath = "/api/v1/admin/dict", tags = "dict", position = 1)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowMethods = "POST,OPTIONS,GET,PUT,DELETE", allowCredentials = "true")
+@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowMethods = "POST,OPTIONS,GET,PUT,DELETE", allowCredentials = "true")
 public class DictController extends BaseController {
 
     @Inject

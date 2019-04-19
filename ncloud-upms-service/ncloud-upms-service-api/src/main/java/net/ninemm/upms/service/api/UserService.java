@@ -144,4 +144,10 @@ public interface UserService extends JbootServiceJoiner {
      * @return List
      */
     public List<User> findListByDeptId(String deptId);
+
+    int batchReset(String[] ids);
+
+    List<Record> findByDepTid(String ids);
+
+    void updateStatusById(String id, String status);
 }

@@ -40,6 +40,11 @@ public class Consts {
 	 * 短信session值
 	 */
 	public static final String SESSION_SMS = "_sms_val";
+
+	/**
+	 * 重置初始密码
+	 */
+	public static final String USER_DEFAULT_PASSWORD = "123456";
 	
 	/**
 	 * 微信授权 token 存储在 session 里 对应的 key
@@ -52,6 +57,11 @@ public class Consts {
 	 * 定位当前菜单功能标识
 	 */
 	public static final String FUNC_TAG = "_func";
+
+	/**
+	 * 数据查看时的数据域
+	 */
+	public static final String SESSION_SELECT_DATAAREA = "data";
 
 	/**
 	 * 表单token 防止重复提交

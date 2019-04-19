@@ -38,7 +38,7 @@ import java.util.Map;
 
 @RequestMapping(value = "/taskProcess")
 @Api(description = "任务管理", basePath = "/taskProcess", tags = "", position = 3)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
 public class TaskProcessController extends BaseAppController {
 	@Inject
 	TaskProcessService taskProcessService;

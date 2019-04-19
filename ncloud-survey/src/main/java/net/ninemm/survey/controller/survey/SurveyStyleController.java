@@ -17,7 +17,7 @@ import java.util.List;
 
 @RequestMapping(value = "/surveyStyle")
 @Api(description = "问卷样式", basePath = "/surveyStyle", tags = "", position = 2)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
 public class SurveyStyleController extends BaseAppController {
     @Inject
     StyleService styleService;

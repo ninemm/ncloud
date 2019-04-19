@@ -21,7 +21,7 @@ import java.util.Map;
  */
 @RequestMapping(value = "/#(lowerCaseModelName)")
 @Api(description = "", basePath = "/#(lowerCaseModelName)", tags = "", position = 0)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
 public class #(tableMeta.modelName)Controller extends BaseAppController {
     @Inject
     private #(tableMeta.modelName)Service #(lowerCaseModelName)Service;

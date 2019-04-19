@@ -12,6 +12,7 @@ import io.jboot.aop.annotation.Bean;
 import io.jboot.components.cache.annotation.Cacheable;
 import io.jboot.db.model.Columns;
 import io.jboot.utils.StrUtil;
+import net.ninemm.base.common.Consts;
 import net.ninemm.base.utils.EncryptUtils;
 import net.ninemm.base.web.base.BaseService;
 import net.ninemm.upms.service.api.GroupService;
@@ -36,16 +37,22 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
     @Override
     public Page<User> paginate(int page, int pageSize, Map<String, Object> params) {
         Columns columns = Columns.create();
-        Object realname = params.get("realname");
-        if (realname != null) {
-            columns.likeAppendPercent("realname", realname);
+        Object realName = params.get("realName");
+        Object departmentId = params.get("departmentId");
+        Object status = params.get("status");
+        if (departmentId!=null){
+            columns.eq("department_id",departmentId);
         }
-
+        if (realName != null) {
+            columns.likeAppendPercent("realname", realName);
+        }
+        if (status != null) {
+            columns.eq("status",status);
+        }
         Object dataArea = params.get("dataArea");
         if (dataArea != null) {
             columns.like("data_area", dataArea);
         }
-
         Object isAsc = params.get("isAsc");
         Object orderByField = params.get("orderByField");
         String orderBy = orderBy(orderByField, isAsc);
@@ -112,6 +119,41 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
     @Cacheable(name = "upms_user", key = "user:dept:#(deptId)", nullCacheEnable = false)
     public List<User> findListByDeptId(String deptId) {
         return DAO.findListByColumn("department_id", deptId);
+    }
+
+    @Override
+    public int batchReset(String[] ids) {
+        if (ids != null && ids.length > 0) {
+            int deleteCount = 0;
+            for (int i = 0; i < ids.length; i++) {
+                if (ids[i].equals("0")) {
+                    continue;
+                }
+                if (resetPasswordById(ids[i])) {
+                    ++deleteCount;
+                }
+            }
+            return deleteCount;
+        }
+        return 0;
+    }
+
+    @Override
+    public List<Record> findByDepTid(String ids) {
+        String sql = "SELECT u.* FROM upms_user u LEFT JOIN upms_department up on u.department_id =up.id WHERE up.id in ("+ids+")";
+        return Db.find(sql);
+    }
+
+    @Override
+    public void updateStatusById(String id, String status) {
+        String sql ="UPDATE upms_user SET status = "+status+" where id = '"+id+"'";
+        Db.update(sql);
+    }
+
+    public boolean resetPasswordById(String id) {
+        User user = findById(id);
+        user.setPassword(EncryptUtils.encryptPassword(Consts.USER_DEFAULT_PASSWORD, user.getSalt()));
+        return user.update();
     }
 
     @Override

@@ -40,7 +40,7 @@ import java.util.List;
  **/
 
 @RequestMapping(value = "/api/v1/admin/menu")
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
 public class MenuController extends BaseAppController {
 
     @Inject

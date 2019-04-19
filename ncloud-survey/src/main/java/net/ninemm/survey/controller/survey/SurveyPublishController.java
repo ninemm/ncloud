@@ -38,7 +38,7 @@ import java.util.Map;
 
 @RequestMapping(value = "/surveyPublish")
 @Api(description = "问卷发布", basePath = "/surveyPublish", tags = "", position = 2)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
 public class SurveyPublishController extends BaseAppController {
     @Inject
     PublishService publishService;

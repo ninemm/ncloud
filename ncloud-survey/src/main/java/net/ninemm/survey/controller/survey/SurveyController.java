@@ -36,7 +36,7 @@ import java.util.Map;
 
 @RequestMapping(value = "/survey")
 @Api(description = "问卷", basePath = "/survey", tags = "", position = 2)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
 public class SurveyController extends BaseAppController {
     @Inject
     SurveyService surveyService;

@@ -25,8 +25,10 @@ import com.jfinal.plugin.activerecord.Page;
 import io.jboot.utils.StrUtil;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
+import net.ninemm.upms.service.api.DepartmentService;
 import net.ninemm.upms.service.api.MenuService;
 import net.ninemm.upms.service.api.OperationService;
+import net.ninemm.upms.service.model.Department;
 import net.ninemm.upms.service.model.Operation;
 
 import java.util.List;
@@ -40,7 +42,7 @@ import java.util.Map;
  **/
 
 @RequestMapping(value = "/api/v1/admin/operation")
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
 public class OperationController extends BaseAppController {
 
     @Inject
@@ -49,8 +51,14 @@ public class OperationController extends BaseAppController {
     @Inject
     MenuService menuService;
 
+    @Inject
+    DepartmentService departmentService;
+
     public void list() {
+        String userId = getUserId();
+        Department department = departmentService.findByUserId(userId);
         Map<String, Object> params = getAllParaMap();
+        params.put("deptId",department.getId());
         Page<Operation> page = operationService.paginate(getPageNumber(), getPageSize(), params);
         Map<String, Object> map = ImmutableMap.of("total", page.getTotalRow(), "records", page.getList());
         renderJson(map);
@@ -108,6 +116,19 @@ public class OperationController extends BaseAppController {
         renderJson(Ret.ok());
     }
 
+    /**
+     * @Description:  关闭验证
+     * @Param: String
+     * @return: void
+     * @Author: yz
+     * @Date: 2019/4/18
+     */
+    public void employ(){
+        String id = getPara("id");
+        operationService.updateIsPrivilegeById(id);
+        renderJson(Ret.ok());
+    }
+
     public void addMenu() {
         String id = getPara(0);
         Operation operation = operationService.findById(id);
@@ -116,6 +137,18 @@ public class OperationController extends BaseAppController {
             renderJson(Ret.fail());
             return ;
         }
+        renderJson(Ret.ok());
+    }
+
+    public void enable(){
+        String id = getPara(0);
+        Operation operation = operationService.findById(id);
+        if (operation.getIsPrivilege() ==1 ){
+            operation.setIsPrivilege(0);
+        }else{
+            operation.setIsPrivilege(1);
+        }
+        operationService.update(operation);
         renderJson(Ret.ok());
     }
 

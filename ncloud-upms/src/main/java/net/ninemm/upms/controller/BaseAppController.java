@@ -27,7 +27,11 @@ import net.ninemm.base.common.Consts;
 import net.ninemm.base.plugin.shiro.ShiroUtils;
 import net.ninemm.base.web.base.BaseController;
 import net.ninemm.upms.service.api.OptionService;
+import org.apache.poi.ss.usermodel.Workbook;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -120,6 +124,32 @@ public class BaseAppController extends BaseController {
     protected String getPlatFormType() {
         AppInfo appInfo = Jboot.config(AppInfo.class);
         return appInfo.getType();
+    }
+
+    protected void responseExcelFile(String fileName, Workbook wb) {
+        HttpServletResponse response = getResponse();
+        OutputStream output = null;
+        try {
+            output = response.getOutputStream();
+            response.reset();
+            response.setHeader("content-disposition", "attachment;filename=" + new String(fileName.getBytes("gb2312"), "ISO8859-1"));
+            response.setContentType("application/msexcel");
+            wb.write(output);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (output != null) {
+                    output.close();
+                }
+                if (wb != null) {
+                    wb.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        renderNull();
     }
 
 }

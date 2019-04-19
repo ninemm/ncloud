@@ -17,6 +17,9 @@
 
 package net.ninemm.upms.controller;
 
+import cn.hutool.poi.excel.ExcelUtil;
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.support.ExcelTypeEnum;
 import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
@@ -33,14 +36,18 @@ import com.jfinal.upload.UploadFile;
 import io.jboot.utils.StrUtil;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
+import net.ninemm.base.plugin.excel.ExcelException;
 import net.ninemm.base.plugin.excel.ExcelKit;
+import net.ninemm.base.plugin.excel.ExcelWriterFactory;
 import net.ninemm.base.utils.AttachmentUtils;
 import net.ninemm.upms.excel.listener.ExcelUserListener;
 import net.ninemm.upms.excel.model.UserPropertyModel;
 import net.ninemm.upms.service.api.*;
+import net.ninemm.upms.service.model.Department;
 import net.ninemm.upms.service.model.Dict;
 import net.ninemm.upms.service.model.Role;
 import net.ninemm.upms.service.model.User;
+import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.File;
 import java.util.List;
@@ -53,7 +60,7 @@ import java.util.Map;
  * @date 2018-12-10 10:44
  **/
 @RequestMapping(value = "/api/v1/admin/user")
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
 public class UserController extends BaseAppController {
 
     @Inject
@@ -74,8 +81,14 @@ public class UserController extends BaseAppController {
     @Inject
     OperationService operationService;
 
+    @Inject
+    DepartmentService departmentService;
+
     public void list() {
+        String userId = getUserId();
+        Department department = departmentService.findByUserId(userId);
         Map<String, Object> params = getAllParaMap();
+        params.put("departmentId",department.getId());
         Page<User> page = userService.paginate(getPageNumber(), getPageSize(), params);
         Map<String, Object> map = ImmutableMap.of("total", page.getTotalRow(), "records", page.getList());
         renderJson(map);
@@ -105,6 +118,49 @@ public class UserController extends BaseAppController {
         user.put("groupIds", groupIds);
 
         renderJson(user);
+    }
+
+    public void resetPassword() {
+        String ids = getPara("ids");
+        String[] idArr = ids.split(",");
+        int count = userService.batchReset(idArr);
+        if (count > 0) {
+            renderJson(Ret.ok());
+        } else {
+            renderJson(Ret.fail());
+        }
+    }
+
+    public void export(){
+        String userId = getUserId();
+        Department department = departmentService.findByUserId(userId);
+        Map<String, Object> params = getAllParaMap();
+        params.put("departmentId",department.getId());
+        Page<User> page = userService.paginate(1, Integer.MAX_VALUE, params);
+        List<User> list = page.getList();
+        List<UserPropertyModel> exportList = Lists.newArrayList();
+        for (User user:list) {
+            UserPropertyModel model = new UserPropertyModel();
+            model.setRealname(user.getRealname());
+            model.setMobile(user.getMobile());
+            model.setGroupName(user.getGroupName());
+            model.setUsername(user.getUsername());
+            exportList.add(model);
+        }
+        ExcelKit.writeExcel(getResponse(), exportList, "用户信息.xlsx", "", new UserPropertyModel());
+        renderNull();
+    }
+
+    public void employ(){
+        String id = getPara("id");
+        String status = getPara("status");
+        if (status.equals("1")){
+            status ="0";
+        }else{
+            status ="1";
+        }
+        userService.updateStatusById(id,status);
+        renderJson(Ret.ok());
     }
 
     public void saveOrUpdate() {
@@ -189,4 +245,6 @@ public class UserController extends BaseAppController {
         List<Record> list = userService.findAllAccount(mobile);
         renderJson(list);
     }
+
+
 }

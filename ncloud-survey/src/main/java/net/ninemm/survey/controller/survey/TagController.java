@@ -16,7 +16,7 @@ import java.util.Date;
 
 @RequestMapping(value = "/tag")
 @Api(description = "问卷标签", basePath = "/tag", tags = "", position = 2)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
 public class TagController extends BaseAppController {
     @Inject
     TagService tagService;

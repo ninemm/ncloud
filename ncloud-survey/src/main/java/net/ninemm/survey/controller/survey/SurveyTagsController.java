@@ -17,7 +17,7 @@ import java.util.List;
 @Deprecated
 @RequestMapping(value = "/surveyTags")
 @Api(description = "问卷标签", basePath = "/surveyTags", tags = "", position = 2)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
 public class SurveyTagsController extends BaseAppController {
     @Inject
     TagsService tagsService;

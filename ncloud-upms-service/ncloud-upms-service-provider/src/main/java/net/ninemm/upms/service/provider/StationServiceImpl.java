@@ -28,10 +28,13 @@ public class StationServiceImpl extends BaseService<Station> implements StationS
     public Page<Station> paginate(int page, int pageSize, Map<String, Object> params) {
         Columns columns = Columns.create();
         Object stationName = params.get("stationName");
+        Object deptId = params.get("deptId");
+        if (deptId!=null){
+            columns.eq("dept_id",deptId);
+        }
         if (stationName != null) {
             columns.likeAppendPercent("station_name", stationName);
         }
-
         Object isAsc = params.get("isAsc");
         Object orderByField = params.get("orderByField");
         String orderBy = orderBy(orderByField, isAsc);

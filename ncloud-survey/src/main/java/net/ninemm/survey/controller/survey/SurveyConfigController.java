@@ -14,7 +14,7 @@ import java.util.List;
 
 @RequestMapping(value = "/surveyConfig")
 @Api(description = "问卷配置", basePath = "/surveyConfig", tags = "", position = 2)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
 public class SurveyConfigController extends BaseAppController {
     @Inject
     ConfigService configService;

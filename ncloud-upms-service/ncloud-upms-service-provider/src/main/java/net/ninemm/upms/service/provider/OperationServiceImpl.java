@@ -30,10 +30,13 @@ public class OperationServiceImpl extends BaseService<Operation> implements Oper
     public Page<Operation> paginate(int page, int pageSize, Map<String, Object> params) {
         Columns columns = Columns.create();
         Object operationName = params.get("operationName");
+        Object deptId = params.get("deptId");
         if (operationName != null) {
             columns.likeAppendPercent("operation_name", operationName);
         }
-
+        if (deptId!=null){
+            columns.eq("dept_id",deptId);
+        }
         Object isAsc = params.get("isAsc");
         Object orderByField = params.get("orderByField");
         String orderBy = orderBy(orderByField, isAsc);
@@ -66,6 +69,12 @@ public class OperationServiceImpl extends BaseService<Operation> implements Oper
     @Override
     public List<Operation> findListByModuleId(String moduleId) {
         return DAO.findListByColumn("module_id", moduleId);
+    }
+
+    @Override
+    public void updateIsPrivilegeById(String id) {
+        String sql = "UPDATE upms_operation SET is_privilege = 0 where id = '"+id+"'";
+        Db.update(sql);
     }
 
     /**

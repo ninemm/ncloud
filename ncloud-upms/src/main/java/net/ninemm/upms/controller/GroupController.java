@@ -25,11 +25,14 @@ import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
-import net.ninemm.upms.service.api.GroupRoleRelService;
-import net.ninemm.upms.service.api.GroupService;
-import net.ninemm.upms.service.api.RoleService;
+import net.ninemm.upms.service.api.*;
+import net.ninemm.upms.service.model.Department;
 import net.ninemm.upms.service.model.Group;
+import net.ninemm.upms.service.model.Role;
+import net.ninemm.upms.service.model.User;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +44,7 @@ import java.util.Map;
  **/
 
 @RequestMapping(value = "/api/v1/admin/group")
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowMethods = "POST,OPTIONS,GET,PUT,DELETE", allowCredentials = "true")
+@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowMethods = "POST,OPTIONS,GET,PUT,DELETE", allowCredentials = "true")
 public class GroupController extends BaseAppController {
 
     @Inject
@@ -53,9 +56,20 @@ public class GroupController extends BaseAppController {
     @Inject
     GroupRoleRelService groupRoleRelService;
 
+    @Inject
+    DepartmentService departmentService;
+
+    @Inject
+    UserService userService;
+
     public void list() {
+        String userId = getUserId();
+        Department department = departmentService.findByUserId(userId);
         Map<String, Object> params = getAllParaMap();
+        params.put("deptId",department.getId());
         Page<Group> page = groupService.paginate(getPageNumber(), getPageSize(), params);
+        String[] attrs = {"dept_name"};
+        departmentService.join(page, "dept_id", attrs);
         Map<String, Object> map = ImmutableMap.of("total", page.getTotalRow(), "records", page.getList());
         renderJson(map);
     }
@@ -64,11 +78,35 @@ public class GroupController extends BaseAppController {
         String groupId = getPara(0);
         List<String> checkedRoleList = groupRoleRelService.findRoleList(groupId);
         List<Record> roleOptionsList = roleService.findListAsOptions(null);
-
         Ret ret = Ret.ok();
         ret.set("roleOptions", roleOptionsList);
         ret.set("checkedKeys", checkedRoleList);
         renderJson(ret);
+    }
+
+    public void findUserAndROle(){
+        String userId = getUserId();
+        Department department = departmentService.findByUserId(userId);
+        List<Role> roleList = roleService.findByDeptId(department.getId());
+        List<User> userList = userService.findListByDeptId(department.getId());
+        List<Map<String, Object>> list = new ArrayList<>();
+        if (roleList.size()>0){
+            for (Role role:roleList) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("roleId",role.getId());
+                map.put("roleName",role.getRoleName());
+                list.add(map);
+            }
+        }
+        if (userList.size()>0){
+            for (User user:userList) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("userId",user.getId());
+                map.put("userName",user.getRealname());
+                list.add(map);
+            }
+        }
+        renderJson(list);
     }
 
     public void findById() {
@@ -104,6 +142,19 @@ public class GroupController extends BaseAppController {
             return;
         }
         renderJson(Ret.fail());
+    }
+
+    /**
+     * @Description:  批量物理删除
+     * @Param: []
+     * @return: void
+     * @Author: lsy
+     * @Date: 2019/3/18
+     */
+    public void batchDelete(){
+        String ids = getPara("ids");
+        groupService.deleteByIds(ids);
+        renderJson(Ret.ok());
     }
 
     public void updateGroupPermission() {

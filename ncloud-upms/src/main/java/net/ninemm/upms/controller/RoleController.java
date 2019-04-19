@@ -29,7 +29,10 @@ import io.swagger.annotations.ApiOperation;
 import net.ninemm.upms.service.api.DepartmentService;
 import net.ninemm.upms.service.api.RoleOperationRelService;
 import net.ninemm.upms.service.api.RoleService;
+import net.ninemm.upms.service.api.UserService;
+import net.ninemm.upms.service.model.Department;
 import net.ninemm.upms.service.model.Role;
+import net.ninemm.upms.service.model.User;
 
 import java.util.List;
 import java.util.Map;
@@ -42,7 +45,7 @@ import java.util.Map;
  **/
 
 @RequestMapping(value = "/api/v1/admin/role")
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowMethods = "POST,OPTIONS,GET,PUT,DELETE", allowCredentials = "true")
+@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowMethods = "POST,OPTIONS,GET,PUT,DELETE", allowCredentials = "true")
 public class RoleController extends BaseAppController {
 
     @Inject
@@ -54,8 +57,14 @@ public class RoleController extends BaseAppController {
     @Inject
     RoleOperationRelService roleOperationRelService;
 
+    @Inject
+    UserService userService;
+
     public void list() {
+        String userId = getUserId();
+        Department department = departmentService.findByUserId(userId);
         Map<String, Object> params = getAllParaMap();
+        params.put("deptId",department.getId());
         Page<Role> page = roleService.paginate(getPageNumber(), getPageSize(), params);
         String[] attrs = {"dept_name"};
         departmentService.join(page, "dept_id", attrs);
@@ -81,6 +90,15 @@ public class RoleController extends BaseAppController {
 
     public void save() {
         Role role = getRawObject(Role.class);
+        if (StrKit.notBlank(role.getId())){
+            roleService.update(role);
+            renderJson(Ret.ok());
+            return;
+        }
+        String userId = getUserId();
+        User user = userService.findById(userId);
+        role.setDeptId(user.getDepartmentId());
+        role.setDataArea(user.getDataArea());
         Object id = roleService.save(role);
         if (id != null) {
             renderJson(Ret.ok());
@@ -116,6 +134,19 @@ public class RoleController extends BaseAppController {
             return;
         }
         roleService.deleteById(id);
+        renderJson(Ret.ok());
+    }
+
+    /**
+     * @Description:  批量物理删除
+     * @Param: []
+     * @return: void
+     * @Author: lsy
+     * @Date: 2019/3/18
+     */
+    public void batchDelete(){
+        String ids = getPara("ids");
+        roleService.deleteByIds(ids);
         renderJson(Ret.ok());
     }
 

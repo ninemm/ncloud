@@ -26,8 +26,10 @@ import com.jfinal.plugin.activerecord.Record;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
 import io.swagger.annotations.ApiOperation;
+import net.ninemm.upms.service.api.DepartmentService;
 import net.ninemm.upms.service.api.StationOperationRelService;
 import net.ninemm.upms.service.api.StationService;
+import net.ninemm.upms.service.model.Department;
 import net.ninemm.upms.service.model.Station;
 
 import java.util.List;
@@ -41,7 +43,7 @@ import java.util.Map;
  **/
 
 @RequestMapping(value = "/api/v1/admin/station")
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
 public class StationController extends BaseAppController {
 
     @Inject
@@ -50,9 +52,17 @@ public class StationController extends BaseAppController {
     @Inject
     StationOperationRelService stationOperationRelService;
 
+    @Inject
+    DepartmentService departmentService;
+
     public void list() {
+        String userId = getUserId();
+        Department department = departmentService.findByUserId(userId);
         Map<String, Object> params = getAllParaMap();
+        params.put("deptId",department.getId());
         Page<Station> page = stationService.paginate(getPageNumber(), getPageSize(), params);
+        String[] attrs = {"dept_name","id"};
+        departmentService.join(page, "dept_id", attrs);
         Map<String, Object> map = ImmutableMap.of("total", page.getTotalRow(), "records", page.getList());
         renderJson(map);
     }

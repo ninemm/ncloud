@@ -38,7 +38,7 @@ import java.util.Map;
 
 @RequestMapping(value = "/taskAttachmentProcess")
 @Api(description = "任务附件", basePath = "/taskAttachmentProcess", tags = "", position = 3)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
 public class TaskAttachmentController extends BaseAppController {
 	@Inject
 	TaskAttachmentService taskAttachmentService;

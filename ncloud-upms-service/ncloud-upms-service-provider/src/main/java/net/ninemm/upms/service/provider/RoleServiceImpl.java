@@ -30,13 +30,16 @@ public class RoleServiceImpl extends BaseService<Role> implements RoleService {
     public Page<Role> paginate(int page, int pageSize, Map<String, Object> params) {
         Columns columns = Columns.create();
         Object roleName = params.get("roleName");
+        Object deptId = params.get("deptId");
         if (roleName != null) {
             columns.likeAppendPercent("role_name", roleName);
         }
-
+        if (deptId!=null){
+            columns.eq("dept_id",deptId);
+        }
         Object isAsc = params.get("isAsc");
         Object orderByField = params.get("orderByField");
-         String orderBy = orderBy(orderByField, isAsc);
+        String orderBy = orderBy(orderByField, isAsc);
         return DAO.paginateByColumns(page, pageSize, columns, orderBy);
     }
 
@@ -94,6 +97,18 @@ public class RoleServiceImpl extends BaseService<Role> implements RoleService {
                 return true;
             }
         });
+    }
+
+    @Override
+    public void deleteByIds(String ids) {
+        String sql = "DELETE FROM upms_role WHERE id in ("+ids+")";
+        Db.delete(sql);
+    }
+
+    @Override
+    public List<Role> findByDeptId(String id) {
+        String sql = "SELECT * FROM upms_role WHERE dept_id = '"+id+"'";
+        return Db.query(sql);
     }
 
     /**

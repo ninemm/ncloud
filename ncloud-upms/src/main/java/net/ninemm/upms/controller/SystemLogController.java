@@ -26,7 +26,7 @@ import io.jboot.web.cors.EnableCORS;
  * @date 2018-12-10 10:50
  **/
 
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
 public class SystemLogController extends BaseAppController {
 
     public void list() {}

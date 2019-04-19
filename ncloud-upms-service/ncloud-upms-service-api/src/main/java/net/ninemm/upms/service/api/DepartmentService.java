@@ -143,4 +143,11 @@ public interface DepartmentService<M extends JbootModel<M>> extends JbootService
      */
     public Department findDeptDataAreaByDeptId(String deptId);
 
+    public List<? extends Model> findByDeptName(String deptName);
+
+    List<Department> findByDeptDataArea(String userId ,String deptName);
+
+    Department findByUserId(String userId);
+
+    void deleteByIds(String ids);
 }

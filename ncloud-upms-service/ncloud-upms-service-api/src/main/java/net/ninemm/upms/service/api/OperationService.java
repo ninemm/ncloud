@@ -97,4 +97,6 @@ public interface OperationService  {
     public List<String> findAllPermissionByUserId(String userId, String roleIds);
 
     public List<Operation> findListByModuleId(String moduleId);
+
+    void updateIsPrivilegeById(String id);
 }

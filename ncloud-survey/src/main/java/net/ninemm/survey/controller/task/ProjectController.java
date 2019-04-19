@@ -24,7 +24,7 @@ import java.util.Map;
 
 @RequestMapping(value = "/project")
 @Api(description = "项目管理", basePath = "/project", tags = "project", position = 2)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
 public class ProjectController extends BaseAppController {
     @Inject
     ProjectService projectService;

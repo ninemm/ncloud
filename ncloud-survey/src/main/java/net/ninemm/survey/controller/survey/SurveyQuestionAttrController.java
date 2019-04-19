@@ -16,7 +16,7 @@ import java.util.List;
 
 @RequestMapping(value = "/surveyQuestionAttr")
 @Api(description = "问卷题目", basePath = "/surveyQuestionAttr", tags = "", position = 2)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
 public class SurveyQuestionAttrController extends BaseAppController {
     @Inject
     QuestionAttrService questionAttrService;

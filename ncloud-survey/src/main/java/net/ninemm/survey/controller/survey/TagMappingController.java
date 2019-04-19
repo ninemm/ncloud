@@ -21,7 +21,7 @@ import java.util.Map;
 
 @RequestMapping(value = "/tagMapping")
 @Api(description = "问卷量表中间表", basePath = "/tagMapping", tags = "", position = 2)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
 public class TagMappingController extends BaseAppController {
     @Inject
     TagMappingService tagMappingService;

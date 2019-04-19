@@ -44,7 +44,7 @@ import java.util.Map;
  **/
 
 @RequestMapping(value = "/api/v1/admin/module")
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
 public class ModuleController extends BaseAppController {
 
     @Inject

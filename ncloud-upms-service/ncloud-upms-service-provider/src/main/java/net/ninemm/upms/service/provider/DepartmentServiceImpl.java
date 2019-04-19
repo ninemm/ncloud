@@ -1,7 +1,9 @@
 package net.ninemm.upms.service.provider;
 
+import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
+import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.SqlPara;
 import io.jboot.Jboot;
 import io.jboot.aop.annotation.Bean;
@@ -14,6 +16,7 @@ import net.ninemm.upms.service.api.DepartmentService;
 import net.ninemm.upms.service.model.Department;
 
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 
 @Bean
@@ -83,7 +86,7 @@ public class DepartmentServiceImpl extends BaseService<Department> implements De
     @Override
     @Cacheable(name = "upms_department", key = "parent:#(parentId)", liveSeconds = 86400)
     public List<Department> findListByParentId(String parentId) {
-        return DAO.findListByColumn("parent_id", parentId, "order_list asc");
+        return DAO.findListByColumn("parent_id", parentId, "data_area desc");
     }
 
     @Override
@@ -102,6 +105,37 @@ public class DepartmentServiceImpl extends BaseService<Department> implements De
         }
         return null;
     }
+
+    @Override
+    public List<? extends Model> findByDeptName(String deptName) {
+        String sql = "SELECT * FROM `upms_department` where dept_name like ? order by order_list asc ";
+        return DAO.find(sql, "%"+deptName + "%");
+    }
+
+    @Override
+    public List<Department> findByDeptDataArea(String dataArea ,String deptName) {
+        LinkedList<String> parmas = new LinkedList<>();
+        StringBuilder sql = new StringBuilder("SELECT up.*  FROM upms_department up LEFT JOIN (select id,dept_name from upms_department) a on up.parent_id = a.id left join upms_user b on b.id = up.principal_user_id WHERE up.data_area like ? ") ;
+        parmas.add(dataArea);
+        if (StrKit.notBlank(deptName)){
+            sql.append("and up.dept_name like ?  ");
+            parmas.add("%"+deptName+"%");
+        }
+        return DAO.find(sql.toString(), parmas.toArray());
+    }
+
+    @Override
+    public Department findByUserId(String userId) {
+        String sql = "SELECT up.* FROM upms_department up LEFT JOIN upms_user u on u.department_id =up.id WHERE u.id = ? ";
+        return DAO.findFirst(sql,userId);
+    }
+
+    @Override
+    public void deleteByIds(String ids) {
+        String sql = "DELETE FROM upms_department WHERE id in ("+ids+")";
+        Db.delete(sql);
+    }
+
 
     private boolean updateParentChildIds(String childIds, String id) {
         String sql = "UPDATE upms_department SET is_parent = 1, child_ids = ? WHERE id = ?";

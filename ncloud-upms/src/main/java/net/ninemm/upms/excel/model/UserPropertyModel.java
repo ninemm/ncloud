@@ -28,16 +28,16 @@ import com.alibaba.excel.metadata.BaseRowModel;
  **/
 public class UserPropertyModel extends BaseRowModel {
 
-    @ExcelProperty(index = 0)
+    @ExcelProperty(value = "真实名称",index = 0)
     private String realname;
 
-    @ExcelProperty(index = 1)
+    @ExcelProperty(value = "用户名",index = 1)
     private String username;
 
-    @ExcelProperty(index = 2)
+    @ExcelProperty(value = "手机",index = 2)
     private String mobile;
 
-    @ExcelProperty(index = 3)
+    @ExcelProperty(value = "用户组名称",index = 3)
     private String groupName;
 
     public String getRealname() {

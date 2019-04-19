@@ -21,6 +21,7 @@ import com.google.common.collect.Lists;
 import com.jfinal.aop.Inject;
 import com.jfinal.kit.Ret;
 import com.jfinal.kit.StrKit;
+import com.jfinal.plugin.activerecord.Record;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
 import net.ninemm.base.common.Consts;
@@ -32,7 +33,10 @@ import net.ninemm.upms.service.model.Department;
 import net.ninemm.upms.service.model.User;
 import net.ninemm.upms.vo.DeptTreeVO;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 组织机构(部门)
@@ -42,7 +46,7 @@ import java.util.List;
  **/
 
 @RequestMapping(value = "/api/v1/admin/dept")
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
 public class DepartmentController extends BaseAppController {
 
     @Inject
@@ -52,19 +56,28 @@ public class DepartmentController extends BaseAppController {
     DepartmentService departmentService;
 
     public void tree() {
-
-        List<Department> list = departmentService.findAllAsSort();
+        String userId = getUserId();
+        String deptName = getPara("deptName");
+        Department department = departmentService.findByUserId(userId);
+        Map<String, Object> map = new HashMap<>();
+        List<Department> list = departmentService.findByDeptDataArea(department.getDataArea()+"%" ,deptName);
         List<DeptTreeVO> deptNodeList = Lists.newArrayList();
         for (Department dept : list) {
             deptNodeList.add(initTreeVO(dept));
         }
-
-        List<DeptTreeVO> treeList = TreeKit.toTree(deptNodeList);
-        renderJson(treeList);
+        String partId = "";
+        if (StrKit.isBlank(deptName) || department.getDeptName().contains(deptName)){
+            partId = department.getParentId() ;
+        }else{
+            partId =department.getId();
+        }
+        List<DeptTreeVO> treeList = TreeKit.toTree(partId,deptNodeList);
+        map.put("state","ok");
+        map.put("result",treeList);
+        renderJson(map);
     }
 
     public void findDeptUserTree() {
-
         String parentId = getPara("parentId", Consts.TREE_DEFAULT_ROOT_ID.toString());
         Boolean isLoadUser = getParaToBoolean("isLoadUser");
         List<DeptTreeVO> treeList = Lists.newArrayList();
@@ -82,6 +95,59 @@ public class DepartmentController extends BaseAppController {
             treeList = TreeKit.toTree(parentId, treeList, true);
         }
         renderJson(treeList);
+    }
+
+    /**
+     * @Description:  批量物理删除
+     * @Param: []
+     * @return: void
+     * @Author: lsy
+     * @Date: 2019/3/18
+     */
+    public void batchDelete(){
+        String ids = getPara("ids");
+        String[] idArr = ids.split(",");
+        for (int i=0 ; i<idArr.length ;i++){
+            List<Record> listDept = userService.findByDepTid(idArr[i]);
+            if (listDept.size()>0){
+                renderJson(Ret.fail());
+                return;
+            }
+        }
+        departmentService.deleteByIds(ids);
+        renderJson(Ret.ok());
+    }
+
+    public void findUserTree(){
+        String userId = getUserId();
+        Department department = departmentService.findByUserId(userId);
+        Map<String, Object> map = new HashMap<>();
+        List<Department> list = departmentService.findByDeptDataArea(department.getDataArea()+"%",null);
+        List<DeptTreeVO> deptNodeList = Lists.newArrayList();
+        for (Department dep: list) {
+            List<User> userList = userService.findListByDeptId(dep.getId());
+            if (userList.size()>0){
+                addTree(userList,dep,deptNodeList);
+            }
+        }
+        for (Department dept : list) {
+            deptNodeList.add(initTreeVO(dept));
+        }
+        List<DeptTreeVO> treeList = TreeKit.toTree(department.getParentId(),deptNodeList);
+        map.put("state","ok");
+        map.put("result",treeList);
+        renderJson(map);
+    }
+
+    private void addTree(List<User> userList,Department dep,List<DeptTreeVO> deptNodeList){
+        Department department = new Department();
+        department.setIsParent(0);
+        department.setParentId(dep.getId());
+        for (User user:userList) {
+            department.setId(user.getId());
+            department.setDeptName(user.getUsername());
+            deptNodeList.add(initUserTree(department));
+        }
     }
 
     @NotNullPara("id")
@@ -103,9 +169,46 @@ public class DepartmentController extends BaseAppController {
         renderJson(Ret.ok());
     }
 
+    public void findByDeptName() {
+        String deptName = getPara("deptName");
+        List<Department> list = departmentService.findByDeptName(deptName);
+        if(list.size()>0){
+            Department department = list.get(0);
+            String parentId = department.getParentId() ;
+            List<DeptTreeVO> deptNodeList = Lists.newArrayList();
+            for (Department dept : list) {
+                deptNodeList.add(initTreeVO(dept));
+            }
+            List<DeptTreeVO> treeList = TreeKit.toTree(parentId,deptNodeList);
+            renderJson(treeList);
+        }else{
+            renderJson(Ret.fail());
+        }
+    }
+
     public void saveOrUpdate() {
         Department department = getRawObject(Department.class);
         Object result = departmentService.saveOrUpdate(department);
+        if (result != null) {
+            renderJson(Ret.ok());
+        } else {
+            renderJson(Ret.fail());
+        }
+    }
+
+    public void save(){
+        Department department = getRawObject(Department.class);
+        Department parent = departmentService.findById(department.getParentId());
+        String dataArea = "";
+        List<Department> parentList = departmentService.findListByParentId(department.getParentId());
+        if (parentList.size()>0){
+            dataArea = "00" + String.valueOf(new BigDecimal(parentList.get(0).getDataArea()).add(new BigDecimal(1)));
+        }else{
+            dataArea = parent.getDataArea()+"001";
+        }
+        department.setDataArea(dataArea);
+        department.setIsParent(0);
+        Object result = departmentService.save(department);
         if (result != null) {
             renderJson(Ret.ok());
         } else {
@@ -135,7 +238,7 @@ public class DepartmentController extends BaseAppController {
             for( User user : userList) {
                 DeptTreeVO deptTree = new DeptTreeVO();
                 deptTree.setId(user.getId());
-                deptTree.setName(user.getRealname());
+                deptTree.setLabel(user.getRealname());
                 deptTree.setParentId(parentId);
                 deptTree.setLeaf(true);
                 deptTree.setDisabled(false);
@@ -158,9 +261,19 @@ public class DepartmentController extends BaseAppController {
     private DeptTreeVO initTreeVO(Department department) {
         DeptTreeVO deptTreeVO = new DeptTreeVO();
         deptTreeVO.setId(department.getId());
-        deptTreeVO.setName(department.getDeptName());
+        deptTreeVO.setLabel(department.getDeptName());
         deptTreeVO.setParentId(department.getParentId());
         deptTreeVO.setLeaf(department.getIsParent() == 1 ? false : true);
+        return deptTreeVO;
+    }
+
+    private DeptTreeVO initUserTree(Department department) {
+        DeptTreeVO deptTreeVO = new DeptTreeVO();
+        deptTreeVO.setId(department.getId());
+        deptTreeVO.setLabel(department.getDeptName());
+        deptTreeVO.setParentId(department.getParentId());
+        deptTreeVO.setLeaf(department.getIsParent() == 1 ? false : true);
+        deptTreeVO.setUser(true);
         return deptTreeVO;
     }
 

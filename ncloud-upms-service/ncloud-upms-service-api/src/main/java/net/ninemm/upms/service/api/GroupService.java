@@ -95,4 +95,5 @@ public interface GroupService  {
 
     public Page<Group> paginate(int page, int pageSize, Map<String, Object> params);
 
+    void deleteByIds(String ids);
 }

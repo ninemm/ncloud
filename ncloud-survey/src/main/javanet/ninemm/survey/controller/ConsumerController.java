@@ -20,7 +20,7 @@ import java.util.Map;
  */
 @RequestMapping(value = "/consumer")
 @Api(description = "", basePath = "/consumer", tags = "", position = 0)
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
 public class ConsumerController extends BaseAppController {
     @Inject
     private ConsumerService consumerService;

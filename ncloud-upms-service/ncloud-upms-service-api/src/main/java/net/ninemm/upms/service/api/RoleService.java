@@ -111,4 +111,7 @@ public interface RoleService {
      */
     public void updatePermission(String roleId, String moduleId, String operationIds);
 
+    void deleteByIds(String ids);
+
+    List<Role> findByDeptId(String id);
 }
