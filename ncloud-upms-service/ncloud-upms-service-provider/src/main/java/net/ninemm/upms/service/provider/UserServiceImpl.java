@@ -151,8 +151,8 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
     }
 
     @Override
-    public List<Record> findByDetaArea(String area) {
-        String sql = "SELECT * FROM upms_user WHERE  data_area like '"+area+"'";
+    public List<Record> findByDateArea(String dataArea) {
+        String sql = "SELECT * FROM upms_user  WHERE data_area like '"+dataArea+"'" ;
         return Db.find(sql);
     }
 

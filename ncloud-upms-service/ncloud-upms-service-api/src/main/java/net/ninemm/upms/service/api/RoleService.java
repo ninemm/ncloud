@@ -113,5 +113,4 @@ public interface RoleService {
 
     void deleteByIds(String ids);
 
-    List<Record> findByDataArea(String id);
 }

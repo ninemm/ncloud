@@ -84,29 +84,26 @@ public class GroupController extends BaseAppController {
         renderJson(ret);
     }
 
-    public void findUserAndROle(){
+    public void  findUserList(){
         String userId = getUserId();
         Department department = departmentService.findByUserId(userId);
-        List<Record> roleList = roleService.findByDataArea(department.getDataArea()+"%");
-        List<Record> userList = userService.findByDetaArea(department.getDataArea()+"%");
+        List<Record> userList = userService.findByDateArea(department.getDataArea());
         List<Map<String, Object>> list = new ArrayList<>();
-        if (roleList.size()>0){
-            for (Record role:roleList) {
-                Map<String, Object> map = new HashMap<>();
-                map.put("roleId",role.getStr("id"));
-                map.put("roleName",role.getStr("role_name"));
-                list.add(map);
-            }
-        }
         if (userList.size()>0){
             for (Record user:userList) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("userId",user.getStr("id"));
-                map.put("userName",user.getStr("realname"));
+                map.put("userName",user.getStr("role_name"));
                 list.add(map);
             }
         }
         renderJson(list);
+    }
+
+    public void findRoleList(){
+        String userId = getUserId();
+        Department department = departmentService.findByUserId(userId);
+
     }
 
     public void findById() {

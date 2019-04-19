@@ -151,5 +151,5 @@ public interface UserService extends JbootServiceJoiner {
 
     void updateStatusById(String id, String status);
 
-    List<Record> findByDetaArea(String s);
+    List<Record> findByDateArea(String userId);
 }

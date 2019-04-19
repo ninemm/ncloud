@@ -105,12 +105,6 @@ public class RoleServiceImpl extends BaseService<Role> implements RoleService {
         Db.delete(sql);
     }
 
-    @Override
-    public List<Record> findByDataArea(String dataArea) {
-        String sql = "SELECT * FROM upms_role WHERE data_area like '"+dataArea+"'";
-        return Db.find(sql);
-    }
-
     /**
      * 清除 model 缓存
      */
