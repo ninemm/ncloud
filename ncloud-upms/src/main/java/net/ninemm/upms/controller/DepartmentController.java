@@ -76,7 +76,7 @@ public class DepartmentController extends BaseAppController {
             Department parent = departmentService.findById(parentId);
             DeptTreeVO deptTreeVO = initTreeVO(parent);
             deptTreeVO.setDisabled(true);
-            deptTreeVO.setLeaf(false);
+            deptTreeVO.setIsLeaf(false);
 
             treeList.add(deptTreeVO);
             treeList = TreeKit.toTree(parentId, treeList, true);
@@ -121,7 +121,7 @@ public class DepartmentController extends BaseAppController {
             Department root = departmentService.findById(Consts.TREE_DEFAULT_ROOT_ID);
             DeptTreeVO tree = initTreeVO(root);
             tree.setDisabled(true);
-            tree.setLeaf(false);
+            tree.setIsLeaf(false);
             treeList.add(tree);
         } else {
             treeList = toDeptTreeList(parentId);
@@ -137,7 +137,7 @@ public class DepartmentController extends BaseAppController {
                 deptTree.setId(user.getId());
                 deptTree.setName(user.getRealname());
                 deptTree.setParentId(parentId);
-                deptTree.setLeaf(true);
+                deptTree.setIsLeaf(true);
                 deptTree.setDisabled(false);
                 treeList.add(deptTree);
             };
@@ -158,9 +158,11 @@ public class DepartmentController extends BaseAppController {
     private DeptTreeVO initTreeVO(Department department) {
         DeptTreeVO deptTreeVO = new DeptTreeVO();
         deptTreeVO.setId(department.getId());
+        deptTreeVO.setKey(department.getId());
         deptTreeVO.setName(department.getDeptName());
+        deptTreeVO.setTitle(department.getDeptName());
         deptTreeVO.setParentId(department.getParentId());
-        deptTreeVO.setLeaf(department.getIsParent() == 1 ? false : true);
+        deptTreeVO.setIsLeaf(department.getIsParent() == 1 ? false : true);
         return deptTreeVO;
     }
 

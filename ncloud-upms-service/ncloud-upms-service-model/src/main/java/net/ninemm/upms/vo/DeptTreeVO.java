@@ -32,6 +32,8 @@ public class DeptTreeVO<T extends DeptTreeVO> implements TreeEntity {
 
     public String id;
     public String name;
+    public String title;
+    public String key;
     public String parentId;
     public List<T> children;
 
@@ -81,11 +83,27 @@ public class DeptTreeVO<T extends DeptTreeVO> implements TreeEntity {
         this.disabled = disabled;
     }
 
-    public boolean isLeaf() {
+    public boolean getIsLeaf() {
         return isLeaf;
     }
 
-    public void setLeaf(boolean leaf) {
+    public void setIsLeaf(boolean leaf) {
         isLeaf = leaf;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }
