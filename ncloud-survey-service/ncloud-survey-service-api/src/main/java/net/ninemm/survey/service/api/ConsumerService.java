@@ -102,5 +102,12 @@ public interface ConsumerService  {
      */
     public Page<Consumer> paginateByColumns(int page, int pageSize, Columns columns, String orderBy);
 
-
+    /**
+    * @Description:
+    * @Param: [openid]
+    * @return: void
+    * @Author: lsy
+    * @Date: 2019/4/17
+    */
+    Consumer findByOpenId(String openid);
 }

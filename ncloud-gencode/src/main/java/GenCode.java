@@ -14,6 +14,6 @@ public class GenCode {
         AppModelGenerator.doGenerate();
         AppServiceGenerator.doGenerate();
         AppServiceImplGenerator.doGenerate();
-        AppControllerGenerator.doGenerate();
+        //AppControllerGenerator.doGenerate();
     }
 }

@@ -19,6 +19,7 @@ package net.ninemm.upms.controller;
 
 import com.google.common.collect.Lists;
 import com.jfinal.aop.Inject;
+import com.jfinal.kit.Kv;
 import com.jfinal.kit.Ret;
 import com.jfinal.kit.StrKit;
 import io.jboot.web.controller.annotation.RequestMapping;
@@ -42,7 +43,7 @@ import java.util.List;
  **/
 
 @RequestMapping(value = "/api/v1/admin/dept")
-@EnableCORS(allowOrigin = "http://localhost:8080", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
 public class DepartmentController extends BaseAppController {
 
     @Inject
@@ -139,6 +140,7 @@ public class DepartmentController extends BaseAppController {
                 deptTree.setParentId(parentId);
                 deptTree.setLeaf(true);
                 deptTree.setDisabled(false);
+                deptTree.setIsUser(true);
                 treeList.add(deptTree);
             };
         }
@@ -162,6 +164,30 @@ public class DepartmentController extends BaseAppController {
         deptTreeVO.setParentId(department.getParentId());
         deptTreeVO.setLeaf(department.getIsParent() == 1 ? false : true);
         return deptTreeVO;
+    }
+
+    /**
+    * @Description:  加载当前用户所在的部门及其部门下的子部门,以及用户所在部门下的用户
+    * @Param:
+    * @return:
+    * @Author: lsy
+    * @Date: 2019/4/18
+    */
+    public void findUserTreeByUserDept() {
+        User user = userService.findById(getUserId());
+        String userDeptId = getPara("userDept", user.getDepartmentId());
+
+        Department depart = departmentService.findById(userDeptId);
+        DeptTreeVO deptTreeVO = initTreeVO(depart);
+        deptTreeVO.setDisabled(true);
+        deptTreeVO.setLeaf(false);
+
+        List<DeptTreeVO> treeList = Lists.newArrayList();
+        treeList = toDeptTreeList(userDeptId);
+        treeList.add(deptTreeVO);
+        loadUser(treeList, userDeptId);
+        treeList = TreeKit.toTree(userDeptId, treeList,true);
+        renderJson(Ret.ok("result",treeList));
     }
 
 }

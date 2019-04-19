@@ -58,13 +58,18 @@ public class WxConfigController extends BaseAppController {
 
     public void findByColum() {
         JSONObject rawObject = getRawObject();
+        String userId = getUserId();
+        User user = userService.findById(userId);
 
         Columns columns = Columns.create();
-        columns.eq("", rawObject.get(""));
-        columns.likeAppendPercent("", rawObject.get(""));
-        columns.like("data_area",rawObject.get("dataArea"));
-        columns.ge("create_date",rawObject.get("startDate"));
-        columns.le("create_date",rawObject.get("endDate"));
+        if (rawObject==null) {
+            columns.like("data_area",user.getDataArea()+"%");
+            columns.eq("is_open","1");
+        }else{
+            columns.like("data_area",rawObject.get("dataArea"));
+            columns.ge("create_date",rawObject.get("startDate"));
+            columns.le("create_date",rawObject.get("endDate"));
+        }
 
         String orderBy = rawObject.getString("orderBy");
         if(StrUtil.isBlank(orderBy)){
@@ -80,7 +85,9 @@ public class WxConfigController extends BaseAppController {
         String userId = getUserId();
         User user = userService.findById(userId);
         if (StrUtil.isBlank(wxConfig.getId())) {
-            wxConfig.setDeptId(user.getDepartmentId());
+            if (wxConfig.getDeptId()==null) {
+                wxConfig.setDeptId(user.getDepartmentId());
+            }
             wxConfig.setDataArea(user.getDataArea());
         }else {
             wxConfig.setModifyDate(new Date());

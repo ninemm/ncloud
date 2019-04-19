@@ -81,6 +81,14 @@ public abstract class BaseWxConfig<M extends BaseWxConfig<M>> extends JbootModel
 		return getStr("encodingaeskey");
 	}
 
+	public void setIsDefault(java.lang.Integer isDefault) {
+		set("is_default", isDefault);
+	}
+	
+	public java.lang.Integer getIsDefault() {
+		return getInt("is_default");
+	}
+
 	public void setDeptId(java.lang.String deptId) {
 		set("dept_id", deptId);
 	}

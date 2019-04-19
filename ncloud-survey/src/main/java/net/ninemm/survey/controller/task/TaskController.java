@@ -17,22 +17,34 @@
 
 package net.ninemm.survey.controller.task;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableBiMap;
 import com.jfinal.aop.Inject;
+import com.jfinal.kit.Kv;
+import com.jfinal.kit.PathKit;
 import com.jfinal.kit.Ret;
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
+import com.jfinal.template.stat.ast.If;
+import com.jfinal.upload.UploadFile;
 import io.jboot.db.model.Columns;
 import io.jboot.utils.StrUtil;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
 import io.swagger.annotations.Api;
+import net.ninemm.base.plugin.excel.ExcelKit;
+import net.ninemm.base.utils.AttachmentUtils;
 import net.ninemm.survey.controller.BaseAppController;
 import net.ninemm.survey.service.api.TaskService;
 import net.ninemm.survey.service.model.Task;
+import net.ninemm.upms.excel.listener.ExcelUserListener;
+import net.ninemm.upms.excel.model.UserPropertyModel;
 import net.ninemm.upms.service.api.UserService;
 import net.ninemm.upms.service.model.User;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
 
@@ -47,9 +59,9 @@ public class TaskController extends BaseAppController {
 
 	public void index() {
 		String userId = getUserId();
-		Columns columns = Columns.create("publisher_id", userId);
-		Page<Task> page = taskService.paginateByColumns(getPageNumber(), getPageSize(), columns, " create_date desc ");
-		Map<String, Object> map = ImmutableBiMap.of("total", page.getTotalRow(), "records", page.getList());
+		String orderBy="";
+        Page<Record> page = taskService.findByUser(getPageNumber(), getPageSize(), userId,orderBy);
+		Map<String, Object> map = ImmutableBiMap.of("total", page.getTotalRow(), "records", page.getList(),"userId",userId);
 		renderJson(Ret.ok("result",map));
 	}
 	
@@ -93,10 +105,9 @@ public class TaskController extends BaseAppController {
 		Map<String, Object> map = ImmutableBiMap.of("total", page.getTotalRow(), "records", page.getList());
 		renderJson(Ret.ok("result",map));
 	}
-
+	@Deprecated
 	public void saveOrUpdate() {
-		Task task = getRawObject(Task.class);
-
+		/*Task task = getRawObject(Task.class);
 		if (!StrUtil.isNotEmpty(task.getId())) {
 			String userId = getUserId();
 			User user = userService.findById(userId);
@@ -121,7 +132,7 @@ public class TaskController extends BaseAppController {
 			renderJson(Ret.ok());
 		} else {
 			renderJson(Ret.fail());
-		}
+		}*/
 	}
 
 	public void delete() {
@@ -136,6 +147,47 @@ public class TaskController extends BaseAppController {
 		String projectId = getPara("projectId");
 		taskService.deleteByProjectId(projectId);
 		renderJson(Ret.ok());
+	}
+
+	public void saveTasks() {
+		JSONObject rawObject = getRawObject();
+		Task task = getRawObject(Task.class);
+		UploadFile file = null;
+
+		User user = userService.findById(getUserId());
+		Kv kv= Kv.create();
+		kv.set("userId",user.getId());
+		kv.set("userName",user.getRealname());
+		kv.set("deptId",user.getDepartmentId());
+		kv.set("dataArea",user.getDataArea());
+
+		String tasksId = taskService.saveTasks(rawObject,task,file,kv);
+		if (StrUtil.isNotEmpty(tasksId)) {
+			renderJson(Ret.ok("result",tasksId));
+		}else{
+			renderJson(Ret.fail("result","任务保存失败"));
+		}
+	}
+
+    /**
+    * @Description: 文件上传测试
+    * @Param:
+    * @return:
+    * @Author: lsy
+    * @Date: 2019/4/19
+    */
+	public void fileTest(){
+		UploadFile file = getFile("file");
+		String path = AttachmentUtils.moveFile(file);
+		String filePath = PathKit.getWebRootPath() + File.separator + path;
+		System.out.println(filePath);
+		File newFile = new File(filePath);
+		try {
+			newFile.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		renderJson(file);
 	}
 
 }

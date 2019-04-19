@@ -1,8 +1,7 @@
 package net.ninemm.survey.config;
 
 import com.jfinal.aop.Aop;
-import com.jfinal.aop.Inject;
-import com.jfinal.core.JFinal;
+import com.jfinal.template.Engine;
 import com.jfinal.weixin.sdk.api.ApiConfig;
 import com.jfinal.weixin.sdk.api.ApiConfigKit;
 import io.jboot.Jboot;

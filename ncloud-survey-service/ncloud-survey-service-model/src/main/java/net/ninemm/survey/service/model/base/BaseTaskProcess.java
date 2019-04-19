@@ -41,6 +41,38 @@ public abstract class BaseTaskProcess<M extends BaseTaskProcess<M>> extends Jboo
 		return getStr("accepter_name");
 	}
 
+	public void setTesterId(java.lang.String testerId) {
+		set("tester_id", testerId);
+	}
+	
+	public java.lang.String getTesterId() {
+		return getStr("tester_id");
+	}
+
+	public void setTesterName(java.lang.String testerName) {
+		set("tester_name", testerName);
+	}
+	
+	public java.lang.String getTesterName() {
+		return getStr("tester_name");
+	}
+
+	public void setAuditerId(java.lang.String auditerId) {
+		set("auditer_id", auditerId);
+	}
+	
+	public java.lang.String getAuditerId() {
+		return getStr("auditer_id");
+	}
+
+	public void setAuditerName(java.lang.String auditerName) {
+		set("auditer_name", auditerName);
+	}
+	
+	public java.lang.String getAuditerName() {
+		return getStr("auditer_name");
+	}
+
 	public void setStage(java.lang.Integer stage) {
 		set("stage", stage);
 	}

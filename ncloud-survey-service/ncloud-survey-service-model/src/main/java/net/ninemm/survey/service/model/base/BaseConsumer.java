@@ -25,6 +25,54 @@ public abstract class BaseConsumer<M extends BaseConsumer<M>> extends JbootModel
 		return getStr("name");
 	}
 
+	public void setSex(java.lang.Integer sex) {
+		set("sex", sex);
+	}
+	
+	public java.lang.Integer getSex() {
+		return getInt("sex");
+	}
+
+	public void setAge(java.lang.Integer age) {
+		set("age", age);
+	}
+	
+	public java.lang.Integer getAge() {
+		return getInt("age");
+	}
+
+	public void setEdu(java.lang.String edu) {
+		set("edu", edu);
+	}
+	
+	public java.lang.String getEdu() {
+		return getStr("edu");
+	}
+
+	public void setProfession(java.lang.String profession) {
+		set("profession", profession);
+	}
+	
+	public java.lang.String getProfession() {
+		return getStr("profession");
+	}
+
+	public void setSalary(java.lang.String salary) {
+		set("salary", salary);
+	}
+	
+	public java.lang.String getSalary() {
+		return getStr("salary");
+	}
+
+	public void setAddress(java.lang.String address) {
+		set("address", address);
+	}
+	
+	public java.lang.String getAddress() {
+		return getStr("address");
+	}
+
 	public void setPhone(java.lang.String phone) {
 		set("phone", phone);
 	}
@@ -33,12 +81,44 @@ public abstract class BaseConsumer<M extends BaseConsumer<M>> extends JbootModel
 		return getStr("phone");
 	}
 
-	public void setWxOpenid(java.lang.String wxOpenid) {
-		set("wx_openid", wxOpenid);
+	public void setEmail(java.lang.String email) {
+		set("email", email);
 	}
 	
-	public java.lang.String getWxOpenid() {
-		return getStr("wx_openid");
+	public java.lang.String getEmail() {
+		return getStr("email");
+	}
+
+	public void setOpenid(java.lang.String openid) {
+		set("openid", openid);
+	}
+	
+	public java.lang.String getOpenid() {
+		return getStr("openid");
+	}
+
+	public void setNickName(java.lang.String nickName) {
+		set("nick_name", nickName);
+	}
+	
+	public java.lang.String getNickName() {
+		return getStr("nick_name");
+	}
+
+	public void setAppid(java.lang.String appid) {
+		set("appid", appid);
+	}
+	
+	public java.lang.String getAppid() {
+		return getStr("appid");
+	}
+
+	public void setSubscribe(java.lang.Integer subscribe) {
+		set("subscribe", subscribe);
+	}
+	
+	public java.lang.Integer getSubscribe() {
+		return getInt("subscribe");
 	}
 
 	public void setContent(java.lang.String content) {

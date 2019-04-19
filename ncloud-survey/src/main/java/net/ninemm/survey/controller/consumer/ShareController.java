@@ -1,19 +1,13 @@
 package net.ninemm.survey.controller.consumer;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableBiMap;
-import com.google.zxing.BarcodeFormat;
 import com.jfinal.aop.Clear;
 import com.jfinal.aop.Inject;
-import com.jfinal.config.JFinalConfig;
-import com.jfinal.core.JFinalFilter;
 import com.jfinal.ext.interceptor.LogInterceptor;
 import com.jfinal.kit.Ret;
 import com.jfinal.plugin.activerecord.Page;
-import com.jfinal.weixin.sdk.api.ApiResult;
-import com.jfinal.weixin.sdk.api.QrcodeApi;
-import com.jfinal.weixin.sdk.api.SnsAccessTokenApi;
-import com.jfinal.weixin.sdk.api.UserApi;
 import io.jboot.db.model.Columns;
 import io.jboot.utils.StrUtil;
 import io.jboot.web.controller.annotation.RequestMapping;
@@ -25,7 +19,6 @@ import net.ninemm.survey.controller.BaseAppController;
 import net.ninemm.survey.service.api.ShareService;
 import net.ninemm.survey.service.model.Share;
 import net.ninemm.upms.service.api.UserService;
-import net.ninemm.wechat.WxQrCode;
 
 import java.util.List;
 import java.util.Map;
@@ -99,15 +92,19 @@ public class ShareController extends BaseAppController {
 
     @Clear({GlobalCacheInterceptor.class, LogInterceptor.class})
     public void test(){
+        JSONObject rawObject = getRawObject();
+        JSONArray taskAssign = rawObject.getJSONArray("taskAssign");
+        System.out.println(taskAssign);
         /*ApiResult apiResult = WxQrCode.createStrTemporary(3000,"hello");
         String QrcodeUrl = QrcodeApi.getShowQrcodeUrl(apiResult.getStr("ticket"));
         renderJson(QrcodeUrl);*/
 /*        ApiResult apiResult = UserApi.getUserInfo("o1_iU076vNdH2WmRK-31KbWhcNjk");
         System.out.println(apiResult);*/
-        renderQrCode("http://wxtest.juster.com.cn/wxoauth/index?appIdKey=wx0f44029e4f230a14&shortUrl=b6Eiaa6yQZ",300,300);
+        //renderQrCode("http://wxtest.juster.com.cn/wxoauth/index?appIdKey=wx0f44029e4f230a14&shortUrl=b6Eiaa6yQZ",300,300);
         /*JFinalFilter jFinalFilter = new JFinalFilter();
         //jFinalFilter.init();
         render("index.html");*/
-        isWechatBrowser();
+        setAttr("name","lsy");
+        render("index.html");
     }
 }

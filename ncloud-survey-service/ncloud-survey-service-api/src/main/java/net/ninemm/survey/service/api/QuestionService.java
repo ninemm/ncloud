@@ -1,5 +1,6 @@
 package net.ninemm.survey.service.api;
 
+import com.alibaba.fastjson.JSONArray;
 import com.jfinal.plugin.activerecord.Page;
 import net.ninemm.survey.service.model.Question;
 import io.jboot.db.model.Columns;
@@ -112,11 +113,21 @@ public interface QuestionService  {
     */ 
     List<Question> findBySurveyId(String surveyId);
     /**
-    * @Description:
+    * @Description:作废了
     * @Param: [questionsList,surveyId]
     * @return:
     * @Author: lsy
     * @Date: 2019/3/11
     */
+    @Deprecated
     Boolean saveQuestions(List<Question> questionsList, String surveyId);
+
+    /**
+    * @Description:
+    * @Param: [pages, surveyId]
+    * @return: java.lang.Boolean
+    * @Author: lsy
+    * @Date: 2019/4/13
+    */
+    Boolean saveQuestion(JSONArray pages, String surveyId);
 }

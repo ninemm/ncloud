@@ -49,6 +49,22 @@ public abstract class BasePublish<M extends BasePublish<M>> extends JbootModel<M
 		return getInt("is_valid");
 	}
 
+	public void setAppid(java.lang.String appid) {
+		set("appid", appid);
+	}
+	
+	public java.lang.String getAppid() {
+		return getStr("appid");
+	}
+
+	public void setPublishUrl(java.lang.String publishUrl) {
+		set("publish_url", publishUrl);
+	}
+	
+	public java.lang.String getPublishUrl() {
+		return getStr("publish_url");
+	}
+
 	public void setType(java.lang.Integer type) {
 		set("type", type);
 	}

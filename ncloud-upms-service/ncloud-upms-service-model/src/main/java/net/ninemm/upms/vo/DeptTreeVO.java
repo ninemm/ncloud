@@ -17,6 +17,7 @@
 
 package net.ninemm.upms.vo;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.ninemm.base.utils.layer.TreeEntity;
 
 import java.util.List;
@@ -34,6 +35,7 @@ public class DeptTreeVO<T extends DeptTreeVO> implements TreeEntity {
     public String name;
     public String parentId;
     public List<T> children;
+    public Boolean isUser;
 
     public boolean disabled = false;
     public boolean isLeaf = true;
@@ -65,6 +67,14 @@ public class DeptTreeVO<T extends DeptTreeVO> implements TreeEntity {
         this.name = name;
     }
 
+    public String getLabel() {
+        return name;
+    }
+
+    public void setLabel(String name) {
+        this.name = name;
+    }
+
     public void setParentId(String parentId) {
         this.parentId = parentId;
     }
@@ -89,5 +99,11 @@ public class DeptTreeVO<T extends DeptTreeVO> implements TreeEntity {
         isLeaf = leaf;
     }
 
+    public Boolean getIsUser() {
+        return isUser;
+    }
 
+    public void setIsUser(Boolean user) {
+        isUser = user;
+    }
 }

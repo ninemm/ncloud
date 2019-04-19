@@ -103,4 +103,13 @@ public interface CategoryService  {
     public Page<Category> paginateByColumns(int page, int pageSize, Columns columns, String orderBy);
 
     void clearAllCache();
+
+    /**
+    * @Description:  通过数据域查询
+    * @Param: [dataArea]
+    * @return: java.util.List<net.ninemm.survey.service.model.Category>
+    * @Author: lsy
+    * @Date: 2019/4/16
+    */
+    List<Category> findByDataArea(String dataArea);
 }

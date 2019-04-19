@@ -138,4 +138,12 @@ public interface WxConfigService extends JbootServiceJoiner {
     * @Date: 2019/4/4
     */
     String findStringAppid(String departmentId);
+    /**
+    * @Description:  查询默认的公众号信息
+    * @Param: []
+    * @return: net.ninemm.survey.service.model.WxConfig
+    * @Author: lsy
+    * @Date: 2019/4/17
+    */
+    WxConfig findDefaultConfig();
 }

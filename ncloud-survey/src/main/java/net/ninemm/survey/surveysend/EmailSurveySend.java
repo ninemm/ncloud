@@ -26,7 +26,7 @@ public class EmailSurveySend implements  SurveySend {
             List<String> alerdySendList = sendRecordService.findByColums(surveyId,sendWay,contactList);
             contactList.removeAll(alerdySendList);
         }
-
+        //http://wxtest.juster.com.cn/wxoauth/index?shortUrl=jaM2Bzuvf7&appIdKey=wx0f44029e4f230a14
         for (String contact : contactList) {
             if(RegexKey.isEmail(contact)){
                 SendRecord sr =new SendRecord();

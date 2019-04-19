@@ -65,22 +65,6 @@ public abstract class BaseTask<M extends BaseTask<M>> extends JbootModel<M> impl
 		return getStr("template_category_id");
 	}
 
-	public void setViewerId(java.lang.String viewerId) {
-		set("viewer_id", viewerId);
-	}
-	
-	public java.lang.String getViewerId() {
-		return getStr("viewer_id");
-	}
-
-	public void setViewerName(java.lang.String viewerName) {
-		set("viewer_name", viewerName);
-	}
-	
-	public java.lang.String getViewerName() {
-		return getStr("viewer_name");
-	}
-
 	public void setTemplateId(java.lang.String templateId) {
 		set("template_id", templateId);
 	}
@@ -105,44 +89,12 @@ public abstract class BaseTask<M extends BaseTask<M>> extends JbootModel<M> impl
 		return getStr("publisher_name");
 	}
 
-	public void setAccepterId(java.lang.String accepterId) {
-		set("accepter_id", accepterId);
+	public void setStage(java.lang.Integer stage) {
+		set("stage", stage);
 	}
 	
-	public java.lang.String getAccepterId() {
-		return getStr("accepter_id");
-	}
-
-	public void setAccepterName(java.lang.String accepterName) {
-		set("accepter_name", accepterName);
-	}
-	
-	public java.lang.String getAccepterName() {
-		return getStr("accepter_name");
-	}
-
-	public void setAcceptTime(java.util.Date acceptTime) {
-		set("accept_time", acceptTime);
-	}
-	
-	public java.util.Date getAcceptTime() {
-		return get("accept_time");
-	}
-
-	public void setReviewerId(java.lang.String reviewerId) {
-		set("reviewer_id", reviewerId);
-	}
-	
-	public java.lang.String getReviewerId() {
-		return getStr("reviewer_id");
-	}
-
-	public void setReviewerName(java.lang.String reviewerName) {
-		set("reviewer_name", reviewerName);
-	}
-	
-	public java.lang.String getReviewerName() {
-		return getStr("reviewer_name");
+	public java.lang.Integer getStage() {
+		return getInt("stage");
 	}
 
 	public void setDeptId(java.lang.String deptId) {
@@ -167,6 +119,14 @@ public abstract class BaseTask<M extends BaseTask<M>> extends JbootModel<M> impl
 	
 	public java.util.Date getCreateDate() {
 		return get("create_date");
+	}
+
+	public void setEndDate(java.lang.String endDate) {
+		set("end_date", endDate);
+	}
+	
+	public java.lang.String getEndDate() {
+		return getStr("end_date");
 	}
 
 	public void setModifyDate(java.util.Date modifyDate) {

@@ -49,6 +49,14 @@ public abstract class BaseAnswerRestrict<M extends BaseAnswerRestrict<M>> extend
 		return getInt("is_fix_start_time");
 	}
 
+	public void setStartTime(java.util.Date startTime) {
+		set("start_time", startTime);
+	}
+	
+	public java.util.Date getStartTime() {
+		return get("start_time");
+	}
+
 	public void setIsFixEndTime(java.lang.Integer isFixEndTime) {
 		set("is_fix_end_time", isFixEndTime);
 	}
@@ -57,12 +65,28 @@ public abstract class BaseAnswerRestrict<M extends BaseAnswerRestrict<M>> extend
 		return getInt("is_fix_end_time");
 	}
 
+	public void setEndTime(java.util.Date endTime) {
+		set("end_time", endTime);
+	}
+	
+	public java.util.Date getEndTime() {
+		return get("end_time");
+	}
+
 	public void setIsFixAnswerTime(java.lang.Integer isFixAnswerTime) {
 		set("is_fix_answer_time", isFixAnswerTime);
 	}
 	
 	public java.lang.Integer getIsFixAnswerTime() {
 		return getInt("is_fix_answer_time");
+	}
+
+	public void setMaxAnswerTime(java.util.Date maxAnswerTime) {
+		set("max_answer_time", maxAnswerTime);
+	}
+	
+	public java.util.Date getMaxAnswerTime() {
+		return get("max_answer_time");
 	}
 
 	public void setIsValidateCode(java.lang.Integer isValidateCode) {

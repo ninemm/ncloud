@@ -47,7 +47,9 @@ import com.jfinal.weixin.sdk.msg.out.OutTextMsg;
 import net.ninemm.base.interceptor.GlobalCacheInterceptor;
 import net.ninemm.survey.interceptor.WxApiInterceptor;
 import net.ninemm.survey.interceptor.WxUserInterceptor;
+import net.ninemm.survey.service.api.ConsumerService;
 import net.ninemm.survey.service.api.WxUserService;
+import net.ninemm.survey.service.model.Consumer;
 import net.ninemm.survey.service.model.WxUser;
 
 /**
@@ -60,6 +62,8 @@ import net.ninemm.survey.service.model.WxUser;
 public class WechatMessageController extends MsgController {
 	@Inject
 	WxUserService wxUserService;
+	@Inject
+	ConsumerService consumerService;
 
 	@Override
 	protected void processInTextMsg(InTextMsg inTextMsg) {
@@ -107,6 +111,7 @@ public class WechatMessageController extends MsgController {
 		String event = inFollowEvent.getEvent();
 		String openid = inFollowEvent.getFromUserName();
 		WxUser wxuser = wxUserService.findByOpenid(openid);
+		Consumer consumer = consumerService.findByOpenId(openid);
 		String message ="感谢您的关注!";
 
 		if(InFollowEvent.EVENT_INFOLLOW_SUBSCRIBE.equals(event)){
@@ -115,11 +120,19 @@ public class WechatMessageController extends MsgController {
 				wxuser.setSubscribe(1);
 				wxuser.update();
 			}
+			if(consumer.getSubscribe()==0){
+				consumer.setSubscribe(1);
+				consumer.update();
+			}
 		}else{
 			//取关
 			if(wxuser.getSubscribe()==1){
 				wxuser.setSubscribe(0);
 				wxuser.update();
+			}
+			if(consumer.getSubscribe()==1){
+				consumer.setSubscribe(0);
+				consumer.update();
 			}
 		}
 		responseDefault(inFollowEvent,message);

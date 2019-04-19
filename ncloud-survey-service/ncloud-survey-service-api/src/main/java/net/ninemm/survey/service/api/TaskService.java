@@ -1,8 +1,12 @@
 package net.ninemm.survey.service.api;
 
+import com.alibaba.fastjson.JSONObject;
+import com.jfinal.kit.Kv;
 import com.jfinal.plugin.activerecord.Page;
-import net.ninemm.survey.service.model.Task;
+import com.jfinal.plugin.activerecord.Record;
+import com.jfinal.upload.UploadFile;
 import io.jboot.db.model.Columns;
+import net.ninemm.survey.service.model.Task;
 
 import java.util.List;
 
@@ -108,5 +112,21 @@ public interface TaskService  {
 
 	void clearAllCache();
 
+    /**
+    * @Description:
+    * @Param: [rawObject, task, file]
+    * @return: java.lang.String
+    * @Author: lsy
+    * @Date: 2019/4/18
+    */
+    String saveTasks(JSONObject rawObject, Task task, UploadFile file, Kv kv);
 
+    /**
+    * @Description:  根据用户查询
+    * @Param: [userId]
+    * @return: com.jfinal.plugin.activerecord.Page<net.ninemm.survey.service.model.Task>
+    * @Author: lsy
+    * @Date: 2019/4/19
+    */
+    Page<Record> findByUser(Integer pageNumber, Integer pageSize, String userId, String orderBy);
 }

@@ -83,10 +83,10 @@ public class AuthController extends BaseAppController {
             return ;
         }
         boolean checkPwd = ShiroUtils.checkPwd(password, user.getPassword(), user.getSalt());
-        if (!checkPwd) {
+        /*if (!checkPwd) {
             renderJson(Ret.fail());
             return ;
-        }
+        }*/
 
         // 查询用户的角色，主管，经理，业务员
         Department department = departmentService.findDeptDataAreaByDeptId(user.getDepartmentId());

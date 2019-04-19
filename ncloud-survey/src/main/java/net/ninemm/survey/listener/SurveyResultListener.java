@@ -1,7 +1,10 @@
 package net.ninemm.survey.listener;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.aop.Inject;
+import com.jfinal.plugin.activerecord.Db;
 import eu.bitwalker.useragentutils.UserAgent;
 import io.jboot.components.event.JbootEvent;
 import io.jboot.components.event.JbootEventListener;
@@ -14,6 +17,8 @@ import net.ninemm.survey.service.api.*;
 import net.ninemm.survey.service.model.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,8 +41,8 @@ public class SurveyResultListener implements JbootEventListener {
     public void onEvent(JbootEvent event) {
         Map<String, Object> map= event.getData();
         JSONObject jsonObject = new JSONObject(map);
+        JSONArray results = jsonObject.getJSONArray("result");
 
-        JSONObject result = jsonObject.getJSONObject("result");
         Double lat = jsonObject.getDouble("lat");
         Double lng = jsonObject.getDouble("lng");
         String userAgent = jsonObject.getString("userAgent");
@@ -80,15 +85,43 @@ public class SurveyResultListener implements JbootEventListener {
         answerSheet.setShorturl(shortUrl);
         answerSheet.save();
 
-       /* //questionid order_list score row_option_id row_option_order col_option_id col_option_order list_option_id option_value  is_correct待处理
-        AnswerValue answerValue = new AnswerValue();
+       // order_list score row_option_id row_option_order col_option_id col_option_order list_option_id option_value  is_correct待处理
+        /*AnswerValue answerValue = new AnswerValue();
         answerValue.setId(StrUtil.uuid());
         answerValue.setSurveyId(surveyId);
         answerValue.setAnswerSheetId(answerSheetId);
-        answerValue.save();
+        answerValue.save();*/
+
+        /*[{
+            "questionindex": 1,
+                    "questionId": "398d835e1d3f4737ac995759e64ef5ba",
+                    "question": "问题1",
+                    "answer": ["item3"],
+            "questionType": "checkbox"
+        }, {
+            "questionindex": 2,
+                    "questionId": "2588cd12e41245e88db4745217b39b79",
+                    "question": "问题2",
+                    "answer": "item2",
+                    "questionType": "dropdown"
+        }]*/
+        List<AnswerValue> answerValuesList = new ArrayList<AnswerValue>();
+        String questionType = null;
+        for (Object result : results) {
+            AnswerValue answerValue = new AnswerValue();
+            answerValue.setId(StrUtil.uuid());
+            answerValue.setSurveyId(surveyId);
+            answerValue.setAnswerSheetId(answerSheetId);
+
+            JSONObject jo = JSONObject.parseObject(result.toString());
+            answerValue.setQuestionId(jo.getString("questionId"));
+            answerValue.setOrderList(jo.getInteger(""));
+            answerValuesList.add(answerValue);
+        }
+        int[] ints = Db.batchSave(answerValuesList, answerValuesList.size());
 
         // question_id category sub_category score
-        Answer answer = new Answer();
+        /*Answer answer = new Answer();
         answer.setId(StrUtil.uuid());
         answer.setSurveyId(surveyId);
         answer.setAnswerSheetId(answerSheetId);*/

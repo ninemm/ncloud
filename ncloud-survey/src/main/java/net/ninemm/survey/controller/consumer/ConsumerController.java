@@ -10,9 +10,13 @@ import io.jboot.utils.StrUtil;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
 import io.swagger.annotations.Api;
+import net.ninemm.base.interceptor.NotNullPara;
+import net.ninemm.base.message.MessageAction;
 import net.ninemm.survey.controller.BaseAppController;
+import net.ninemm.survey.service.api.WxConfigService;
 import net.ninemm.survey.service.model.Consumer;
 import net.ninemm.survey.service.api.ConsumerService;
+import net.ninemm.survey.service.model.WxConfig;
 import net.ninemm.upms.service.api.UserService;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +33,8 @@ public class ConsumerController extends BaseAppController {
     private ConsumerService consumerService;
     @Inject
     private UserService userService;
+    @Inject
+    WxConfigService wxConfigService;
 
     public void index() {
         String userId = getUserId();
@@ -47,16 +53,41 @@ public class ConsumerController extends BaseAppController {
         List<Consumer> consumerList = consumerService.findAll();
         renderJson(Ret.ok("result",consumerList));
     }
-
+    /**
+    * @Description:  筛选样本信息
+    * @Param: []
+    * @return: void
+    * @Author: lsy
+    * @Date: 2019/4/17
+    */
     public void findByColum() {
         JSONObject rawObject = getRawObject();
-
         Columns columns = Columns.create();
-        columns.eq("", rawObject.get(""));
-        columns.likeAppendPercent("", rawObject.get(""));
-        columns.like("data_area",rawObject.get("dataArea"));
-        columns.ge("create_date",rawObject.get("startDate"));
-        columns.le("create_date",rawObject.get("endDate"));
+        Integer sendWay = rawObject.getInteger("sendWay");
+        if (sendWay == MessageAction.SendSurvey.WEIXIN) {
+            String appId = rawObject.getString("appId");
+            if (!StrUtil.isNotEmpty(appId)) {
+                WxConfig wxConfig =wxConfigService.findDefaultConfig();
+                appId = wxConfig.getAppid();
+            }
+            columns.eq("appid",appId);
+            //只查询已订阅的微信用户
+            columns.eq("subscribe",1);
+        }else if(sendWay==MessageAction.SendSurvey.EMAIL){
+            columns.is_not_null("email");
+        }else if(sendWay==MessageAction.SendSurvey.MOBILE){
+            columns.is_not_null("phone");
+        }
+
+        columns.eq("email",rawObject.getString("email"));
+        columns.eq("phone",rawObject.getString("phone"));
+        columns.eq("sex",rawObject.getInteger("sex"));
+        String age = rawObject.getString("age");
+        if(StrUtil.isNotEmpty(age)){
+            String[] split = age.split(",");
+            columns.ge("age",split[0]);
+            columns.lt("age",split[1]);
+        }
 
         String orderBy = rawObject.getString("orderBy");
         if(StrUtil.isBlank(orderBy)){
@@ -73,6 +104,7 @@ public class ConsumerController extends BaseAppController {
         renderJson(Ret.ok().set("id", consumer.getId()));
     }
 
+    @NotNullPara(value = "id")
     public void delete() {
         if(consumerService.deleteById(getPara("id"))){
             renderJson(Ret.ok());
@@ -80,5 +112,16 @@ public class ConsumerController extends BaseAppController {
         }else{
             renderJson(Ret.fail());
         }
+    }
+
+    /**
+    * @Description:  微信模板发送问卷 筛选消费者
+    * @Param: []
+    * @return: void
+    * @Author: lsy
+    * @Date: 2019/4/17
+    */
+    public void findConsumerByAppid(){
+        //consumerService.findByAppid();
     }
 }

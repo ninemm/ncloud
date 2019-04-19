@@ -8,6 +8,8 @@ import net.ninemm.survey.service.model.Survey;
 import io.jboot.service.JbootServiceBase;
 import net.ninemm.survey.service.model.TaskProcess;
 
+import java.util.List;
+
 
 @Bean
 public class SurveyServiceImpl extends JbootServiceBase<Survey> implements SurveyService {
@@ -21,5 +23,11 @@ public class SurveyServiceImpl extends JbootServiceBase<Survey> implements Surve
     public void deleteByIds(String ids) {
         String sql ="update survey set status="+Survey.SurveyStatus.DELETE.getStatu()+" where id in ("+ids+")";
         Db.update(sql);
+    }
+
+    @Override
+    public List<Survey> findByIds(String ids) {
+        String sql ="select * from survey where id in ("+ids+")";
+        return DAO.find(sql);
     }
 }

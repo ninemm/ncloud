@@ -5,15 +5,13 @@ import com.google.common.collect.ImmutableBiMap;
 import com.jfinal.aop.Inject;
 import com.jfinal.kit.Ret;
 import io.jboot.Jboot;
+import io.jboot.utils.StrUtil;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
 import io.swagger.annotations.Api;
 import net.ninemm.base.message.MessageAction;
 import net.ninemm.survey.controller.BaseAppController;
-import net.ninemm.survey.service.api.AnswerRestrictService;
-import net.ninemm.survey.service.api.ConsumerAttrConditionService;
-import net.ninemm.survey.service.api.FrequencyConditionService;
-import net.ninemm.survey.service.api.TimeConditionService;
+import net.ninemm.survey.service.api.*;
 import net.ninemm.survey.service.model.AnswerRestrict;
 import net.ninemm.survey.service.model.ConsumerAttrCondition;
 import net.ninemm.survey.service.model.FrequencyCondition;
@@ -22,6 +20,7 @@ import net.ninemm.upms.service.api.UserService;
 import net.ninemm.upms.service.model.User;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +38,8 @@ public class SurveyAnswerRestrictController extends BaseAppController {
     ConsumerAttrConditionService consumerAttrConditionService;
     @Inject
     UserService userService;
+    @Inject
+    SurveyService surveyService;
 
     public void save() {
         AnswerRestrict answerRestrict = getRawObject(AnswerRestrict.class);
@@ -48,7 +49,7 @@ public class SurveyAnswerRestrictController extends BaseAppController {
         Boolean res = answerRestrictService.saveAnswerLimit(answerRestrict,rawObject,users.getDepartmentId(), users.getDataArea());
 
         if (res) {
-            renderJson(Ret.ok());
+            renderJson(Ret.ok("result",answerRestrict.getId()));
         } else {
             renderJson(Ret.fail());
         }
@@ -73,13 +74,25 @@ public class SurveyAnswerRestrictController extends BaseAppController {
     public void findBySurveyId() {
         String surveyId = getPara("surveyId");
         AnswerRestrict answerRestrict = answerRestrictService.findBySurveyId(surveyId);
+        if (answerRestrict==null) {
+            answerRestrict = new AnswerRestrict();
+            answerRestrict.setId(StrUtil.uuid());
+            answerRestrict.setSurveyId(surveyId);
+            answerRestrict.save();
+        }
+        answerRestrict = answerRestrictService.findBySurveyId(surveyId);
         String answerRestrictId = answerRestrict.getId();
 
         List<TimeCondition> timeConditions = timeConditionService.findByRestrictId(answerRestrictId);
         List<FrequencyCondition> frequencyConditions = frequencyConditionService.findByRestrictId(answerRestrictId);
         List<ConsumerAttrCondition> consumerAttrConditionS = consumerAttrConditionService.findByRestrictId(answerRestrictId);
 
-        Map<String, Object> map = ImmutableBiMap.of("answerRestrict", answerRestrict,"timeConditions",timeConditions,"frequencyConditions",frequencyConditions,"consumerAttrConditionS",consumerAttrConditionS);
+        //Map<String, Object> map = ImmutableBiMap.of("answerRestrict", answerRestrict,"timeConditions",timeConditions,"frequencyConditions",frequencyConditions,"consumerAttrConditionS",consumerAttrConditionS);
+        Map map =new HashMap<String,Object>();
+        map.put("answerRestrict",answerRestrict);
+        map.put("timeConditions",timeConditions);
+        map.put("frequencyConditions",frequencyConditions);
+        map.put("consumerAttrConditionS",consumerAttrConditionS);
         renderJson(Ret.ok("result",map));
     }
 

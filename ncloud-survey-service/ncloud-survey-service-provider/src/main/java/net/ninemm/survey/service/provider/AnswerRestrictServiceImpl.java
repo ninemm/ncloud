@@ -15,6 +15,7 @@ import net.ninemm.survey.service.model.FrequencyCondition;
 import net.ninemm.survey.service.model.TimeCondition;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -51,39 +52,56 @@ public class AnswerRestrictServiceImpl extends JbootServiceBase<AnswerRestrict> 
 
                 String answerRestrictId = answerRestrict.getId();
 
-                String timeLimit = rawObject.get("timeLimit").toString();
+                String timeLimit = rawObject.getString("timeLimit");
                 if(StrUtil.isNotEmpty(timeLimit)){
                     List<TimeCondition> timeConditions = JSONArray.parseArray(timeLimit, TimeCondition.class);
+                    List<TimeCondition> timeConditionsSave = new ArrayList<TimeCondition>();
+                    List<TimeCondition> timeConditionupdate = new ArrayList<TimeCondition>();
                     for (TimeCondition timeCondition : timeConditions) {
-                        timeCondition.setId(StrUtil.uuid());
                         timeCondition.setAnswerRestrictId(answerRestrictId);
                         timeCondition.setDataArea(dataArea);
                         timeCondition.setDeptId(deptId);
                         timeCondition.setCreateDate(new Date());
+                        if(timeCondition.getId()==null){
+                            timeCondition.setId(StrUtil.uuid());
+                            timeConditionsSave.add(timeCondition);
+                        }else{
+                            timeConditionupdate.add(timeCondition);
+                        }
                     }
-                    int[] ints = Db.batchSave(timeConditions, timeConditions.size());
-                    if(ints.length<=0){
+
+                    int[] ints = Db.batchSave(timeConditionsSave, timeConditionsSave.size());
+                    int[] ints1 = Db.batchUpdate(timeConditionupdate, timeConditionupdate.size());
+                    if(ints.length<=0 && ints1.length<=0){
                         return false;
                     }
                 }
 
-                String answerLimit = rawObject.get("answerLimit").toString();
+                String answerLimit = rawObject.getString("answerLimit");
                 if(StrUtil.isNotEmpty(answerLimit)){
                     List<FrequencyCondition> FrequencyConditions = JSONArray.parseArray(answerLimit, FrequencyCondition.class);
+                    List<FrequencyCondition> FrequencyConditionSave = new ArrayList<FrequencyCondition>();
+                    List<FrequencyCondition> FrequencyConditionUpdate = new ArrayList<FrequencyCondition>();
                     for (FrequencyCondition frequencyCondition : FrequencyConditions) {
-                        frequencyCondition.setId(StrUtil.uuid());
                         frequencyCondition.setAnswerRestrictId(answerRestrictId);
                         frequencyCondition.setDataArea(dataArea);
                         frequencyCondition.setDeptId(deptId);
                         frequencyCondition.setCreateDate(new Date());
+                        if(frequencyCondition.getId()==null){
+                            frequencyCondition.setId(StrUtil.uuid());
+                            FrequencyConditionSave.add(frequencyCondition);
+                        }else{
+                            FrequencyConditionUpdate.add(frequencyCondition);
+                        }
                     }
-                    int[] ints = Db.batchSave(FrequencyConditions,FrequencyConditions.size());
-                    if(ints.length<=0){
+                    int[] ints = Db.batchSave(FrequencyConditionSave,FrequencyConditionSave.size());
+                    int[] ints1 = Db.batchUpdate(FrequencyConditionUpdate,FrequencyConditionUpdate.size());
+                    if(ints.length<=0 && ints1.length<=0){
                         return false;
                     }
                 }
 
-                String consumerLimit = rawObject.get("consumerLimit").toString();
+                String consumerLimit = rawObject.getString("consumerLimit");
                 if(StrUtil.isNotEmpty(consumerLimit)){
                     List<ConsumerAttrCondition> ConsumerAttrConditions = JSONArray.parseArray(consumerLimit, ConsumerAttrCondition.class);
                     for (ConsumerAttrCondition consumerAttrCondition : ConsumerAttrConditions) {

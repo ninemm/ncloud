@@ -74,6 +74,12 @@ public class SurveyController extends BaseAppController {
         renderJson(Ret.ok("result",survey));
     }
 
+    public void findByIds() {
+        List<Survey> surveyList = surveyService.findByIds(getPara("ids"));
+        renderJson(Ret.ok("result",surveyList));
+    }
+
+
     /**
      * 多字段查询
      */
@@ -83,18 +89,18 @@ public class SurveyController extends BaseAppController {
         Columns columns = Columns.create();
         String orderBy=" create_date desc ";
         if (rawObject==null) {
-            columns.le("status",Survey.SurveyStatus.DELETE);
-            columns.like("data_area",user.getDataArea());
+            columns.lt("status",Survey.SurveyStatus.DELETE.getStatu());
+            columns.like("data_area",user.getDataArea()+"%");
         }else{
             if (rawObject.get("status")!=null){
                 columns.eq("status", rawObject.get("status"));
             }else {
-                columns.le("status",Survey.SurveyStatus.DELETE);
+                columns.lt("status",Survey.SurveyStatus.DELETE.getStatu());
             }
             if(rawObject.get("dataArea")!=null){
-                columns.like("data_area",rawObject.get("dataArea"));
+                columns.like("data_area",rawObject.get("dataArea")+"%");
             }else{
-                columns.like("data_area",user.getDataArea());
+                columns.like("data_area",user.getDataArea()+"%");
             }
             columns.eq("category_id", rawObject.get("categoryId"));
             columns.eq("type", rawObject.get("type"));
@@ -104,7 +110,6 @@ public class SurveyController extends BaseAppController {
             columns.le("create_date",rawObject.get("endDate"));
             orderBy = rawObject.getString("orderBy")==null?orderBy:rawObject.getString("orderBy");
         }
-
         Page<Survey> page = surveyService.paginateByColumns(getPageNumber(), getPageSize(), columns,orderBy);
         Map<String, Object> map = ImmutableBiMap.of("total", page.getTotalRow(), "records", page.getList());
         renderJson(Ret.ok("result",map));
@@ -125,7 +130,7 @@ public class SurveyController extends BaseAppController {
         survey.setModifyDate(new Date());
         Object result = surveyService.saveOrUpdate(survey);
         if (result != null) {
-            renderJson(Ret.ok());
+            renderJson(Ret.ok("result",survey.getId()));
         } else {
             renderJson(Ret.fail());
         }

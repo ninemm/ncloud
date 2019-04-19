@@ -36,4 +36,10 @@ public class WxConfigServiceImpl extends JbootServiceBase<WxConfig> implements W
         String sql ="select GROUP_CONCAT(appid) from wx_config where is_open=1 and dept_id=?";
         return Db.queryStr(sql,departmentId);
     }
+
+    @Override
+    public WxConfig findDefaultConfig() {
+        String sql="select * from wx_config where is_open = 1 and is_default=1 ";
+        return DAO.findFirst(sql);
+    }
 }

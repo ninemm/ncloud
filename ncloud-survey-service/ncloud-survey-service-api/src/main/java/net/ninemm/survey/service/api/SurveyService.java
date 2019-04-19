@@ -111,4 +111,13 @@ public interface SurveyService  {
     * @Date: 2019/3/18
     */
     void deleteByIds(String ids);
+
+    /**
+    * @Description:  根据ids查找
+    * @Param: [ids]
+    * @return: java.util.List<net.ninemm.survey.service.model.Survey>
+    * @Author: lsy
+    * @Date: 2019/4/13
+    */
+    List<Survey> findByIds(String ids);
 }

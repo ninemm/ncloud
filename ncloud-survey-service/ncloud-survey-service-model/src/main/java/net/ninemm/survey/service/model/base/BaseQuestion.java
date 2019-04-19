@@ -25,12 +25,44 @@ public abstract class BaseQuestion<M extends BaseQuestion<M>> extends JbootModel
 		return getStr("survey_id");
 	}
 
-	public void setType(java.lang.Integer type) {
+	public void setPageName(java.lang.String pageName) {
+		set("page_name", pageName);
+	}
+	
+	public java.lang.String getPageName() {
+		return getStr("page_name");
+	}
+
+	public void setQuestionIndex(java.lang.Integer questionIndex) {
+		set("question_index", questionIndex);
+	}
+	
+	public java.lang.Integer getQuestionIndex() {
+		return getInt("question_index");
+	}
+
+	public void setQuestionName(java.lang.String questionName) {
+		set("question_name", questionName);
+	}
+	
+	public java.lang.String getQuestionName() {
+		return getStr("question_name");
+	}
+
+	public void setQuestionTitle(java.lang.String questionTitle) {
+		set("question_title", questionTitle);
+	}
+	
+	public java.lang.String getQuestionTitle() {
+		return getStr("question_title");
+	}
+
+	public void setType(java.lang.String type) {
 		set("type", type);
 	}
 	
-	public java.lang.Integer getType() {
-		return getInt("type");
+	public java.lang.String getType() {
+		return getStr("type");
 	}
 
 	public void setQuestionInfo(java.lang.String questionInfo) {

@@ -37,14 +37,14 @@ public class ProjectListener implements JbootEventListener {
                 task.setDataArea(project.getDataArea());
                 task.setPublisherId(createrId);
                 task.setPublisherName(name);
-                task.setViewerId(createrId);
+                /*task.setViewerId(createrId);
                 task.setViewerName(name);
                 task.setReviewerId(createrId);
                 task.setReviewerName(name);
                 task.setAccepterId(createrId);
                 task.setAccepterName(name);
                 task.setModifyDate(new Date());
-                task.setAcceptTime(new Date());
+                task.setAcceptTime(new Date());*/
                 
                 task.setTitle(project.getProjectName());
                 task.setStatus(1);

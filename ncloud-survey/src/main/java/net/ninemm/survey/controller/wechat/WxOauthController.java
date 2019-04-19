@@ -8,23 +8,21 @@ import com.jfinal.kit.HashKit;
 import com.jfinal.kit.Kv;
 import com.jfinal.kit.StrKit;
 import com.jfinal.weixin.sdk.api.*;
-import com.jfinal.weixin.sdk.kit.IpKit;
-import com.jfinal.weixin.sdk.kit.PaymentKit;
 import io.jboot.Jboot;
 import io.jboot.utils.StrUtil;
 import io.jboot.web.controller.JbootController;
 import io.jboot.web.controller.annotation.RequestMapping;
-import io.jboot.web.cors.EnableCORS;
 import net.ninemm.base.interceptor.GlobalCacheInterceptor;
 import net.ninemm.survey.interceptor.WxApiInterceptor;
 import net.ninemm.survey.interceptor.WxJsSdkInterceptor;
+import net.ninemm.survey.service.api.PublishService;
 import net.ninemm.survey.service.api.WxConfigService;
 import net.ninemm.survey.service.api.WxUserService;
+import net.ninemm.survey.service.model.Publish;
 import net.ninemm.survey.service.model.WxConfig;
 import net.ninemm.survey.service.model.WxUser;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -39,18 +37,29 @@ public class WxOauthController extends JbootController {
     WxConfigService wxConfigService;
     @Inject
     WxUserService wxUserService;
+    @Inject
+    PublishService publishService;
 
     public void index(){
         String url = null;
         String state = getPara("shortUrl");
         if (isWechatBrowser()) {
             String appIdKey = getPara("appIdKey");
+            if (!StrUtil.isNotEmpty(appIdKey)) {
+                //先查看发布问卷时有没有记录问卷的公众号归属 如果没有则归属到默认公众号
+                Publish publish = publishService.findByShortUrl(state);
+                if (StrUtil.isNotEmpty(publish.getAppid())) {
+                    appIdKey=publish.getAppid();
+                }else{
+                    WxConfig wxconfig = wxConfigService.findDefaultConfig();
+                    appIdKey = wxconfig.getAppid();
+                }
+            }
             String redirectUri = "http://wxtest.juster.com.cn/wxoauth/callback?appIdKey="+appIdKey;
             url = SnsAccessTokenApi.getAuthorizeURL(appIdKey, redirectUri, state, false);
         }else{
             url="http://wxtest.juster.com.cn/surveyPublish/getSurveyByShortUrl?shortUrl="+state;
         }
-        System.out.println(url);
         redirect(url);
     }
 
@@ -74,8 +83,9 @@ public class WxOauthController extends JbootController {
 
     private void saveWxUser(SnsAccessToken snsAccessToken,String openid,String appIdKey) {
         WxUser wxuser = wxUserService.findByOpenid(openid);
-        ApiResult userInfo = SnsApi.getUserInfo(snsAccessToken.getAccessToken(), openid);
-        if (userInfo.isSucceed()){
+        if (wxuser==null) {
+            wxuser=new WxUser();
+            ApiResult userInfo = SnsApi.getUserInfo(snsAccessToken.getAccessToken(), openid);
             wxuser.setId(StrUtil.uuid());
             wxuser.setSubscribe(userInfo.getInt("subscribe"));
             wxuser.setNickname((userInfo.getStr("nickname")));
@@ -123,66 +133,5 @@ public class WxOauthController extends JbootController {
         kv.set("signature", signature);
         kv.set("jsapi_ticket", jsapi_ticket);
         renderJson(kv);
-    }
-
-    // 商户相关资料
-    private static String wxappIdKey = "wxcf12086e850e0885";
-    // 微信支付分配的商户号
-    private static String partner = "1522637501";
-    private static String sendName = "武汉珈研";
-    //API密钥
-    private static String paternerKey = "7322375DFD0D9C1DBE489E93002D889B";
-    //微信证书路径
-    private static String certPath = "C://apiclient_cert.p12";
-    public void sendRedPack(){
-        // 接受红包的用户用户在wxappIdKey下的openid
-        String reOpenid = "";
-        // 商户订单号
-        String mchBillno = System.currentTimeMillis() + "";
-        String ip = IpKit.getRealIp(getRequest());
-
-        Map<String, String> params = new HashMap<String, String>();
-        // 随机字符串
-        params.put("nonce_str", System.currentTimeMillis() / 1000 + "");
-        // 商户订单号
-        params.put("mch_billno", mchBillno);
-        // 商户号
-        params.put("mch_id", "1522637501");
-        // 公众账号ID
-        params.put("wxappIdKey", wxappIdKey);
-        // 商户名称
-        params.put("send_name", sendName);
-        // 用户OPENID
-        params.put("re_openid", reOpenid);
-        // 付款现金(单位分)
-        params.put("total_amount", "100");
-        // 红包发放总人数
-        params.put("total_num", "1");
-        // 红包祝福语
-        params.put("wishing", "恭喜您....");
-        // 终端IP
-        params.put("client_ip", ip);
-        // 活动名称
-        params.put("act_name", "床垫睡眠日活动");
-        // 备注
-        params.put("remark", "新年新气象");
-        //创建签名
-        String sign = PaymentKit.createSign(params, paternerKey);
-        params.put("sign", sign);
-
-        String xmlResult = RedPackApi.sendRedPack(params, certPath, partner);
-        Map<String, String> result = PaymentKit.xmlToMap(xmlResult);
-        System.out.println(result);
-        //业务结果
-        String result_code = result.get("result_code");
-        //此字段是通信标识，非交易标识，交易是否成功需要查看result_code来判断
-        String return_code = result.get("return_code");
-        //
-        if (StrKit.isBlank(result_code) || !"SUCCESS".equals(result_code)) {
-            System.out.println("发送成功");
-        } else {
-            System.out.println("发送失败");
-        }
-        renderJson(result);
     }
 }

@@ -1,29 +1,29 @@
 package net.ninemm.survey.controller.survey;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.ImmutableBiMap;
 import com.jfinal.aop.Before;
 import com.jfinal.aop.Clear;
 import com.jfinal.aop.Inject;
 import com.jfinal.kit.Kv;
 import com.jfinal.kit.PathKit;
 import com.jfinal.kit.Ret;
+import com.jfinal.plugin.activerecord.Page;
 import io.jboot.Jboot;
+import io.jboot.db.model.Columns;
 import io.jboot.utils.StrUtil;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
 import io.swagger.annotations.Api;
 import net.ninemm.base.interceptor.GlobalCacheInterceptor;
+import net.ninemm.base.interceptor.NotNullPara;
 import net.ninemm.base.message.MessageAction;
 import net.ninemm.base.utils.ShortUrl;
 import net.ninemm.survey.controller.BaseAppController;
 import net.ninemm.survey.interceptor.WxJsSdkInterceptor;
 import net.ninemm.survey.interceptor.WxUserInterceptor;
-import net.ninemm.survey.service.api.PublishService;
-import net.ninemm.survey.service.api.SendRecordService;
-import net.ninemm.survey.service.api.SurveyService;
-import net.ninemm.survey.service.model.Publish;
-import net.ninemm.survey.service.model.SendRecord;
-import net.ninemm.survey.service.model.Survey;
+import net.ninemm.survey.service.api.*;
+import net.ninemm.survey.service.model.*;
 import net.ninemm.upms.interceptor.LogInterceptor;
 import net.ninemm.upms.service.api.OptionService;
 import net.ninemm.upms.service.api.UserService;
@@ -33,8 +33,9 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 
-@RequestMapping(value = "/surveyPublish")
+@RequestMapping(value = "/surveyPublish",viewPath="/Html")
 @Api(description = "问卷发布", basePath = "/surveyPublish", tags = "", position = 2)
 @EnableCORS
 public class SurveyPublishController extends BaseAppController {
@@ -48,54 +49,89 @@ public class SurveyPublishController extends BaseAppController {
     SendRecordService sendRecordService;
     @Inject
     UserService userService;
+    @Inject
+    QuestionService questionService;
+    @Inject
+    WxConfigService wxConfigService;
 
-    /*public void saveOrUpdate() {
-        Publish publish = getRawObject(Publish.class);
-        if(StrUtil.isBlank(publish.getId())){
-            User user = userService.findById(getUserId());
-            publish.setDeptId(user.getDepartmentId());
-            publish.setDataArea(user.getDataArea());
-        }
-        publish.setModifyDate(new Date());
-        Object result = publishService.saveOrUpdate(publish);
-        if (result != null) {
-            renderJson(Ret.ok());
-        } else {
-            renderJson(Ret.fail());
-        }
-    }
+
+
+    /**
+    * @Description:  根据问卷id获取问卷发布信息 (获取短链接)
+    * @Param: []
+    * @return: void
+    * @Author: lsy
+    * @Date: 2019/4/17
+    */
+    @NotNullPara(value = "surveyId")
     public void findBySurveyId() {
-        JSONObject rawObject = getRawObject();
-        Columns columns = Columns.create();
-        columns.eq("survey_id", rawObject.get("surveyId"));
-
-        Page<Publish> page = publishService.paginateByColumns(getPageNumber(), getPageSize(), columns);
-        Map<String, Object> map = ImmutableBiMap.of("total", page.getTotalRow(), "records", page.getList());
-        renderJson(map);
-    }
-
-    public void delete() {
-        String id = getPara("id");
-        if(publishService.deleteById(id)){
-            renderJson(Ret.ok());
-            return ;
+        Publish publish = publishService.findBySurveyId(getPara("surveyId"));
+        if (publish!=null) {
+            renderJson(Ret.ok("result",publish).set("url",""));
         }else{
-            renderJson(Ret.fail());
+            renderJson(Ret.fail("result","未找到该问卷!"));
         }
     }
 
-    public void deleteBySurveyId() {
+    @NotNullPara(value = "surveyId")
+    @Clear({GlobalCacheInterceptor.class, LogInterceptor.class})
+    public void publishStatic(){
         String surveyId = getPara("surveyId");
-        publishService.deleteBySurveyId(surveyId);
-        renderJson(Ret.ok());
-    }*/
+        Survey survey = surveyService.findById(surveyId);
 
+        List<Question>  questionList= questionService.findBySurveyId(surveyId);
+        if(questionList==null || questionList.size()==0){
+            renderJson(Ret.ok("result","问卷中没有题目"));
+            return;
+        }
+        String pageName ="";
+        StringBuffer sb = new StringBuffer("{ \"pages\": [");
+        for (Question question : questionList) {
+            if(question.getPageName().equals(pageName)){
+                sb.append(",").append(question.getQuestionInfo());
+            }else if(pageName.equals("")){
+                pageName=question.getPageName();
+                sb.append("{ \"questions\": [").append(question.getQuestionInfo());
+            }else{
+                sb.append("]},").append("{ \"questions\": [").append(question.getQuestionInfo());
+                pageName=question.getPageName();
+            }
+        }
+        sb.append("] }] }");
+        setAttr("survey",survey );
+        setAttr("questionJson",JSONObject.parse(sb.toString()));
+        render("template.html");
+    }
+    @NotNullPara(value = "surveyId")
     public void publish(){
         String surveyId = getPara("surveyId");
+        //静态化页面需要的url
         String surveyUrl = getPara("surveyUrl");
-        Survey survey = new Survey();
-        survey.setId(surveyId);
-
+        String appId = getPara("appId");
+        //返回结果的url
+        String publishUrl = "http://wxtest.juster.com.cn/wxoauth/index?shortUrl=";
+        Survey survey = surveyService.findById(surveyId);
+        
+        //如果问卷是发布状态的话直接回传地址即可
+        if (survey.getStatus()== Survey.SurveyStatus.PUBLISH.getStatu()) {
+            Publish publish = publishService.findBySurveyId(surveyId);
+            if (publish != null && StrUtil.isNotEmpty(publish.getPublishUrl())) {
+                renderJson(Ret.ok("result",publish.getPublishUrl()));
+                return;
+            }
+        }
+        
+        if (!StrUtil.isNotEmpty(appId)) {
+            //根据问卷的部门查找对应的微信公众号
+            List<WxConfig> wxConfigList = wxConfigService.findByDeptId(survey.getDeptId());
+            if (wxConfigList!=null && wxConfigList.size()>0) {
+                appId=wxConfigList.get(0).getAppid();
+            }else{
+                WxConfig wxConfig = wxConfigService.findDefaultConfig();
+                appId=wxConfig.getAppid();
+            }
+        }
+        
         /*if(){//先判断是否有答卷,有答卷的话需要先修改问卷状态再删除答卷 再删除已静态化的问卷
 
         }*/
@@ -114,29 +150,21 @@ public class SurveyPublishController extends BaseAppController {
             publish.setDeptId(user.getDepartmentId());
             publish.setDataArea(user.getDataArea());
             publish.setShortLink(shortUrl);
-            publishService.saveOrUpdate(publish);
+            publish.setAppid(appId);
 
-            /*//往发送记录里面插入一条数据
-            SendRecord sr =new SendRecord();
-            sr.setSurveyId(surveyId);
-            sr.setSurveyPublishId(publish.getId());
-            sr.setOriginalLink(url);
-            sr.setType(0);
-            sr.setSendTitle("");
-            sr.setSendAddress("");
-            sr.setResendNum(0);
-            sr.setIsAnswered(0);
-            sr.setDeptId(publish.getDeptId());
-            sr.setDataArea(publish.getDataArea());
-            sr.setIsSuccess(1);
-            sendRecordService.save(sr);*/
+            publishUrl+=shortUrl;
+            if (StrUtil.isNotEmpty(appId)) {
+                publishUrl+="&appIdKey="+appId;
+            }
+            publish.setPublishUrl(publishUrl);
+            publishService.saveOrUpdate(publish);
 
             survey.setStatus(Survey.SurveyStatus.PUBLISH.getStatu());
             if(!surveyService.update(survey)){
                 renderJson(Ret.fail("result","问卷发布失败!"));
                 return ;
             }
-            renderJson(Ret.ok("result",getBaseUrl()+"/surveyPublish/getSurveyByShortUrl?shortUrl="+shortUrl));
+            renderJson(Ret.ok("result",publishUrl));
             return;
         } catch (Exception e) {
             e.printStackTrace();
@@ -229,15 +257,19 @@ public class SurveyPublishController extends BaseAppController {
     public void getSurveyByShortUrl(){
         String shortUrl = getPara("shortUrl");
         String openid = getPara("openid");
+        String appIdKey = getPara("appIdKey");
         System.out.println(shortUrl+"  "+openid);
 
         String surveyId = null;
         String originaLink = null;
+        String shortLink= "";
         Publish publish = publishService.findByShortUrl(shortUrl);
+
         //如果不为null则说明不是针对特殊人群答题
         if(publish!=null){
             surveyId=publish.getSurveyId();
             originaLink=publish.getOriginalLink();
+            shortLink = publish.getShortLink();
             // 需要考虑是否有限制同一IP只能答题一次规则
             // 考虑是否已到答卷数限制
             // 检测是否设置了密码
@@ -255,6 +287,13 @@ public class SurveyPublishController extends BaseAppController {
                 renderJson(Ret.fail("message","对不起找不到该问卷!"));
                 return;
             }
+            Publish ph = publishService.findBySurveyId(surveyId);
+            shortLink = ph.getShortLink();
+        }
+
+        String shareUrl = "http://wxtest.juster.com.cn/wxoauth/index?shortUrl="+shortLink;
+        if (StrUtil.isNotEmpty(appIdKey)) {
+            shareUrl+="&appIdKey="+appIdKey;
         }
 
         //取出该问卷判断问卷的状态
@@ -271,8 +310,8 @@ public class SurveyPublishController extends BaseAppController {
         if(StrUtil.isNotBlank(openid)){
             redirectUrl+="&openid="+openid;
         }
-        System.out.println(redirectUrl);
-        redirect(redirectUrl);
+        System.out.println(redirectUrl+"&shareUrl="+shareUrl);
+        redirect(redirectUrl+"&shareUrl="+shareUrl);
     }
 
 }
