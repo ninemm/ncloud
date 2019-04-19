@@ -150,6 +150,12 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
         Db.update(sql);
     }
 
+    @Override
+    public List<Record> findByDetaArea(String area) {
+        String sql = "SELECT * FROM upms_user WHERE  data_area like '"+area+"'";
+        return Db.find(sql);
+    }
+
     public boolean resetPasswordById(String id) {
         User user = findById(id);
         user.setPassword(EncryptUtils.encryptPassword(Consts.USER_DEFAULT_PASSWORD, user.getSalt()));

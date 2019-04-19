@@ -113,5 +113,5 @@ public interface RoleService {
 
     void deleteByIds(String ids);
 
-    List<Role> findByDeptId(String id);
+    List<Record> findByDataArea(String id);
 }

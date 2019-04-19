@@ -106,9 +106,9 @@ public class RoleServiceImpl extends BaseService<Role> implements RoleService {
     }
 
     @Override
-    public List<Role> findByDeptId(String id) {
-        String sql = "SELECT * FROM upms_role WHERE dept_id = '"+id+"'";
-        return Db.query(sql);
+    public List<Record> findByDataArea(String dataArea) {
+        String sql = "SELECT * FROM upms_role WHERE data_area like '"+dataArea+"'";
+        return Db.find(sql);
     }
 
     /**

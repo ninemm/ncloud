@@ -150,4 +150,6 @@ public interface UserService extends JbootServiceJoiner {
     List<Record> findByDepTid(String ids);
 
     void updateStatusById(String id, String status);
+
+    List<Record> findByDetaArea(String s);
 }
