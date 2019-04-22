@@ -62,7 +62,7 @@ public class NCloudAppConfigListener extends JbootAppListenerBase {
         interceptors.add(new NotNullParaInterceptor("/template/exception.html"));
         interceptors.add(new BusinessExceptionInterceptor("/template/exception.html"));
         interceptors.add(new GlobalCacheInterceptor());
-        interceptors.add(new LogInterceptor());
+        // interceptors.add(new LogInterceptor());
     }
 
     @Override
