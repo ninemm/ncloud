@@ -30,12 +30,12 @@ public class RoleServiceImpl extends BaseService<Role> implements RoleService {
     public Page<Role> paginate(int page, int pageSize, Map<String, Object> params) {
         Columns columns = Columns.create();
         Object roleName = params.get("roleName");
-        Object deptId = params.get("deptId");
+        Object dataArea = params.get("dataArea");
+        if (dataArea!=null){
+            columns.likeAppendPercent("data_area",dataArea);
+        }
         if (roleName != null) {
             columns.likeAppendPercent("role_name", roleName);
-        }
-        if (deptId!=null){
-            columns.eq("dept_id",deptId);
         }
         Object isAsc = params.get("isAsc");
         Object orderByField = params.get("orderByField");
@@ -103,6 +103,12 @@ public class RoleServiceImpl extends BaseService<Role> implements RoleService {
     public void deleteByIds(String ids) {
         String sql = "DELETE FROM upms_role WHERE id in ("+ids+")";
         Db.delete(sql);
+    }
+
+    @Override
+    public List<Record> findByDateArea(String dataArea) {
+        String sql ="SELECT * FROM upms_role WHERE data_area like '"+dataArea+"'";
+        return Db.find(sql);
     }
 
     /**

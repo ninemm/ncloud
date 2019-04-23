@@ -2,6 +2,7 @@ package net.ninemm.upms.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
 import net.ninemm.upms.service.model.Module;
 import net.ninemm.upms.service.model.Systems;
 
@@ -91,4 +92,5 @@ public interface ModuleService  {
 
     public List<Module> findListByParentId(String parentId);
 
+    List<Record> findByDataAtea(String s);
 }

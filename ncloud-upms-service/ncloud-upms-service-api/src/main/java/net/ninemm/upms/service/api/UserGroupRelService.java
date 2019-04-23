@@ -2,6 +2,7 @@ package net.ninemm.upms.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
 import net.ninemm.upms.service.model.UserGroupRel;
 
 import java.util.List;
@@ -84,4 +85,14 @@ public interface UserGroupRelService  {
     public void keep(List<? extends Model> models, String... attrs);*/
 
     public int deleteByUserId(String userId);
+
+    void deleteByGroupId(String id);
+
+    List<Record> findUserListByGroupId(String id);
+
+    List<Record> findNotUser(String id, String s);
+
+    List<Record> findNotGroup(String id, String s);
+
+    List<Record> findGroupListByUserId(String id);
 }

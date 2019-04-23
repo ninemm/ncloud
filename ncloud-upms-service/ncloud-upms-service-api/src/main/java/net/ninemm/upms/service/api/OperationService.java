@@ -98,5 +98,4 @@ public interface OperationService  {
 
     public List<Operation> findListByModuleId(String moduleId);
 
-    void updateIsPrivilegeById(String id);
 }

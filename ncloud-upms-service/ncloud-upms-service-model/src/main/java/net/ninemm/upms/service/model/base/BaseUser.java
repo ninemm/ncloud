@@ -202,19 +202,19 @@ public abstract class BaseUser<M extends BaseUser<M>> extends JbootModel<M> impl
 	}
 
 	public void setWechatOpenId(java.lang.String wechatOpenId) {
-		set("wechat_open_id", wechatOpenId);
+		set("wx_open_id", wechatOpenId);
 	}
 	
 	public java.lang.String getWechatOpenId() {
-		return getStr("wechat_open_id");
+		return getStr("wx_open_id");
 	}
 
 	public void setWechatUserid(java.lang.String wechatUserid) {
-		set("wechat_userid", wechatUserid);
+		set("qywx_open_id", wechatUserid);
 	}
 	
 	public java.lang.String getWechatUserid() {
-		return getStr("wechat_userid");
+		return getStr("qywx_open_id");
 	}
 
 	public void setCreateDate(java.util.Date createDate) {

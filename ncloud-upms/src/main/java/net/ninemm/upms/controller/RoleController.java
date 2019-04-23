@@ -23,17 +23,14 @@ import com.jfinal.kit.Ret;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
+import io.jboot.utils.StrUtil;
 import io.jboot.web.controller.annotation.RequestMapping;
 import io.jboot.web.cors.EnableCORS;
 import io.swagger.annotations.ApiOperation;
-import net.ninemm.upms.service.api.DepartmentService;
-import net.ninemm.upms.service.api.RoleOperationRelService;
-import net.ninemm.upms.service.api.RoleService;
-import net.ninemm.upms.service.api.UserService;
-import net.ninemm.upms.service.model.Department;
-import net.ninemm.upms.service.model.Role;
-import net.ninemm.upms.service.model.User;
+import net.ninemm.upms.service.api.*;
+import net.ninemm.upms.service.model.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -60,15 +57,22 @@ public class RoleController extends BaseAppController {
     @Inject
     UserService userService;
 
+    @Inject
+    OperationService operationService;
+
+
     public void list() {
         String userId = getUserId();
         Department department = departmentService.findByUserId(userId);
         Map<String, Object> params = getAllParaMap();
-        params.put("deptId",department.getId());
+        params.put("dataArea",department.getDataArea());
         Page<Role> page = roleService.paginate(getPageNumber(), getPageSize(), params);
         String[] attrs = {"dept_name"};
         departmentService.join(page, "dept_id", attrs);
-        Map<String, Object> map = ImmutableMap.of("total", page.getTotalRow(), "records", page.getList());
+        Map<String, Object> mapPage = ImmutableMap.of("total", page.getTotalRow(), "records", page.getList());
+        Map<String, Object> map = new HashMap<>();
+        map.put("state","ok");
+        map.put("result",mapPage);
         renderJson(map);
     }
 
@@ -86,6 +90,23 @@ public class RoleController extends BaseAppController {
         Role role = roleService.findById(id);
         departmentService.join(role, "dept_id", "department");
         renderJson(Ret.ok().set("data", role));
+    }
+
+    public void getPermission(){
+        String moduleId = getPara("mid");
+        String roleId = getPara("roleId");
+        List<Record> list =optionService.findByModuleId(moduleId,roleId);
+        for (Record record :list){
+            if (StrKit.notBlank(record.getStr("hava"))){
+                record.set("show",true);
+            }else{
+                record.set("show",false);
+            }
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("state","ok");
+        map.put("result",list);
+        renderJson(map);
     }
 
     public void save() {
@@ -115,6 +136,24 @@ public class RoleController extends BaseAppController {
         } else {
             renderJson(Ret.fail());
         }
+    }
+
+    public void updateRolePermission(){
+        String roleId = getPara("roleId");
+        String show = getPara("show");
+        String operationId = getPara("operationId");
+        Operation operation = operationService.findById(operationId);
+        if (show.equals("true")){
+            RoleOperationRel roleOperationRel = new RoleOperationRel();
+            roleOperationRel.setId(StrUtil.uuid());
+            roleOperationRel.setOperationId(operationId);
+            roleOperationRel.setRoleId(roleId);
+            roleOperationRel.setModuleId(operation.getModuleId());
+            roleOperationRelService.save(roleOperationRel);
+        }else{
+            roleOperationRelService.deleteByRoleIdAndOpId(roleId,operationId);
+        }
+        renderJson(Ret.ok());
     }
 
     public void saveOrUpdate() {

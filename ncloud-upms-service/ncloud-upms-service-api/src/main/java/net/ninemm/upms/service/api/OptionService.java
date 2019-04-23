@@ -2,6 +2,7 @@ package net.ninemm.upms.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
 import net.ninemm.upms.service.model.Option;
 
 import java.util.List;
@@ -107,5 +108,5 @@ public interface OptionService  {
     public List<Option> findAllSystemSettingList();
 
 
-
+    List<Record> findByModuleId(String moduleId,String roleId);
 }

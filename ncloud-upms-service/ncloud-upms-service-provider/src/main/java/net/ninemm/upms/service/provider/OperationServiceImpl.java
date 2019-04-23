@@ -17,6 +17,7 @@ import net.ninemm.upms.service.model.Operation;
 import net.ninemm.upms.service.model.User;
 import org.apache.curator.shaded.com.google.common.collect.Lists;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -30,18 +31,29 @@ public class OperationServiceImpl extends BaseService<Operation> implements Oper
     public Page<Operation> paginate(int page, int pageSize, Map<String, Object> params) {
         Columns columns = Columns.create();
         Object operationName = params.get("operationName");
-        Object deptId = params.get("deptId");
         if (operationName != null) {
             columns.likeAppendPercent("operation_name", operationName);
-        }
-        if (deptId!=null){
-            columns.eq("dept_id",deptId);
         }
         Object isAsc = params.get("isAsc");
         Object orderByField = params.get("orderByField");
         String orderBy = orderBy(orderByField, isAsc);
         return DAO.paginateByColumns(page, pageSize, columns, orderBy);
     }
+
+//    @Override
+//    public Page<Operation> paginate(int page, int pageSize, Map<String, Object> params) {
+//        LinkedList<Object> param = new LinkedList<Object>();
+//        String sql = "SELECT distinct p.* ,us.id uid ,us.station_name gName ";
+//        StringBuilder fromBuilder = new StringBuilder("FROM upms_operation p LEFT JOIN upms_station_operation_rel uso on p.id = uso.operation_id ");
+//        fromBuilder.append("LEFT JOIN upms_station us on uso.station_id = us.id ");
+//        Object operationName = params.get("operationName");
+//        if (operationName != null) {
+//            fromBuilder.append("where p.operation_name like ? ");
+//            param.add("%"+operationName+"%");
+//        }
+//        return DAO.paginate(page, pageSize, sql, fromBuilder.toString(), param.toArray());
+//    }
+
 
     @Override
     public List<String> findAllPermissionByUserId(String userId, String roleIds) {
@@ -71,11 +83,6 @@ public class OperationServiceImpl extends BaseService<Operation> implements Oper
         return DAO.findListByColumn("module_id", moduleId);
     }
 
-    @Override
-    public void updateIsPrivilegeById(String id) {
-        String sql = "UPDATE upms_operation SET is_privilege = 0 where id = '"+id+"'";
-        Db.update(sql);
-    }
 
     /**
      * 清除 model 缓存

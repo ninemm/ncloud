@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
+import com.jfinal.plugin.activerecord.Record;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.db.model.Column;
 import io.jboot.service.JbootServiceBase;
@@ -64,6 +65,24 @@ public class GroupRoleRelServiceImpl extends JbootServiceBase<GroupRoleRel> impl
             }
         });
         return updated;
+    }
+
+    @Override
+    public void deleteByGroupId(String id) {
+        String sql = "delete from upms_group_role_rel where group_id = "+id;
+        Db.delete(sql);
+    }
+
+    @Override
+    public List<Record> findRoleListByGroupId(String id) {
+        String sql = "SELECT r.* FROM upms_group_role_rel gr LEFT JOIN upms_role r on gr.role_id = r.id WHERE gr.group_id = '"+id+"'";
+        return Db.find(sql);
+    }
+
+    @Override
+    public List<Record> findNotRole(String id, String s) {
+        String sql = "SELECT distinct r.* FROM upms_role r WHERE r.id not in(SELECT ug.role_id FROM upms_group_role_rel ug WHERE ug.group_id ='"+id+"') and r.data_area like '"+s+"'";
+        return Db.find(sql);
     }
 
 }

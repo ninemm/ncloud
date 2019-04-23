@@ -102,4 +102,11 @@ public interface StationService  {
      * @return java.util.List<net.ninemm.upms.service.model.Role>
      */
     public void updatePermission(String stationId, String moduleId, String operationIds);
+
+    List<Record> findByDataArea(String dataArea);
+
+    List<Record> findNotListByDataArea(String s, String substring);
+
+    List<Record> findByIds(String substring);
+
 }

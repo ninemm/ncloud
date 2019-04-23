@@ -1,10 +1,7 @@
 package net.ninemm.upms.service.provider;
 
 import com.jfinal.kit.StrKit;
-import com.jfinal.plugin.activerecord.Db;
-import com.jfinal.plugin.activerecord.IAtom;
-import com.jfinal.plugin.activerecord.Page;
-import com.jfinal.plugin.activerecord.SqlPara;
+import com.jfinal.plugin.activerecord.*;
 import io.jboot.Jboot;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.components.cache.annotation.Cacheable;
@@ -95,6 +92,12 @@ public class ModuleServiceImpl extends JbootServiceBase<Module> implements Modul
     @Cacheable(name = "upms_module", key = "parent:#(parentId)", liveSeconds = 86400)
     public List<Module> findListByParentId(String parentId) {
         return DAO.findListByColumn("parent_id", parentId, "order_list asc");
+    }
+
+    @Override
+    public List<Record> findByDataAtea(String dataArea) {
+        String sql ="SELECT * FROM upms_module WHERE data_area like '"+dataArea+"' order by data_area desc ";
+        return Db.find(sql);
     }
 
 }

@@ -88,4 +88,9 @@ public interface GroupRoleRelService  {
 
     public boolean update(String groupId, String roleIds);
 
+    void deleteByGroupId(String id);
+
+    List<Record> findRoleListByGroupId(String id);
+
+    List<Record> findNotRole(String id, String s);
 }

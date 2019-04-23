@@ -94,7 +94,10 @@ public class DepartmentController extends BaseAppController {
             treeList.add(deptTreeVO);
             treeList = TreeKit.toTree(parentId, treeList, true);
         }
-        renderJson(treeList);
+        Map<String, Object> map = new HashMap<>();
+        map.put("state","ok");
+        map.put("result",treeList);
+        renderJson(map);
     }
 
     /**

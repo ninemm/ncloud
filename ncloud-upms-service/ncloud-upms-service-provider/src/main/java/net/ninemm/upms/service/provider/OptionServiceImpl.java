@@ -1,5 +1,7 @@
 package net.ninemm.upms.service.provider;
 
+import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Record;
 import io.jboot.aop.annotation.Bean;
 import io.jboot.components.cache.annotation.CacheEvict;
 import io.jboot.components.cache.annotation.Cacheable;
@@ -38,6 +40,11 @@ public class OptionServiceImpl extends JbootServiceBase<Option> implements Optio
     public List<Option> findAllSystemSettingList() {
         String sql = "select option_key, option_value from upms_option where is_system = 1";
         return DAO.find(sql);
+    }
+
+    @Override
+    public List<Record> findByModuleId(String moduleId,String roleId) {
+        return Db.find("SELECT u.* ,r.id hava FROM upms_operation u LEFT JOIN upms_role_operation_rel ro on ro.operation_id = u.id LEFT JOIN upms_role r on r.id = ro.role_id and r.id ='"+roleId+"'  where  u.module_id = '"+moduleId+"'");
     }
 
     @Override

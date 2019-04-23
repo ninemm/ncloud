@@ -2,6 +2,7 @@ package net.ninemm.upms.service.api;
 
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
 import net.ninemm.upms.service.model.StationOperationRel;
 
 import java.util.List;
@@ -86,4 +87,12 @@ public interface StationOperationRelService  {
     public List<String> findListByStationId(String stationId);
 
     public void deleteByModuleId(String stationId, String moduleId);
+
+    Record findByOperIdAndStationId(String stationId, String id);
+
+    void deleteByOperationId(String id);
+
+    Record findStationByOpId(String id);
+
+    Record findByOperId(String id);
 }

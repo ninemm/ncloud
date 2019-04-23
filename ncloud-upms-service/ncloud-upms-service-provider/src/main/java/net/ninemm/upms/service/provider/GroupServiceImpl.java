@@ -28,10 +28,6 @@ public class GroupServiceImpl extends BaseService<Group> implements GroupService
     public Page<Group> paginate(int page, int pageSize, Map<String, Object> params) {
         Columns columns = Columns.create();
         Object groupName = params.get("groupName");
-        Object deptId = params.get("deptId");
-        if (deptId!=null){
-            columns.eq("dept_id",deptId);
-        }
         if (groupName != null) {
             columns.likeAppendPercent("group_name", groupName);
         }
@@ -40,7 +36,6 @@ public class GroupServiceImpl extends BaseService<Group> implements GroupService
         if (dataArea != null) {
             columns.like("data_area", dataArea);
         }
-
         Object isAsc = params.get("isAsc");
         Object orderByField = params.get("orderByField");
         String orderBy = orderBy(orderByField, isAsc);
@@ -52,6 +47,12 @@ public class GroupServiceImpl extends BaseService<Group> implements GroupService
     public void deleteByIds(String ids) {
         String sql = "DELETE FROM upms_group WHERE id in ("+ids+")";
         Db.delete(sql);
+    }
+
+    @Override
+    public List<Record> findListByDataArea(String s) {
+        String sql = "SELECT g.id,g.group_name from upms_group g where g.data_area like '"+s+"'";
+        return Db.find(sql);
     }
 
     @Override

@@ -22,4 +22,11 @@ public class RoleOperationRelServiceImpl extends JbootServiceBase<RoleOperationR
         String sql = "delete from upms_role_operation_rel where role_id = ? and module_id = ?";
         Db.delete(sql, roleId, moduleId);
     }
+
+    @Override
+    public void deleteByRoleIdAndOpId(String roleId, String operationId) {
+        String sql = "delete from upms_role_operation_rel where role_id = ? and operation_id = ?";
+        Db.delete(sql, roleId, operationId);
+    }
+
 }

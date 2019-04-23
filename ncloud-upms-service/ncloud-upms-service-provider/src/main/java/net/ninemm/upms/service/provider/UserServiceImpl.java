@@ -38,11 +38,7 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
     public Page<User> paginate(int page, int pageSize, Map<String, Object> params) {
         Columns columns = Columns.create();
         Object realName = params.get("realName");
-        Object departmentId = params.get("departmentId");
         Object status = params.get("status");
-        if (departmentId!=null){
-            columns.eq("department_id",departmentId);
-        }
         if (realName != null) {
             columns.likeAppendPercent("realname", realName);
         }

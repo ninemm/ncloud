@@ -86,4 +86,7 @@ public interface RoleOperationRelService  {
     public List<String> findListByRoleId(String roleId);
 
     public void deleteByModuleId(String roleId, String moduleId);
+
+    void deleteByRoleIdAndOpId(String roleId, String operationId);
+
 }

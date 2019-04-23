@@ -3,8 +3,6 @@ package net.ninemm.upms.service.api;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
-import io.jboot.db.model.JbootModel;
-import net.ninemm.upms.service.model.Module;
 import net.ninemm.upms.service.model.Role;
 
 import java.util.List;
@@ -113,4 +111,5 @@ public interface RoleService {
 
     void deleteByIds(String ids);
 
+    List<Record> findByDateArea(String dataArea);
 }

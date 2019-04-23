@@ -15,6 +15,7 @@ import net.ninemm.upms.service.model.Station;
 import net.ninemm.upms.service.model.StationOperationRel;
 
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,21 +25,39 @@ public class StationServiceImpl extends BaseService<Station> implements StationS
     @Inject
     StationOperationRelServiceImpl stationOperationRelService;
 
+//    @Override
+//    public Page<Station> paginate(int page, int pageSize, Map<String, Object> params) {
+//        Columns columns = Columns.create();
+//        Object stationName = params.get("stationName");
+//        Object dataArea = params.get("dataArea");
+//        if (dataArea!=null){
+//            columns.likeAppendPercent("data_area",dataArea);
+//        }
+//        if (stationName != null) {
+//            columns.likeAppendPercent("station_name", stationName);
+//        }
+//        Object isAsc = params.get("isAsc");
+//        Object orderByField = params.get("orderByField");
+//        String orderBy = orderBy(orderByField, isAsc);
+//        return DAO.paginateByColumns(page, pageSize, columns, orderBy);
+//    }
+
     @Override
     public Page<Station> paginate(int page, int pageSize, Map<String, Object> params) {
-        Columns columns = Columns.create();
+        String select = "SELECT s.*,us.station_name parentName ";
+        StringBuilder fromBuilder = new StringBuilder("FROM upms_station s LEFT JOIN upms_station us on us.id = s.parent_id ");
+        LinkedList<Object> param = new LinkedList<Object>();
         Object stationName = params.get("stationName");
-        Object deptId = params.get("deptId");
-        if (deptId!=null){
-            columns.eq("dept_id",deptId);
+        Object dataArea = params.get("dataArea");
+        if (dataArea!=null){
+            fromBuilder.append("where s.data_area like ? ");
+            param.add(dataArea);
         }
         if (stationName != null) {
-            columns.likeAppendPercent("station_name", stationName);
+            fromBuilder.append("and s.station_name like ? ");
+            param.add("%"+stationName+"%");
         }
-        Object isAsc = params.get("isAsc");
-        Object orderByField = params.get("orderByField");
-        String orderBy = orderBy(orderByField, isAsc);
-        return DAO.paginateByColumns(page, pageSize, columns, orderBy);
+        return DAO.paginate(page, pageSize, select, fromBuilder.toString(), param.toArray());
     }
 
     @Override
@@ -96,6 +115,24 @@ public class StationServiceImpl extends BaseService<Station> implements StationS
                 return true;
             }
         });
+    }
+
+    @Override
+    public List<Record> findByDataArea(String dataArea) {
+        String sql ="SELECT * FROM upms_station where data_area like '"+dataArea+"' order by data_area desc";
+        return Db.find(sql);
+    }
+
+    @Override
+    public List<Record> findNotListByDataArea(String s, String substring) {
+        String sql = "SELECT * FROM upms_station where data_area like '"+s+"' and id not in("+substring+")";
+        return Db.find(sql);
+    }
+
+    @Override
+    public List<Record> findByIds(String substring) {
+        String sql = "SELECT * FROM upms_station where id in("+substring+")";
+        return Db.find(sql);
     }
 
     /**
