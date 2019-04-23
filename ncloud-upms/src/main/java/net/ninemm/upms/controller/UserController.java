@@ -324,7 +324,7 @@ public class UserController extends BaseAppController {
             model.setUsername(user.getUsername());
             exportList.add(model);
         }
-        ExcelKit.writeExcel(getResponse(), exportList, "用户信息.xlsx", "", new UserPropertyModel());
+        ExcelKit.writeExcel(getResponse(), exportList, "用户信息", "用户", new UserPropertyModel());
         renderNull();
     }
 

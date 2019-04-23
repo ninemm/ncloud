@@ -25,6 +25,7 @@ import com.alibaba.excel.metadata.Sheet;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import com.google.common.collect.Lists;
 import io.jboot.utils.FileUtil;
+import org.yaml.snakeyaml.scanner.Constant;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -107,9 +108,10 @@ public class ExcelKit {
      * @param rowModel  映射实体类，Excel 模型
      */
     public static void writeExcel(HttpServletResponse response, List<? extends BaseRowModel> list,
-        String fileName, String sheetName, BaseRowModel rowModel) {
-
-        ExcelWriter writer = new ExcelWriter(getOutputStream(fileName, response), ExcelTypeEnum.XLSX);
+        String fileName, String sheetName, BaseRowModel rowModel){
+        //OutputStream outputStream = new FileOutputStream("D:/file/用户列表.xlsx");
+        OutputStream outputStream = getOutputStream(fileName, response);
+        ExcelWriter writer = new ExcelWriter(outputStream, ExcelTypeEnum.XLSX);
         Sheet sheet = new Sheet(1, 0, rowModel.getClass());
         sheet.setSheetName(sheetName);
         writer.write(list, sheet);
@@ -158,6 +160,8 @@ public class ExcelKit {
             throw new ExcelException("创建文件失败!");
         }
     }
+
+
 
     /**
      * 返回 ExcelReader

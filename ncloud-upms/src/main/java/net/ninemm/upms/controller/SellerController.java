@@ -16,6 +16,8 @@ import net.ninemm.upms.service.model.Seller;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.jfinal.kit.HashKit.sha256;
+
 /**
  * 账套设置
  *
@@ -24,7 +26,7 @@ import java.util.Map;
  **/
 
 @RequestMapping(value = "/api/v1/admin/seller")
-@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowMethods = "POST,OPTIONS,GET,PUT,DELETE", allowCredentials = "true")
+@EnableCORS
 public class SellerController extends BaseAppController {
 
     @Inject
@@ -83,8 +85,13 @@ public class SellerController extends BaseAppController {
             return;
         }
         seller.setId(StrUtil.uuid());
+        seller.setSellerPassword(encryptPassword(seller.getSellerPassword()));
         sellerService.save(seller);
         renderJson(Ret.ok());
+    }
+
+    private static String encryptPassword(String password) {
+        return sha256(password);
     }
 
 }

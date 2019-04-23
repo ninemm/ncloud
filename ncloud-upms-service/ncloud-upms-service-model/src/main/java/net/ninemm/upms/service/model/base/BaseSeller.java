@@ -108,4 +108,28 @@ public class BaseSeller<M extends BaseSeller<M>> extends JbootModel<M> implement
     public java.util.Date getModifyDate() {
         return get("modify_date");
     }
+
+    public void setSellerNumber(java.lang.String sellerNumber) {
+        set("seller_number", sellerNumber);
+    }
+
+    public java.lang.String getSellerNumber() {
+        return getStr("seller_number");
+    }
+
+    public void setSellerPassword(java.lang.String sellerPassword) {
+        set("seller_password", sellerPassword);
+    }
+
+    public java.lang.String getSellerPassword() {
+        return getStr("seller_password");
+    }
+
+    public void setSellerId(java.lang.String sellerId) {
+        set("seller_id", sellerId);
+    }
+
+    public java.lang.String getSellerId() {
+        return getStr("seller_id");
+    }
 }

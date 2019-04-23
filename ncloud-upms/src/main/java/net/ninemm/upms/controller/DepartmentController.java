@@ -46,7 +46,7 @@ import java.util.Map;
  **/
 
 @RequestMapping(value = "/api/v1/admin/dept")
-@EnableCORS(allowOrigin = "*", allowHeaders = "Content-Type,Jwt", allowCredentials = "true")
+@EnableCORS
 public class DepartmentController extends BaseAppController {
 
     @Inject
