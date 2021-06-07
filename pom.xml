@@ -23,7 +23,7 @@
         <jboot.version>1.7.5</jboot.version>
         <jpush.version>3.3.7</jpush.version>
         <bitwalker.version>1.15</bitwalker.version>
-        <logback.version>1.1.11</logback.version>
+        <logback.version>1.2.0</logback.version>
         <easyexcel.version>1.1.2-beta4</easyexcel.version>
         <hutool.version>4.1.12</hutool.version>
     </properties>
